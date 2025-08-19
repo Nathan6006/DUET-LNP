@@ -1,0 +1,270 @@
+Formulation_ID,Cationic_Lipid_Mass_Ratio,Phospholipid_Mass_Ratio,Cholesterol_Mass_Ratio,PEG_Lipid_Mass_Ratio,Helper_lipid_ID,Amine,Tail,Lipid_name,Library_ID,Experiment_ID,Purity,Mix_type,Cargo_type,Experimenter_ID,Model_type,Target_or_delivered_gene,Delivery_target,Route_of_administration,Experiment_weight,Goal,Batch_or_individual_or_barcoded,Value_name,screen_id,Comment,Amine_number,Full_SMILES,Amine_SMILES,Tail_length,Num_tails,Ketone,Isocyanide,Is_cyclic,Formulation,Batch_or_individual,Random_id,4CR_Lipid_name,Aldehyde,Carboxylic_acid,Amine_name,Tail_name,Linker,MolWt,Tail_count,Num tails,Common_name,Ester,Disulfide,Total_radiance,Form_comment,molecular_weight
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B3,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B3,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B2,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B2,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B2,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B2,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B3,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B3,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B2,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B2,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B3,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B3,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B2,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B2,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B3,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B3,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B3,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B3,,,,,,,,,,,,,
+,,,,,DOPE,4A1,SCC-4,4A1-SCC-4,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:57",1664.597386
+,,,,,DOPE,4A1,SCC-8,4A1-SCC-8,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:58",1888.847787
+,,,,,DOPE,4A1,SCC-10,4A1-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:59",2000.972988
+,,,,,DOPE,4A1,SCC-12,4A1-SCC-12,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:60",2113.098188
+,,,,,DOPE,4A1,SCC-14,4A1-SCC-14,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:61",2225.223389
+,,,,,DOPE,4A1,SCC-EH,4A1-SCC-EH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:62",1888.847787
+,,,,,DOPE,4A1,SCC-PH,4A1-SCC-PH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:63",2000.972988
+,,,,,DOPE,4A1,SCC-BO,4A1-SCC-BO,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:64",2113.098188
+,,,,,DOPE,5A1,SCC-4,5A1-SCC-4,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:73",1961.638859
+,,,,,DOPE,5A1,SCC-8,5A1-SCC-8,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:74",2241.95186
+,,,,,DOPE,5A1,SCC-10,5A1-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:75",2382.108361
+,,,,,DOPE,5A1,SCC-12,5A1-SCC-12,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:76",2522.264862
+,,,,,DOPE,5A1,SCC-14,5A1-SCC-14,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:77",2662.421362
+,,,,,DOPE,5A1,SCC-EH,5A1-SCC-EH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:78",2241.95186
+,,,,,DOPE,5A1,SCC-PH,5A1-SCC-PH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:79",2382.108361
+,,,,,DOPE,5A1,SCC-BO,5A1-SCC-BO,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:80",2522.264862
+,,,,,DOPE,5A2,SCC-4,5A2-SCC-4,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:81",1976.649758
+,,,,,DOPE,5A2,SCC-8,5A2-SCC-8,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:82",2256.962759
+,,,,,DOPE,5A2,SCC-10,5A2-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:83",2397.11926
+,,,,,DOPE,5A2,SCC-12,5A2-SCC-12,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:84",2537.275761
+,,,,,DOPE,5A2,SCC-14,5A2-SCC-14,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:85",2677.432261
+,,,,,DOPE,5A2,SCC-EH,5A2-SCC-EH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:86",2256.962759
+,,,,,DOPE,5A2,SCC-PH,5A2-SCC-PH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:87",2397.11926
+,,,,,DOPE,5A2,SCC-BO,5A2-SCC-BO,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:88",2537.275761
+,,,,,DOPE,4A1,SCC-4,4A1-SCC-4,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC10",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:108",1664.597386
+,,,,,DOPE,4A1,SCC-8,4A1-SCC-8,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC11",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:109",1888.847787
+,,,,,DOPE,4A1,SCC-10,4A1-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC12",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:110",2000.972988
+,,,,,DOPE,4A1,SCC-12,4A1-SCC-12,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC13",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:111",2113.098188
+,,,,,DOPE,4A1,SCC-14,4A1-SCC-14,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC14",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:112",2225.223389
+,,,,,DOPE,4A1,SCC-EH,4A1-SCC-EH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC15",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:113",1888.847787
+,,,,,DOPE,4A1,SCC-PH,4A1-SCC-PH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC16",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:114",2000.972988
+,,,,,DOPE,4A1,SCC-BO,4A1-SCC-BO,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC17",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:115",2113.098188
+,,,,,DOPE,5A1,SCC-10,5A1-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC26",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:124",2382.108361
+,,,,,DOPE,5A2,SCC-10,5A2-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC27",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:125",2397.11926
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B3,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B3,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B2,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B2,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+,,,,,DOPE,2A3,SCC-4,2A3-SCC-4,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:17",889.3565422
+,,,,,DOPE,2A3,SCC-8,2A3-SCC-8,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:18",1001.481743
+,,,,,DOPE,2A3,SCC-10,2A3-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:19",1057.544343
+,,,,,DOPE,2A3,SCC-12,2A3-SCC-12,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:20",1113.606943
+,,,,,DOPE,2A3,SCC-14,2A3-SCC-14,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:21",1169.669544
+,,,,,DOPE,2A3,SCC-EH,2A3-SCC-EH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:22",1001.481743
+,,,,,DOPE,2A3,SCC-PH,2A3-SCC-PH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:23",1057.544343
+,,,,,DOPE,2A3,SCC-BO,2A3-SCC-BO,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:24",1113.606943
+,,,,,DOPE,3A1,SCC-4,3A1-SCC-4,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:41",1257.471515
+,,,,,DOPE,3A1,SCC-8,3A1-SCC-8,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:42",1425.659315
+,,,,,DOPE,3A1,SCC-10,3A1-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:43",1509.753216
+,,,,,DOPE,3A1,SCC-12,3A1-SCC-12,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:44",1593.847116
+,,,,,DOPE,3A1,SCC-14,3A1-SCC-14,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:45",1677.941017
+,,,,,DOPE,3A1,SCC-EH,3A1-SCC-EH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:46",1425.659315
+,,,,,DOPE,3A1,SCC-PH,3A1-SCC-PH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:47",1509.753216
+,,,,,DOPE,3A1,SCC-BO,3A1-SCC-BO,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:48",1593.847116
+,,,,,DOPE,2A3,SCC-10,2A3-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC5",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:103",1057.544343
+,,,,,DOPE,3A1,SCC-10,3A1-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC8",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:106",1509.753216
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B2,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B2,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B3,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B3,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B3,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B3,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B3,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B3,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B2,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B2,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B1,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B1,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B3,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B3,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B3,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B3,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B5,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B5,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B2,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B2,,,,,,,,,,,,,
+Form 5,49.7,9.3,24.2,16.8,DOPE,AGILE_3CR_A1,,AGILE_3CR_A1_C1_B4,Li_enzyme_catalyzed,data_multitask, Pure, Hand, mRNA, nliu,RAW264p7,FFL,macrophage,in_vitro,1.0,max,Individual,Luminescence,data_multitask,,,,,,,,AGILE_3CR_C1,,,,,,AGILE_3CR_B4,,,,,,,,,,,,,
+,,,,,DOPE,2A2,SCC-4,2A2-SCC-4,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:9",860.3299931
+,,,,,DOPE,2A2,SCC-8,2A2-SCC-8,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:10",972.4551936
+,,,,,DOPE,2A2,SCC-10,2A2-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:11",1028.517794
+,,,,,DOPE,2A2,SCC-12,2A2-SCC-12,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:12",1084.580394
+,,,,,DOPE,2A2,SCC-14,2A2-SCC-14,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:13",1140.642994
+,,,,,DOPE,2A2,SCC-EH,2A2-SCC-EH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:14",972.4551936
+,,,,,DOPE,2A2,SCC-PH,2A2-SCC-PH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:15",1028.517794
+,,,,,DOPE,2A2,SCC-BO,2A2-SCC-BO,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:16",1084.580394
+,,,,,DOPE,3A2,SCC-4,3A2-SCC-4,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:49",1241.440214
+,,,,,DOPE,3A2,SCC-8,3A2-SCC-8,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:50",1409.628015
+,,,,,DOPE,3A2,SCC-10,3A2-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:51",1493.721916
+,,,,,DOPE,3A2,SCC-12,3A2-SCC-12,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:52",1577.815816
+,,,,,DOPE,3A2,SCC-14,3A2-SCC-14,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:53",1661.909716
+,,,,,DOPE,3A2,SCC-EH,3A2-SCC-EH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:54",1409.628015
+,,,,,DOPE,3A2,SCC-PH,3A2-SCC-PH,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:55",1493.721916
+,,,,,DOPE,3A2,SCC-BO,3A2-SCC-BO,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,IGROV1,FFL,generic_cell,in_vitro,1.0,max,Individual,Discretized_luminescence,Chen_disulfide,Ranked 1-4 by heatmap color,,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:56",1577.815816
+,,,,,DOPE,2A2,SCC-10,2A2-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC4",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:102",1028.517794
+,,,,,DOPE,3A2,SCC-10,3A2-SCC-10,Chen_disulfide,Chen_disulfide,Pure,Hand,mRNA,chen_disulfide,Mouse,FFL,liver,intravenous,3.0,max,Individual,log_luminescence,Chen_disulfide,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC9",,,,,,,,,Chen_disulfide,,,,,,,,,,,,,,,,"""Unless otherwise stated, all lipids were dissolved in ethanol
+(or DMF) at molar ratios of 15: 15: 30: 3 and mRNA was dissolved in 10 mM citrate
+buffer (pH 4.2) with weight molar of 40: 1"" I assume that's total lipid:mRNA ratio of 40:107",1493.721916

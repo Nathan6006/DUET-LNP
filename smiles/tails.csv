@@ -1,0 +1,11 @@
+identifier,full,smiles
+a2-6,CCCCCCC(=O)Oc1cc(C=O)cc(OC(=O)CCCCCC)c1,CCCCCCC(=O)Oc1cc(C([*]))cc(OC(=O)CCCCCC)c1
+a2-6b,CCCCC(C)C(=O)Oc1cc(C=O)cc(OC(=O)C(C)CCCC)c1,CCCCC(C)C(=O)Oc1cc(C([*]))cc(OC(=O)C(C)CCCC)c1
+a2-7,CCCCCCCC(=O)Oc1cc(C=O)cc(OC(=O)CCCCCCC)c1,CCCCCCCC(=O)Oc1cc(C([*]))cc(OC(=O)CCCCCCC)c1
+a2-7b,CCCCCC(C)C(=O)Oc1cc(C=O)cc(OC(=O)C(C)CCCCC)c1,CCCCCC(C)C(=O)Oc1cc(C([*]))cc(OC(=O)C(C)CCCCC)c1
+a2-7b2,CCCCC(CC)C(=O)Oc1cc(C=O)cc(OC(=O)C(CC)CCCC)c1,CCCCC(CC)C(=O)Oc1cc(C([*]))cc(OC(=O)C(CC)CCCC)c1
+a2-8,CCCCCCCCC(=O)Oc1cc(C=O)cc(OC(=O)CCCCCCCC)c1,CCCCCCCCC(=O)Oc1cc(C([*]))cc(OC(=O)CCCCCCCC)c1
+a2-8b,CCCCC(C)CCC(=O)Oc1cc(C=O)cc(OC(=O)CCC(C)CCC)c1,CCCCC(C)CCC(=O)Oc1cc(C([*]))cc(OC(=O)CCC(C)CCC)c1
+a2-9,CCCCCCCCCC(=O)Oc1cc(C=O)cc(OC(=O)CCCCCCCCC)c1,CCCCCCCCCC(=O)Oc1cc(C([*]))cc(OC(=O)CCCCCCCCC)c1
+a2-9b,CCCCCC(C)CCC(=O)Oc1cc(C=O)cc(OC(=O)CCC(C)CCCCC)c1,CCCCCC(C)CCC(=O)Oc1cc(C([*]))cc(OC(=O)CCC(C)CCCCC)c1
+a2-9b2,CCCCC(CC)CCC(=O)Oc1cc(C=O)cc(OC(=O)CCC(CC)CCCC)c1,CCCCC(CC)CCC(=O)Oc1cc(C([*]))cc(OC(=O)CCC(CC)CCCC)c1

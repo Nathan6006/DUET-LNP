@@ -1,0 +1,9 @@
+fold,split_name,target,pearson,pearson_p_val,spearman,kendall,rmse,n_vals,note
+1,data_multitask_Li_enzyme_catalyzed_macrophage_in_vitro,delivery,-0.2187829576132058,0.35407032510417635,-0.19548872180451127,-0.12631578947368421,1.4625506048347536,20,
+1,data_multitask_Li_enzyme_catalyzed_macrophage_in_vitro,toxicity,0.01999474706024698,0.9333192324918962,0.09323308270676692,0.08421052631578947,1.8305836989198134,20,
+1,Chen_disulfide_Chen_disulfide_generic_cell_in_vitro,delivery,-0.4471629673157366,0.017043583530955638,-0.5121103579595717,-0.3771242514692345,1.2349557668203521,28,
+1,Chen_disulfide_Chen_disulfide_generic_cell_in_vitro,toxicity,,,,,,0,insufficient_data
+1,Chen_disulfide_Chen_disulfide_liver_intravenous,delivery,-0.10005012825061316,0.7336257934575603,0.25991252477449595,0.25557133205065075,1.1857119830533664,14,
+1,Chen_disulfide_Chen_disulfide_liver_intravenous,toxicity,,,,,,0,insufficient_data
+1,Lee_unsat_dendrimer_Lee_unsat_dendrimer_generic_cell_in_vitro,delivery,0.6550338830132486,0.0031732583299908736,0.6881404719782159,0.5095121676727873,1.6474216835482498,18,
+1,Lee_unsat_dendrimer_Lee_unsat_dendrimer_generic_cell_in_vitro,toxicity,,,,,,0,insufficient_data

@@ -1,8 +1,7 @@
 import numpy as np 
 import os
 import pandas as pd  # type: ignore
-from sklearn.model_selection import train_test_split # type: ignore
-from sklearn.metrics import mean_squared_error, roc_curve, roc_auc_score # type: ignore
+from sklearn.metrics import mean_squared_error # type: ignore
 from rdkit import Chem # type: ignore
 from rdkit.Chem import Descriptors # type: ignore
 import matplotlib.pyplot as plt # type: ignore
@@ -23,7 +22,7 @@ def change_column_order(path, all_df, first_cols = ['smiles','quantified_deliver
     all_df.to_csv(path, index=False)
 
 # these functions called in main 
-def make_pred_vs_actual(split_folder, ensemble_size = 5, predictions_done = [],standardize_predictions = True):
+def make_pred_vs_actual(split_folder, ensemble_size = 5, standardize_predictions = True):
     # Makes predictions on each test set in a cross-validation-split system
     # Not used for screening a new library, used for predicting on the test set of the existing dataset
     for cv in range(ensemble_size):
@@ -74,13 +73,14 @@ def make_pred_vs_actual(split_folder, ensemble_size = 5, predictions_done = [],s
 
             # move new prediction columns to the front
             new_cols = current_predictions.columns.tolist()
-            new_cols = new_cols + ["quantified_delivery", "quantified_toxicity"]
+            new_cols = new_cols + ["quantified_delivery", "quantified_toxicity", "smiles"]
             path = results_dir+'/predicted_vs_actual.csv'
             change_column_order(path, output, first_cols= new_cols)
     
     if '_with_uho' in split_folder:
-        results_dir = '../results/crossval_splits/'+split_folder+'/ultra_held_out'
+        print("here")
         uho_dir = '../data/crossval_splits/'+split_folder+'/ultra_held_out'
+        results_dir = uho_dir+'/preds'
         path_if_none(results_dir)
         output = pd.read_csv(uho_dir+'/test.csv')
         metadata = pd.read_csv(uho_dir+'/test_metadata.csv')
@@ -95,7 +95,7 @@ def make_pred_vs_actual(split_folder, ensemble_size = 5, predictions_done = [],s
                     '--test_path',uho_dir+'/test.csv',
                     '--features_path',uho_dir+'/test_extra_x.csv',
                     '--checkpoint_dir', model_dir,
-                    '--preds_path',results_dir+'/preds_cv_'+str(cv)+'.csv'
+                    '--preds_path', results_dir+'/preds_cv_'+str(cv)+'.csv'
                 ]
                 if 'morgan' in split_folder:
                     arguments = arguments + ['--features_generator','morgan_count']
@@ -119,14 +119,15 @@ def make_pred_vs_actual(split_folder, ensemble_size = 5, predictions_done = [],s
         output['Avg_pred_quantified_delivery'] = output[pred_delivery_cols].mean(axis = 1)
         output['Avg_pred_quantified_toxicity'] = output[pred_toxicity_cols].mean(axis = 1)
 
-
-        path = results_dir+'/predicted_vs_actual.csv'
+        ultra_dir = '../results/crossval_splits/'+split_folder+'/ultra_held_out'
+        path_if_none(ultra_dir)
+        path = ultra_dir+'/predicted_vs_actual.csv'
         first_col = [
-            "smiles", "quantified_delivery", "quantified_toxicity", "cv_0_pred_quantified_delivery", 
+            "quantified_delivery", "quantified_toxicity", "cv_0_pred_quantified_delivery", 
             "cv_0_pred_quantified_toxicity", "cv_1_pred_quantified_delivery", "cv_1_pred_quantified_toxicity", 
             "cv_2_pred_quantified_delivery", "cv_2_pred_quantified_toxicity", "cv_3_pred_quantified_delivery", 
             "cv_3_pred_quantified_toxicity", "cv_4_pred_quantified_delivery", "cv_4_pred_quantified_toxicity", 
-            "Avg_pred_quantified_delivery", "Avg_pred_quantified_toxicity"
+            "Avg_pred_quantified_delivery", "Avg_pred_quantified_toxicity", "smiles"
         ]
 
         change_column_order(path, output, first_cols=first_col)
@@ -140,14 +141,12 @@ def analyze_predictions_cv(split_name, pred_split_variables = ['Experiment_ID','
     all_rmse = {}
     all_unique = []
     
-    all_unique = []
-
     preds_vs_actual = []
     for i in range(ensemble_number):
         df = pd.read_csv(path_to_preds + split_name + '/cv_' + str(i) + '/predicted_vs_actual.csv')
         preds_vs_actual.append(df)
         unique = set(df['Prediction_split_name'].tolist())
-        all_unique.extend(unique)
+        all_unique.extend(unique) #get list of all unique split names 
 
     unique_pred_split_names = set(all_unique)
 
@@ -161,19 +160,23 @@ def analyze_predictions_cv(split_name, pred_split_variables = ['Experiment_ID','
 
     target_columns = [('quantified_delivery', 'delivery'), ('quantified_toxicity', 'toxicity')]
 
-    for i in range(ensemble_number):
+    for i in range(ensemble_number): #create crossval_performance and results folder 
         crossval_results_path = f"{path_to_preds}{split_name}/crossval_performance"
         path_if_none(crossval_results_path)
 
         fold_results = []  # stores rows for this fold
 
-        for pred_split_name in unique_pred_split_names:
-            path_if_none(path_to_preds+split_name+'/cv_'+str(i)+'/results')
+        fold_df = preds_vs_actual[i]
+        fold_unique = fold_df['Prediction_split_name'].unique()
+
+        for pred_split_name in fold_unique: #unique_pred_split_names:
+            path_if_none(path_to_preds+split_name+'/cv_'+str(i)+'/results/'+pred_split_name)
             data_subset = preds_vs_actual[i][
                 preds_vs_actual[i]['Prediction_split_name'] == pred_split_name
             ].reset_index(drop=True)
 
             value_names = set(list(data_subset.Value_name))
+
             if len(value_names) > 1:
                 raise Exception(
                     f'Multiple types of measurement in the same prediction split: split {pred_split_name} has value names {value_names}. Try adding more pred split variables.'
@@ -181,43 +184,53 @@ def analyze_predictions_cv(split_name, pred_split_variables = ['Experiment_ID','
 
             for actual_col, label in target_columns:
                 if actual_col not in data_subset.columns:
+                    print("target missing", actual_col)
                     continue  # skip if target missing in this split
 
                 actual = data_subset[actual_col]
                 pred_col = f'cv_{i}_pred_{actual_col}'
                 if pred_col not in data_subset.columns:
+                    print("predictions missing", pred_col)
                     continue  # skip if predictions missing
 
                 pred = data_subset[pred_col]
 
                 analyzed_data = pd.DataFrame({
-                    'smiles': data_subset.smiles,
-                    'actual': actual,
-                    'predicted': pred
-                 })
+                    'smiles': data_subset.smiles, 'actual': actual, 'predicted': pred
+                })
                 
-                if len(actual) >= min_values_for_analysis:
+                mask = ~(actual.isna() | pred.isna() | np.isinf(actual) | np.isinf(pred))
+                actual = actual[mask]
+                pred = pred[mask]
+
+                n_vals = len(actual)
+                if n_vals < 2: #if not enough actual data then cannot run metrics
+                    pearson_r = pearson_p = spearman_r = kendall_r = rmse = np.nan
+                    analyzed_path = f"{path_to_preds}{split_name}/cv_{i}/results/{pred_split_name}/{label}"
+                    path_if_none(analyzed_path)
+
+                    analyzed_data.to_csv(analyzed_path+'/pred_vs_actual_data.csv', index = False)
+
+                else: 
                     pearson_r, pearson_p = scipy.stats.pearsonr(actual, pred)
                     spearman_r, _ = scipy.stats.spearmanr(actual, pred)
                     kendall_r, _ = scipy.stats.kendalltau(actual, pred)
                     rmse = np.sqrt(mean_squared_error(actual, pred))
-                    n_vals = len(pred)
-                else:
-                    pearson_r, pearson_p, spearman_r, kendall_r, rmse, n_vals = [float('nan')]*6
+                    analyzed_path = f"{path_to_preds}{split_name}/cv_{i}/results/{pred_split_name}/{label}"
+                    path_if_none(analyzed_path)
+                    plt.figure()
+                    plt.scatter(pred, actual, color='black')
+                    plt.plot(np.unique(pred), np.poly1d(np.polyfit(pred, actual, 1))(np.unique(pred)))
+                    plt.xlabel(f'Predicted {label}')
+                    plt.ylabel(f'Quantified {label} ({value_names})')
+                    plt.savefig(analyzed_path + '/pred_vs_actual.png')
+                    plt.close()
+                    
+                    analyzed_data.to_csv(analyzed_path+'/pred_vs_actual_data.csv', index = False)
+                
+                if n_vals < min_values_for_analysis:
+                    print(f"⚠️ Warning: only {n_vals} samples for {pred_split_name} (below threshold {min_values_for_analysis})")
 
-                # Save scatter plot
-                analyzed_path = f"{path_to_preds}{split_name}/cv_{i}/results/{pred_split_name}/{label}"
-                path_if_none(analyzed_path)
-                plt.figure()
-                plt.scatter(pred, actual, color='black')
-                plt.plot(np.unique(pred), np.poly1d(np.polyfit(pred, actual, 1))(np.unique(pred)))
-                plt.xlabel(f'Predicted {label}')
-                plt.ylabel(f'Quantified {label}')
-                plt.savefig(analyzed_path + '/pred_vs_actual.png')
-                plt.close()
-                analyzed_data.to_csv(analyzed_path+'/pred_vs_actual_data.csv', index = False)
-
-                # Append a row to fold_results
                 fold_results.append({
                     'fold': i,
                     'split_name': pred_split_name,
@@ -227,15 +240,15 @@ def analyze_predictions_cv(split_name, pred_split_variables = ['Experiment_ID','
                     'spearman': spearman_r,
                     'kendall': kendall_r,
                     'rmse': rmse,
-                    'n_vals': n_vals
+                    'n_vals': n_vals,
+                    'note': "insufficient_data" if n_vals < min_values_for_analysis else ""
                 })
 
-        # Save this fold's results as its own CSV
         fold_df = pd.DataFrame(fold_results)
         fold_df.to_csv(f"{crossval_results_path}/fold_{i}_metrics.csv", index=False)
 
 
-    # Now analyze the ultra-held-out set
+    # Now analyze uho
     try:
         preds_vs_actual = pd.read_csv(path_to_preds + split_name + '/ultra_held_out/predicted_vs_actual.csv')
 
@@ -243,11 +256,9 @@ def analyze_predictions_cv(split_name, pred_split_variables = ['Experiment_ID','
 
         unique_pred_split_names = preds_vs_actual['Prediction_split_name'].unique()
 
-        # Identify target columns (Avg_pred_*) for multi-task metrics
         target_cols = [col for col in preds_vs_actual.columns if col.startswith('Avg_pred_')]
         actual_cols = [col.replace('Avg_pred_', '') for col in target_cols]
 
-        # Create list to store all metrics
         metrics_rows = []
 
         for pred_split_name in unique_pred_split_names:
@@ -261,21 +272,28 @@ def analyze_predictions_cv(split_name, pred_split_variables = ['Experiment_ID','
                 if actual.isna().all() or pred.isna().all(): #skip when all are NaN
                     continue
 
-                pearson = scipy.stats.pearsonr(actual, pred)
-                spearman, _ = scipy.stats.spearmanr(actual, pred)
-                kendall, _ = scipy.stats.kendalltau(actual, pred)
-                rmse = np.sqrt(mean_squared_error(actual, pred))
+                mask = ~(actual.isna() | pred.isna() | np.isinf(actual) | np.isinf(pred))
+                actual = actual[mask]
+                pred = pred[mask]
+                if len(actual) < 2: #if not enough actual data then cannot run metrics
+                    pearson_r = pearson_p = spearman_r = kendall_r = rmse = np.nan
+                    n_vals = len(pred)
+                else: 
+                    pearson = scipy.stats.pearsonr(actual, pred)
+                    spearman, _ = scipy.stats.spearmanr(actual, pred)
+                    kendall, _ = scipy.stats.kendalltau(actual, pred)
+                    rmse = np.sqrt(mean_squared_error(actual, pred))
 
-                # Save pred vs actual plot
-                analyzed_path = f"{path_to_preds}{split_name}/ultra_held_out/individual_dataset_results/{pred_split_name}"
-                path_if_none(analyzed_path)
-                plt.figure()
-                plt.scatter(pred, actual, color='black')
-                plt.plot(np.unique(pred), np.poly1d(np.polyfit(pred, actual, 1))(np.unique(pred)))
-                plt.xlabel(f"Predicted {actual_col}")
-                plt.ylabel(f"Experimental {actual_col}")
-                plt.savefig(f"{analyzed_path}/pred_vs_actual_{actual_col}.png")
-                plt.close()
+                    # Save pred vs actual plot
+                    analyzed_path = f"{path_to_preds}{split_name}/ultra_held_out/individual_dataset_results/{pred_split_name}"
+                    path_if_none(analyzed_path)
+                    plt.figure()
+                    plt.scatter(pred, actual, color='black')
+                    plt.plot(np.unique(pred), np.poly1d(np.polyfit(pred, actual, 1))(np.unique(pred)))
+                    plt.xlabel(f"Predicted {actual_col}")
+                    plt.ylabel(f"Experimental {actual_col}")
+                    plt.savefig(f"{analyzed_path}/pred_vs_actual_{actual_col}.png")
+                    plt.close()
 
                 # Save pred vs actual data
                 pd.DataFrame({
@@ -293,7 +311,10 @@ def analyze_predictions_cv(split_name, pred_split_variables = ['Experiment_ID','
                     'pearson_p_val': pearson[1],
                     'kendall': kendall,
                     'spearman': spearman,
-                    'rmse': rmse
+                    'rmse': rmse,
+                    'note': "insufficient_data" if n_vals < min_values_for_analysis else ""
+
+
                 })
 
         # Save metrics table in combined format
@@ -305,96 +326,8 @@ def analyze_predictions_cv(split_name, pred_split_variables = ['Experiment_ID','
     except Exception as e:
         print(f"Ultra-held-out analysis failed: {e}")
 
-####
-    try:
-        preds_vs_actual = pd.read_csv(path_to_preds+split_name+'/ultra_held_out/predicted_vs_actual.csv')
-        ns = []
-        pearsons = []
-        pearson_p_vals = []
-        kendalls = []
-        spearmans = []
-        rmses = []
-        split_names = []
 
-        all_unique = []
-            
-        pred_split_names = []
-        for index, row in preds_vs_actual.iterrows():
-            pred_split_name = ''
-            for vbl in pred_split_variables:
-                pred_split_name = pred_split_name + row[vbl] + '_'
-            pred_split_names.append(pred_split_name[:-1])
-        all_unique = all_unique + list(set(pred_split_names))
-        unique_pred_split_names = set(all_unique)
-        preds_vs_actual['Prediction_split_name'] = pred_split_names
-        # unique_pred_split_names = set(pred_split_names)
-        cols = preds_vs_actual.columns
-        data_types = []
-        for col in cols:
-            if col.startswith('Avg_pred_'):
-                data_types.append(col)
-            
-
-        for pred_split_name in unique_pred_split_names:
-            split_names.append(pred_split_name)
-            data_subset = preds_vs_actual[preds_vs_actual['Prediction_split_name']==pred_split_name].reset_index(drop=True)
-            value_names = set(list(data_subset.Value_name))
-            if len(value_names)>1:
-                raise Exception('Multiple types of measurement in the same prediction split: split ',pred_split_name,' has value names ',value_names,'. Try adding more pred split variables.')
-            elif len(value_names)==0:
-                value_name = 'Empty, ignore!'
-            else:
-                value_name = [val_name for val_name in value_names][0]
-            kept_dtypes = []
-            for dtype in data_types:
-                analyzed_path = path_to_preds+split_name+'/ultra_held_out/individual_dataset_results/'+pred_split_name
-                path_if_none(analyzed_path)
-                kept_dtypes.append(dtype)
-                analyzed_data = pd.DataFrame({'smiles':data_subset.smiles})
-                analyzed_data['quantified_delivery'] = data_subset['quantified_delivery']
-                analyzed_data['Avg_pred_quantified_delivery'] = data_subset['Avg_pred_quantified_delivery']
-                actual = data_subset['quantified_delivery']
-                pred = data_subset['Avg_pred_quantified_delivery']
-
-                pearson = scipy.stats.pearsonr(actual, pred)
-                spearman, pval = scipy.stats.spearmanr(actual, pred)
-                kendall, pval = scipy.stats.kendalltau(actual, pred)
-
-                rmse = np.sqrt(mean_squared_error(actual, pred))
-
-                rmses.append(rmse)
-                pearsons.append(pearson[0])
-                pearson_p_vals.append(pearson[1])
-                kendalls.append(kendall)
-                spearmans.append(spearman)
-                ns.append(len(pred))
-
-                plt.figure()
-                plt.scatter(pred,actual,color = 'black')
-                plt.plot(np.unique(pred),np.poly1d(np.polyfit(pred, actual, 1))(np.unique(pred)))
-                plt.xlabel('Predicted '+value_name)
-                plt.ylabel('Experimental '+value_name)
-                plt.savefig(analyzed_path+'/pred_vs_actual.png')
-                plt.close()
-
-                analyzed_data.to_csv(analyzed_path+'/pred_vs_actual_data.csv', index = False)
-        uho_results_path = path_to_preds+split_name+'/ultra_held_out'
-        path_if_none(uho_results_path)
-        uho_results = pd.DataFrame({})
-        uho_results['dataset_ID'] = split_names
-        uho_results['n'] = ns
-        uho_results['pearson'] = pearsons
-        uho_results['pearson_p_val'] = pearson_p_vals
-        uho_results['kendall'] = kendalls
-        uho_results['spearman'] = spearmans
-        uho_results['rmse'] = rmses
-
-
-        uho_results.to_csv(uho_results_path+'/ultra_held_out_results.csv', index = False)
-    except:
-        pass
-
-def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_merge', write_path = '../data'):
+def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_merge', write_path = '../data'): 
     # Each folder contains the following files: 
     # main_data.csv: a csv file with columns: 'smiles', which should contain the SMILES of the ionizable lipid, the activity measurements for that measurement
     # If the same ionizable lipid is measured multiple times (i.e. for different properties, or transfection in vitro and in vivo) make separate rows, one for each measurement
@@ -430,8 +363,6 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
         # Experiment_ID
         # Cargo (siRNA, DNA, mRNA, RNP are probably the relevant 4 options)
         # Model_type (either the cell type or the name of the animal (probably "mouse"))
-
-
     all_df = pd.DataFrame({})
     col_type = {'Column_name':[],'Type':[]}
     experiment_df = pd.read_csv(path_to_folders + '/experiment_metadata.csv')
@@ -668,17 +599,23 @@ def generate_normalized_data(all_df, split_variables = ['Experiment_ID','Library
     norm_delivery = []
     norm_toxicity = []
     for i, row in all_df.iterrows():
-        val = row['quantified_delivery']
-        split = split_names[i]
-        stdev = norm_dict_del[split][1]
-        mean = norm_dict_del[split][0]
-        norm_delivery.append((float(val)-mean)/stdev)
+        deli = row['quantified_delivery']
+        split_del = split_names[i]
+        std_del = norm_dict_del[split_del][1]
+        mn_del = norm_dict_del[split_del][0]
+        if pd.isna(deli):
+            norm_delivery.append(np.nan)
+        else:
+            norm_delivery.append((float(deli)-mn_del)/std_del)
 
         tox = row['quantified_toxicity']
         split_tox = split_names[i]
-        std_tox = norm_dict_tox[split][1]
-        mn_tox = norm_dict_tox[split][0]
-        norm_toxicity.append((float(val)-mean)/stdev)
+        std_tox = norm_dict_tox[split_tox][1]
+        mn_tox = norm_dict_tox[split_tox][0]
+        if pd.isna(deli):
+            norm_toxicity.append(np.nan)
+        else:
+            norm_toxicity.append((float(tox)-mn_tox)/std_tox)
 
     return split_names, norm_delivery, norm_toxicity
 
@@ -765,7 +702,7 @@ def main(argv):
     elif task_type == 'analyze':
         split = argv[2]
         print("analyze")
-        make_pred_vs_actual(split, predictions_done = [], ensemble_size = 5)
+        make_pred_vs_actual(split, ensemble_size = 5)
         print("two")
         analyze_predictions_cv(split)
         print("done")
@@ -802,7 +739,6 @@ def main(argv):
             "cv_1_pred_toxicity", "cv_2_pred_delivery", "cv_2_pred_toxicity", "cv_3_pred_delivery",
             "cv_3_pred_toxicity", "cv_4_pred_delivery", "cv_4_pred_toxicity", "avg_pred_delivery", "avg_pred_toxicity", "smiles"]
         change_column_order(path, all_df, first_cols = first_cols)
-        #all_df.to_csv('../results/screen_results/'+argv[2]+'_preds'+'/'+screen_name+'/pred_file.csv', index = False)
     
     elif task_type == 'hyperparam_optimize':
         split_folder = argv[2]
@@ -822,7 +758,7 @@ def main(argv):
         args = chemprop.args.HyperoptArgs().parse_args(arguments)
         chemprop.hyperparameter_optimization.hyperopt(args)
     
-    elif task_type == 'merge_datasets':
+    elif task_type == 'merge':
         merge_datasets(None)
 
 

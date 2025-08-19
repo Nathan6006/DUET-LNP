@@ -1,0 +1,3 @@
+Task,Mean rmse,Standard deviation rmse,Fold 0 rmse
+quantified_delivery,1.1057319619988792,0.0,1.1057319619988792
+quantified_toxicity,1.157413141871895,0.0,1.157413141871895

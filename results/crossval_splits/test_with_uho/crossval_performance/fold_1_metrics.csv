@@ -1,0 +1,7 @@
+fold,split_name,target,pearson,pearson_p_val,spearman,kendall,rmse,n_vals,note
+1,data_multitask_Li_enzyme_catalyzed_macrophage_in_vitro,delivery,0.6054737210913814,0.004669241318226862,0.5849624060150376,0.4105263157894737,0.8687218872687913,20,
+1,data_multitask_Li_enzyme_catalyzed_macrophage_in_vitro,toxicity,0.12082919950649064,0.6118484734196108,0.21353383458646616,0.1473684210526316,1.4505698151415007,20,
+1,Chen_disulfide_Chen_disulfide_generic_cell_in_vitro,delivery,-0.728325213730626,0.0013768822742737789,-0.6563990619332017,-0.5781515884776753,2.377544910679981,16,
+1,Chen_disulfide_Chen_disulfide_generic_cell_in_vitro,toxicity,,,,,,0,insufficient_data
+1,Chen_disulfide_Chen_disulfide_liver_intravenous,delivery,-0.06953038395692893,0.955699839112607,-0.5,-0.33333333333333337,1.947914708152448,3,insufficient_data
+1,Chen_disulfide_Chen_disulfide_liver_intravenous,toxicity,,,,,,0,insufficient_data
