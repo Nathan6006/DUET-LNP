@@ -327,7 +327,7 @@ def analyze_predictions_cv(split_name, pred_split_variables = ['Experiment_ID','
         print(f"Ultra-held-out analysis failed: {e}")
 
 
-def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_merge', write_path = '../data'): 
+def merge_datasets(experiment_list_del, experiment_list_tox, path_to_folders = '../data/data_files_to_merge', write_path = '../data'): 
     # Each folder contains the following files: 
     # main_data.csv: a csv file with columns: 'smiles', which should contain the SMILES of the ionizable lipid, the activity measurements for that measurement
     # If the same ionizable lipid is measured multiple times (i.e. for different properties, or transfection in vitro and in vivo) make separate rows, one for each measurement
@@ -365,13 +365,13 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
         # Model_type (either the cell type or the name of the animal (probably "mouse"))
     all_df = pd.DataFrame({})
     col_type = {'Column_name':[],'Type':[]}
-    experiment_df = pd.read_csv(path_to_folders + '/experiment_metadata.csv')
-    if experiment_list == None:
-        experiment_list = list(experiment_df.Experiment_ID)
+    experiment_df = pd.read_csv(path_to_folders + '/experiment_metadata_del.csv')
+    if experiment_list_del == None:
+        experiment_list_del = list(experiment_df.Experiment_ID)
     y_val_cols = []
     helper_mol_weights = pd.read_csv(path_to_folders + '/Component_molecular_weights.csv')
 
-    for folder in experiment_list:
+    for folder in experiment_list_del:
         contin = False
         try:
             main_temp = pd.read_csv(path_to_folders + '/' + folder + '/main_data.csv')
@@ -459,13 +459,6 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
                 # folder_df['Sample_weight'] = [float(folder_df.Experiment_weight[i])/list(folder_df.smiles).count(smile) for i,smile in enumerate(folder_df.smiles)]
                 folder_df['Sample_weight'] = [float(folder_df.Experiment_weight[i]) for i,smile in enumerate(folder_df.smiles)]
             all_df = pd.concat([all_df,folder_df], ignore_index = True)
-
-    # Make the column type dict
-    extra_x_variables = ['Cationic_Lipid_Mol_Ratio','Phospholipid_Mol_Ratio','Cholesterol_Mol_Ratio','PEG_Lipid_Mol_Ratio','Cationic_Lipid_to_mRNA_weight_ratio']
-    # ADD HELPER LIPID ID
-    # extra_x_categorical = ['Delivery_target','Helper_lipid_ID','Route_of_administration','Batch_or_individual_or_barcoded','screen_id']
-    extra_x_categorical = ['Delivery_target','Helper_lipid_ID','Route_of_administration','Batch_or_individual_or_barcoded','Cargo_type','Model_type']
-
     # Make changes:
     all_df = all_df.replace('im','intramuscular')
     all_df = all_df.replace('iv','intravenous')
@@ -476,6 +469,59 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
     all_df = all_df.replace('hek','generic_cell')
     all_df = all_df.replace('igrov1','generic_cell')
     all_df = all_df.replace({'Model_type':'muscle'},'Mouse')
+
+    experiment_df = pd.read_csv(path_to_folders + '/experiment_metadata_tox.csv')
+    if experiment_list_tox == None:
+        experiment_list_tox = list(experiment_df.Experiment_ID)
+    y_val_cols = []
+
+    for folder in experiment_list_tox:
+        cont = False
+        try:
+            main_temp = pd.read_csv(path_to_folders + '/' + folder + '/main_data.csv')
+            cont = True
+        except:
+            print("main_data.csv not found for:", folder)
+            pass
+        if cont:
+            y_val_cols = y_val_cols + list(main_temp.columns)
+            for col in main_temp.columns:
+                if 'Unnamed' in col:
+                    print('\n\n\nTHERE IS A BS UNNAMED COLUMN IN FOLDER: ',folder,'\n\n')
+            data_n = len(main_temp)
+
+            try:
+                individual_temp = pd.read_csv(path_to_folders + '/' + folder + '/individual_metadata.csv')
+            except:
+                print("individual metadata not found for", folder)
+                individual_temp = pd.DataFrame({})
+            if len(individual_temp) == 1:
+                individual_temp = pd.concat([individual_temp]*data_n,ignore_index = True)
+        
+            elif len(individual_temp) != data_n:
+                print(len(individual_temp))
+                raise ValueError('For experiment ID: ',folder,': Length of individual metadata file  (',len(individual_temp), ') doesn\'t match length of main datafile (',data_n,')')
+            
+            experiment_temp = experiment_df[experiment_df.Experiment_ID == folder]
+            experiment_temp = pd.concat([experiment_temp]*data_n, ignore_index = True).reset_index(drop = True)
+            to_drop = []
+            for col in experiment_temp.columns:
+                if col in individual_temp.columns:
+                    print('Column ',col,' in experiment ID ',folder,'is being provided for each individual lipid.')
+                    to_drop.append(col)
+            experiment_temp = experiment_temp.drop(columns = to_drop)
+            folder_df = pd.concat([main_temp, individual_temp], axis = 1).reset_index(drop = True)
+            folder_df = pd.concat([folder_df, experiment_temp], axis = 1)
+            if 'Sample_weight' not in folder_df.columns:
+                folder_df['Sample_weight'] = [float(folder_df.Experiment_weight[i]) for i,smile in enumerate(folder_df.smiles)]
+            all_df = pd.concat([all_df,folder_df], ignore_index = True)
+
+
+    # Make the column type dict
+    extra_x_variables = ['Cationic_Lipid_Mol_Ratio','Phospholipid_Mol_Ratio','Cholesterol_Mol_Ratio','PEG_Lipid_Mol_Ratio','Cationic_Lipid_to_mRNA_weight_ratio']
+    # ADD HELPER LIPID ID
+    # extra_x_categorical = ['Delivery_target','Helper_lipid_ID','Route_of_administration','Batch_or_individual_or_barcoded','screen_id']
+    extra_x_categorical = ['Delivery_target','Helper_lipid_ID','Route_of_administration','Batch_or_individual_or_barcoded','Cargo_type','Model_type']
 
     # other_x_vals = ['Target_organ']
     # form_variables.append('Helper_lipid_ID')
@@ -499,12 +545,14 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
             col_type['Type'].append('Metadata')
 
     col_type_df = pd.DataFrame(col_type)
+
     norm_split_names, norm_del, norm_tox = generate_normalized_data(all_df)
     all_df['split_name_for_normalization'] = norm_split_names
     all_df.rename(columns = {'quantified_delivery':'unnormalized_delivery'}, inplace = True)
     all_df['quantified_delivery'] = norm_del
     all_df.rename(columns = {'quantified_toxicity':'unnormalized_toxicity'}, inplace = True)
     all_df['quantified_toxicity'] = norm_tox
+    
     all_df = all_df.replace({True: 1.0, False: 0.0})
     path = write_path + '/all_data.csv'
     change_column_order(path, all_df)
@@ -759,7 +807,7 @@ def main(argv):
         chemprop.hyperparameter_optimization.hyperopt(args)
     
     elif task_type == 'merge':
-        merge_datasets(None)
+        merge_datasets(None, None)
 
 
 if __name__ == '__main__':
