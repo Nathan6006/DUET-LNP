@@ -77,7 +77,6 @@ Route_of_administration_intratracheal,X_val
 Route_of_administration_intravenous,X_val
 Batch_or_individual_or_barcoded_Barcoded,X_val
 Batch_or_individual_or_barcoded_Individual,X_val
-Cargo_type_ mRNA,X_val
 Cargo_type_mRNA,X_val
 Cargo_type_pDNA,X_val
 Cargo_type_siRNA,X_val

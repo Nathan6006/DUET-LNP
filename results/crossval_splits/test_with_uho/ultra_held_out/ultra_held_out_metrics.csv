@@ -1,3 +1,0 @@
-dataset_ID,target,n,pearson,pearson_p_val,kendall,spearman,rmse,note
-data_multitask_Li_enzyme_catalyzed_macrophage_in_vitro,quantified_delivery,5,0.9168469600775833,0.028422262844431008,0.6,0.7999999999999999,0.6498537678435536,insufficient_data
-data_multitask_Li_enzyme_catalyzed_macrophage_in_vitro,quantified_toxicity,5,0.28902373330634645,0.6371931610357623,0.39999999999999997,0.6,0.9867249605212712,insufficient_data

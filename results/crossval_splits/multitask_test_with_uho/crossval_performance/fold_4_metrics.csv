@@ -1,3 +1,0 @@
-fold,split_name,target,pearson,pearson_p_val,spearman,kendall,rmse,n_vals
-4,data_multitask_Li_enzyme_catalyzed_macrophage_in_vitro,delivery,0.03347995455714843,0.8917693386823005,-0.02631578947368421,-0.029239766081871343,1.3833086885682,19
-4,data_multitask_Li_enzyme_catalyzed_macrophage_in_vitro,toxicity,0.06408434039682241,0.7943695826692734,0.0035087719298245615,0.005847953216374269,1.361513432073025,19
