@@ -31,10 +31,7 @@ def change_column_order(path, all_df, first_cols = ['smiles','quantified_deliver
     all_df.to_csv(path, index=False)
 
 # these functions called in main 
-class MyMoleculeDataset(data.MoleculeDataset):
-    def __len__(self):
-        return len(self.data)
-    
+
 def train(split_dir ='../data', smiles_column='smiles', target_columns = ["quantified_delivery", "quantified_toxicity"], epochs=50, save_dir='../data'):
     def load_datapoints(smiles_csv, extra_csv):
         df_smi = pd.read_csv(smiles_csv)
@@ -57,37 +54,42 @@ def train(split_dir ='../data', smiles_column='smiles', target_columns = ["quant
     # train_dset = data.MoleculeDataset(train_datapoints)
     # val_dset   = data.MoleculeDataset(val_datapoints)
     #test_dset  = data.MoleculeDataset(test_datapoints)
-    train_dset = MyMoleculeDataset(train_datapoints)
-    val_dset = MyMoleculeDataset(val_datapoints)
+    train_dset = data.MoleculeDataset(train_datapoints)
+    val_dset = data.MoleculeDataset(val_datapoints)
 
-    # 3. Scale targets and extra features
+    # scale targets and extra features
 
     extra_features_scaler = train_dset.normalize_inputs("X_d")
     val_dset.normalize_inputs("X_d", extra_features_scaler)
     #test_dset.normalize_inputs("X_d", extra_features_scaler)
 
-    train_loader = data.build_dataloader(train_dset, num_workers=2, persistent_workers=True, prefetch_factor=2)
+    train_loader = data.build_dataloader(train_dset, num_workers=6, persistent_workers=True, prefetch_factor=2)
     val_loader = data.build_dataloader(val_dset, shuffle=False, num_workers=2, persistent_workers=True, prefetch_factor=2)
     #test_loader = data.build_dataloader(test_dset, shuffle=False, num_workers=4, persistent_workers=True)
     
-    # Step 4: define the model
-
-    ffn_input_dim = train_dset[0].x_d.shape[0] + nn.BondMessagePassing().output_dim
-
-
+    #define the model
+    mp = nn.BondMessagePassing(depth=4)
+    ffn_input_dim = train_dset[0].x_d.shape[0] + mp.output_dim
     ffn = nn.RegressionFFN(
         n_tasks = len(target_columns), 
-        input_dim=ffn_input_dim
+        input_dim=ffn_input_dim,
+        dropout=0.1,
+        hidden_dim=600,
+        n_layers=3,
+        activation='Sigmoid'
     )
-    
+    #sigmoid for activation
+    #cross entropy loss 
+    #train until loss near 0
     chemprop_model = models.MPNN(
-        nn.BondMessagePassing(),
+        mp,
         nn.MeanAggregation(),
         ffn
     )
 
     #train 
     logger = CSVLogger("logs", name="chemprop_runs")
+    pl.seed_everything(42)
     trainer = pl.Trainer(logger=logger, enable_checkpointing=False, max_epochs=epochs, num_sanity_val_steps=0)
     trainer.fit(chemprop_model, train_loader, val_loader)
     torch.save(chemprop_model.state_dict(), save_dir)
@@ -433,6 +435,7 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
         # Experiment_ID
         # Cargo (siRNA, DNA, mRNA, RNP are probably the relevant 4 options)
         # Model_type (either the cell type or the name of the animal (probably "mouse"))
+    
     all_df = pd.DataFrame({})
     col_type = {'Column_name':[],'Type':[]}
     experiment_df = pd.read_csv(path_to_folders + '/experiment_metadata.csv')
@@ -572,7 +575,7 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
 
     col_type_df = pd.DataFrame(col_type)
 
-    norm_split_names, norm_del, norm_tox = generate_normalized_data(all_df)
+    norm_split_names, norm_del, norm_tox = generate_normalized_data_minmax(all_df)
     all_df['split_name_for_normalization'] = norm_split_names
     all_df.rename(columns = {'quantified_delivery':'unnormalized_delivery'}, inplace = True)
     all_df['quantified_delivery'] = norm_del
@@ -694,6 +697,43 @@ def generate_normalized_data(all_df, split_variables = ['Experiment_ID','Library
 
     return split_names, norm_delivery, norm_toxicity
 
+def generate_normalized_data_minmax(all_df, split_variables=['Experiment_ID','Library_ID','Delivery_target','Model_type','Route_of_administration']):
+    split_names = []
+    norm_dict_del = {}
+    norm_dict_tox = {}
+
+    # split names
+    for index, row in all_df.iterrows():
+        split_name = '_'.join([str(row[vbl]) for vbl in split_variables])
+        split_names.append(split_name)
+
+    unique_split_names = set(split_names)
+
+    for split_name in unique_split_names:
+        data_subset = all_df[[spl == split_name for spl in split_names]]
+        norm_dict_del[split_name] = (data_subset['quantified_delivery'].min(), data_subset['quantified_delivery'].max())
+        norm_dict_tox[split_name] = (data_subset['quantified_toxicity'].min(), data_subset['quantified_toxicity'].max())
+
+    norm_delivery = []
+    norm_toxicity = []
+
+    for i, row in all_df.iterrows():
+        deli = row['quantified_delivery']
+        min_del, max_del = norm_dict_del[split_names[i]]
+        if pd.isna(deli) or min_del == max_del:
+            norm_delivery.append(np.nan)  # avoid division by zero
+        else:
+            norm_delivery.append((float(deli) - min_del) / (max_del - min_del))
+
+        tox = row['quantified_toxicity']
+        min_tox, max_tox = norm_dict_tox[split_names[i]]
+        if pd.isna(tox) or min_tox == max_tox:
+            norm_toxicity.append(np.nan)
+        else:
+            norm_toxicity.append((float(tox) - min_tox) / (max_tox - min_tox))
+
+    return split_names, norm_delivery, norm_toxicity
+
 # these functions only used in specified_cv_split
 def split_df_by_col_type(df,col_types):
     # Splits into 4 dataframes: y_vals, x_vals, sample_weights, metadata
@@ -737,7 +777,7 @@ def main(argv):
                     in_silico_screen = True
             elif argv[4]=='in_silico_screen_split':
                 in_silico_screen = True
-        specified_cv_split(split ,ultra_held_out_fraction = ultra_held_out, is_morgan = is_morgan, test_is_valid = in_silico_screen)
+        specified_cv_split(split ,cv_fold=2, ultra_held_out_fraction = ultra_held_out, is_morgan = is_morgan, test_is_valid = in_silico_screen)
 
     elif task_type == 'train':
         split_folder = argv[2]
@@ -745,9 +785,11 @@ def main(argv):
         cv_num = 5
         for i, arg in enumerate(argv):
             if arg.replace('–', '-') == '--epochs':
-                epochs = argv[i+1]
+                epochs = int(argv[i+1])
                 print('this many epochs: ',str(epochs))
-                epochs = int(epochs)
+            elif arg.replace('–', '-') == '--cv':
+                cv_num = int(argv[i+1])
+                print('this many folds: ',str(cv_num))
         for cv in range(cv_num):
             split_dir = '../data/crossval_splits/'+split_folder+'/cv_'+str(cv)
 
