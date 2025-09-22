@@ -1,5 +1,0 @@
-fold,split_name,target,pearson,pearson_p_val,spearman,kendall,rmse,n_vals,note
-2,Xue_CAD_LNP_Xue_CAD_LNP_nan_nan,delivery,,,,,,0,insufficient_data
-2,Xue_CAD_LNP_Xue_CAD_LNP_nan_nan,toxicity,0.23489335911070264,0.3188254204070128,0.33684210526315783,0.24210526315789474,1.554709134400279,20,
-2,Lee_unsat_dendrimer_Lee_unsat_dendrimer_generic_cell_in_vitro,delivery,0.8193158131653467,5.722975009382876e-05,0.7706378059863591,0.5873100793306594,0.8444211937449417,17,
-2,Lee_unsat_dendrimer_Lee_unsat_dendrimer_generic_cell_in_vitro,toxicity,,,,,,0,insufficient_data

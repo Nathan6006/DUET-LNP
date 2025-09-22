@@ -515,7 +515,7 @@ def merge_datasets(experiment_list_del, experiment_list_tox, path_to_folders = '
     change_column_order(path, all_df)
     col_type_df.to_csv(write_path + '/col_type.csv', index = False)
 
-def specified_cv_split(split_spec_fname, path_to_folders = '../data', is_morgan = False, cv_fold = 5, ultra_held_out_fraction = -1.0, min_unique_vals = 2.0, test_is_valid = False):
+def specified_cv_split(split_spec_fname, path_to_folders = '../data', is_morgan = False, cv_fold = 2, ultra_held_out_fraction = -1.0, min_unique_vals = 2.0, test_is_valid = False):
     # Splits the dataset according to the specifications in split_spec_fname
     # spilt_spec_fname is file with spilt/train specs
     # cv_fold: self-explanatory
