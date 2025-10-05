@@ -1,4 +1,0 @@
-dataset_ID,target,n,pearson,pearson_p_val,kendall,spearman,rmse,note
-Xue_CAD_LNP_Xue_CAD_LNP_nan_nan,quantified_toxicity,12,-0.41698285835554655,0.17748088983362303,-0.2424242424242424,-0.3706293706293707,0.23791753557652504,insufficient_data
-IR_4CR_ketone_4CR_Ketone_muscle_intramuscular,quantified_delivery,6,-0.5688071238945698,0.23880568176461983,-0.3333333333333333,-0.3714285714285715,0.4106876179919655,insufficient_data
-IR_4CR_ketone_4CR_Ketone_lung_epithelium_in_vitro,quantified_delivery,3,0.9308942169863266,0.23805956873256134,1.0,1.0,0.3619194473892693,insufficient_data

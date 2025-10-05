@@ -1,6 +1,6 @@
 import numpy as np 
 import os
-import pandas as pd
+import pandas as pd  
 from sklearn.metrics import mean_squared_error 
 from rdkit import Chem 
 from rdkit.Chem import Descriptors 
@@ -15,6 +15,7 @@ from pathlib import Path
 from chemprop import data, models, nn, featurizers 
 from lightning.pytorch.loggers import CSVLogger 
 from lightning.pytorch.callbacks import ModelCheckpoint 
+from sklearn.model_selection import train_test_split
 
 
 
@@ -121,14 +122,12 @@ def train(split_dir ='../data', smiles_column='smiles', target_columns = ["quant
     trainer.fit(chemprop_model, train_loader, val_loader)
 
 def train_cm(
-    split_dir ='../data',
+    split_dir='../data',
     smiles_column='smiles',
     target_columns=["quantified_delivery", "quantified_toxicity"],
     epochs=50,
-    save_dir='../data'):
-    # --------------------------
-    # Helper: load datapoints
-    # --------------------------
+    save_dir='../data'
+):
     def load_datapoints(smiles_csv, extra_csv):
         df_smi = pd.read_csv(smiles_csv)
         df_extra = pd.read_csv(extra_csv)
@@ -137,61 +136,52 @@ def train_cm(
         ys = df_smi[target_columns].values
         extra_features = df_extra.to_numpy(dtype=float)
 
-        datapoints = [
+        return [
             data.MoleculeDatapoint.from_smi(smi, y, x_d=xf)
             for smi, y, xf in zip(smis, ys, extra_features)
         ]
-        return datapoints
+
 
     train_datapoints = load_datapoints(
-        split_dir+'/train.csv',
-        split_dir+'/train_extra_x.csv'
+        os.path.join(split_dir, 'train.csv'),
+        os.path.join(split_dir, 'train_extra_x.csv')
     )
-    val_datapoints   = load_datapoints(
-        split_dir+'/valid.csv',
-        split_dir+'/valid_extra_x.csv'
+    val_datapoints = load_datapoints(
+        os.path.join(split_dir, 'valid.csv'),
+        os.path.join(split_dir, 'valid_extra_x.csv')
     )
-    # test_datapoints = load_datapoints(...)
 
-    # --------------------------
-    # Load CheMeleon
-    # --------------------------
     featurizer = featurizers.SimpleMoleculeMolGraphFeaturizer()
     agg = nn.MeanAggregation()
-    torch.serialization.add_safe_globals([chemprop.nn.message_passing.base.BondMessagePassing])
-    # Load pretrained CheMeleon (dict with hyperparameters + state_dict)
-    chemeleon_mp = torch.load("chemeleon_mp.pt", weights_only=True)
+
+    # --------------------------
+    # Load pretrained CheMeleon weights
+    # --------------------------
+    # Allow necessary classes for safe loading
+    # torch.serialization.add_safe_globals([
+    #     nn.BondMessagePassing,
+    #     torch.nn.Linear,
+    #     torch.nn.ReLU,
+    #     torch.nn.modules.activation.ReLU,
+    #     torch.nn.modules.dropout.Dropout,   # <--- newly added
+    #     torch.nn.Identity,
+    # ])
+
+    # Now load checkpoint
+    chemeleon_mp = torch.load("chemeleon_mp.pt", weights_only=False)
     mp = nn.BondMessagePassing(**chemeleon_mp['hyper_parameters'])
-    mp.load_state_dict(chemeleon_mp['state_dict'])  # initialize weights
+    mp.load_state_dict(chemeleon_mp['state_dict'])
 
-    # --------------------------
-    # Build datasets/loaders
-    # --------------------------
     train_dset = data.MoleculeDataset(train_datapoints, featurizer)
-    val_dset   = data.MoleculeDataset(val_datapoints, featurizer)
+    val_dset = data.MoleculeDataset(val_datapoints, featurizer)
 
-    # Scale extra features
+    # Normalize extra features
     extra_features_scaler = train_dset.normalize_inputs("X_d")
     val_dset.normalize_inputs("X_d", extra_features_scaler)
 
-    train_loader = data.build_dataloader(
-        train_dset,
-        num_workers=6,
-        persistent_workers=True,
-        prefetch_factor=2
-    )
-    val_loader = data.build_dataloader(
-        val_dset,
-        shuffle=False,
-        num_workers=6,
-        persistent_workers=True,
-        prefetch_factor=2
-    )
+    train_loader = data.build_dataloader(train_dset, num_workers=6, persistent_workers=True, prefetch_factor=2)
+    val_loader = data.build_dataloader(val_dset, shuffle=False, num_workers=6, persistent_workers=True, prefetch_factor=2)
 
-    # --------------------------
-    # Build FFN + MPNN
-    # --------------------------
-    # Important: input_dim must match CheMeleon’s output_dim + extra features
     ffn_input_dim = mp.output_dim + train_dset[0].x_d.shape[0]
 
     ffn = nn.RegressionFFN(
@@ -200,56 +190,51 @@ def train_cm(
         dropout=0.1,
         hidden_dim=600,
         n_layers=3,
-        activation="RELU",
-        output_transform=nn.Identity()
+        activation="RELU"
     )
 
     X_d_transform = nn.ScaleTransform.from_standard_scaler(extra_features_scaler)
-
     metric_list = [nn.metrics.RMSE(), nn.metrics.MAE()]
 
     chemprop_model = models.MPNN(
-        mp,
-        agg,
-        ffn,
+        mp, agg, ffn,
         X_d_transform=X_d_transform,
         batch_norm=False,
         metrics=metric_list
     )
 
-    # --------------------------
-    # Training setup
-    # --------------------------
-    logger = CSVLogger("logs", name="chemprop_runs")
-
+    os.makedirs(save_dir, exist_ok=True)
     checkpointing = ModelCheckpoint(
-        dirpath="checkpoints",
-        filename="best-{epoch}-{val_loss:.2f}",
-        monitor="val_loss",
+        dirpath=save_dir,
+        filename="best",
+        monitor="val/rmse",
         mode="min",
         save_last=True,
+        save_top_k=1
     )
 
-    pl.seed_everything(42)
+    logger = CSVLogger(save_dir=save_dir, name="chemprop_runs")
 
+    pl.seed_everything(42)
     trainer = pl.Trainer(
         logger=logger,
         callbacks=[checkpointing],
         enable_checkpointing=True,
         max_epochs=epochs,
         num_sanity_val_steps=0,
-        enable_progress_bar=True,
         accelerator="auto",
-        devices=1,
+        devices=1
     )
 
     # --------------------------
-    # Train + Save
+    # Train and save fine-tuned model
     # --------------------------
     trainer.fit(chemprop_model, train_loader, val_loader)
 
-    torch.save(chemprop_model.state_dict(), save_dir + "/chemprop_chemelon_finetuned.pt") 
-
+    torch.save(
+        chemprop_model.state_dict(),
+        os.path.join(save_dir, "chemprop_chemelon_finetuned.pt")
+    )
 def make_pred_vs_actual(split_folder, ensemble_size = 5, standardize_predictions = False):
     # Makes predictions on each test set in a cross-validation-split system
     # Not used for screening a new library, used for predicting on the test set of the existing dataset
@@ -389,265 +374,6 @@ def make_pred_vs_actual(split_folder, ensemble_size = 5, standardize_predictions
         first_col += ["Avg_pred_quantified_delivery", "Avg_pred_quantified_toxicity", "smiles"]
 
         change_column_order(path, output, first_cols=first_col)
-
-def analyze_predictions_cv_(
-    split_name,
-    pred_split_variables = ['Experiment_ID','Library_ID','Delivery_target','Route_of_administration'],
-    path_to_preds = '../results/crossval_splits/',
-    ensemble_number = 5,
-    min_values_for_analysis = 10
-):
-    """
-    Robust version of analyze_predictions_cv:
-    - skips missing fold files
-    - uses safe column access
-    - creates analyzed_data from masked values (ensures saved CSVs align with metrics)
-    - consistent variable naming for metrics
-    """
-
-    # Containers for overall info (kept for backward compatibility, though not strictly used later)
-    fold_metrics_summary = []
-
-    # --- Load available fold predicted_vs_actual files ---
-    fold_dfs = []
-    available_folds = []
-    for i in range(ensemble_number):
-        fold_path = os.path.join(path_to_preds, split_name, f'cv_{i}', 'predicted_vs_actual.csv')
-        if not os.path.exists(fold_path):
-            print(f"Fold {i} missing predicted_vs_actual.csv -> skipping fold {i}")
-            continue
-        try:
-            df = pd.read_csv(fold_path)
-        except Exception as e:
-            print(f"Error reading {fold_path}: {e} -- skipping fold {i}")
-            continue
-
-        fold_dfs.append(df)
-        available_folds.append(i)
-
-    if len(fold_dfs) == 0:
-        print("No fold predicted_vs_actual files found. Exiting fold analysis.")
-    else:
-        # Create a union of all prediction split names across folds (for informational use)
-        all_unique = set()
-        for df in fold_dfs:
-            if 'Prediction_split_name' in df.columns:
-                all_unique.update(df['Prediction_split_name'].astype(str).tolist())
-
-        # For each fold, compute metrics
-        for idx, i in enumerate(available_folds):
-            df = fold_dfs[idx]
-            crossval_results_path = os.path.join(path_to_preds, split_name, 'crossval_performance')
-            path_if_none(crossval_results_path)
-
-            fold_results = []
-            # safe access to Prediction_split_name
-            if 'Prediction_split_name' not in df.columns:
-                print(f"cv_{i}: missing 'Prediction_split_name' column -> skipping fold {i}")
-                continue
-
-            fold_unique = df['Prediction_split_name'].astype(str).unique()
-
-            for pred_split_name in fold_unique:
-                # create results folder for this split
-                analyzed_base = os.path.join(path_to_preds, split_name, f'cv_{i}', 'results', pred_split_name)
-                path_if_none(analyzed_base)
-
-                data_subset = df[df['Prediction_split_name'].astype(str) == str(pred_split_name)].reset_index(drop=True)
-
-                # Value_name check
-                if 'Value_name' not in data_subset.columns:
-                    value_names = set(['unknown'])
-                else:
-                    value_names = set(data_subset['Value_name'].astype(str).unique())
-
-                if len(value_names) > 1:
-                    raise Exception(
-                        f'Multiple types of measurement in the same prediction split: split {pred_split_name} has value names {value_names}.'
-                    )
-
-                # target columns mapping: actual column name -> label for plotting/dirs
-                target_columns = [('quantified_delivery', 'delivery'), ('quantified_toxicity', 'toxicity')]
-
-                for actual_col, label in target_columns:
-                    if actual_col not in data_subset.columns:
-                        # target missing: skip
-                        # printing is helpful for debugging
-                        print(f"cv_{i} | split {pred_split_name} -> target missing: {actual_col} (skipping)")
-                        continue
-
-                    pred_col = f'cv_{i}_pred_{actual_col}'
-                    if pred_col not in data_subset.columns:
-                        print(f"cv_{i} | split {pred_split_name} -> predictions missing: {pred_col} (skipping)")
-                        continue
-
-                    actual_raw = data_subset[actual_col].astype(float)
-                    pred_raw = data_subset[pred_col].astype(float)
-
-                    # mask invalid values
-                    mask = ~(actual_raw.isna() | pred_raw.isna() | np.isinf(actual_raw) | np.isinf(pred_raw))
-                    actual = actual_raw[mask].reset_index(drop=True)
-                    pred = pred_raw[mask].reset_index(drop=True)
-
-                    n_vals = len(actual)
-
-                    # create analyzed_data with smiles aligned
-                    smiles_series = data_subset.get('smiles', pd.Series([None]*len(data_subset)))[mask].reset_index(drop=True)
-                    analyzed_data = pd.DataFrame({'smiles': smiles_series, 'actual': actual, 'predicted': pred})
-
-                    analyzed_path = os.path.join(analyzed_base, label)
-                    path_if_none(analyzed_path)
-
-                    pearson_r = pearson_p = spearman_r = kendall_r = rmse = np.nan
-
-                    if n_vals < 2:
-                        # not enough data for correlations
-                        analyzed_data.to_csv(os.path.join(analyzed_path, 'pred_vs_actual_data.csv'), index=False)
-                    else:
-                        # compute metrics
-                        pearson_r, pearson_p = scipy.stats.pearsonr(actual, pred)
-                        spearman_r, _ = scipy.stats.spearmanr(actual, pred)
-                        kendall_r, _ = scipy.stats.kendalltau(actual, pred)
-                        rmse = np.sqrt(mean_squared_error(actual, pred))
-
-                        # scatter + fit (only if at least 2 points)
-                        plt.figure()
-                        plt.scatter(pred, actual)
-                        if n_vals >= 2:
-                            xs = np.unique(pred)
-                            try:
-                                ys = np.poly1d(np.polyfit(pred, actual, 1))(xs)
-                                plt.plot(xs, ys)
-                            except Exception as e:
-                                # fallback: skip line fit if polyfit fails
-                                print(f"Warning: polyfit failed for {pred_split_name} fold {i} target {label}: {e}")
-                        plt.xlabel(f'Predicted {label}')
-                        plt.ylabel(f'Quantified {label} ({list(value_names)})')
-                        plt.savefig(os.path.join(analyzed_path, 'pred_vs_actual.png'))
-                        plt.close()
-
-                        analyzed_data.to_csv(os.path.join(analyzed_path, 'pred_vs_actual_data.csv'), index=False)
-
-                    if n_vals < min_values_for_analysis:
-                        print(f"⚠️ Warning: only {n_vals} samples for {pred_split_name} (below threshold {min_values_for_analysis})")
-
-                    fold_results.append({
-                        'fold': i,
-                        'split_name': pred_split_name,
-                        'target': label,
-                        'pearson': pearson_r,
-                        'pearson_p_val': pearson_p,
-                        'spearman': spearman_r,
-                        'kendall': kendall_r,
-                        'rmse': rmse,
-                        'n_vals': n_vals,
-                        'note': "insufficient_data" if n_vals < min_values_for_analysis else ""
-                    })
-
-            # save fold-level metrics
-            fold_df = pd.DataFrame(fold_results)
-            fold_results_dir = os.path.join(path_to_preds, split_name, 'crossval_performance')
-            path_if_none(fold_results_dir)
-            fold_df.to_csv(os.path.join(fold_results_dir, f'fold_{i}_metrics.csv'), index=False)
-
-    # --- Ultra held-out analysis ---
-    try:
-        uho_path = os.path.join(path_to_preds, split_name, 'ultra_held_out', 'predicted_vs_actual.csv')
-        if os.path.exists(uho_path):
-            uho_df = pd.read_csv(uho_path)
-        else:
-            print("No ultra_held_out predicted_vs_actual.csv found; skipping UHO analysis.")
-            return
-
-        # ensure Prediction_split_name exists (or create it)
-        if 'Prediction_split_name' not in uho_df.columns:
-            # build from pred_split_variables
-            missing = [c for c in pred_split_variables if c not in uho_df.columns]
-            if missing:
-                print(f"Warning: some pred_split_variables are missing in UHO df: {missing}. Using available ones.")
-            use_cols = [c for c in pred_split_variables if c in uho_df.columns]
-            if len(use_cols) == 0:
-                uho_df['Prediction_split_name'] = 'all'
-            else:
-                uho_df['Prediction_split_name'] = uho_df[use_cols].astype(str).agg('_'.join, axis=1)
-
-        unique_pred_split_names = uho_df['Prediction_split_name'].astype(str).unique()
-
-        target_cols = [col for col in uho_df.columns if col.startswith('Avg_pred_')]
-        actual_cols = [col.replace('Avg_pred_', '') for col in target_cols]
-
-        metrics_rows = []
-
-        for pred_split_name in unique_pred_split_names:
-            subset = uho_df[uho_df['Prediction_split_name'].astype(str) == str(pred_split_name)].reset_index(drop=True)
-
-            for target_col, actual_col in zip(target_cols, actual_cols):
-                if target_col not in subset.columns or actual_col not in subset.columns:
-                    continue
-
-                actual_raw = subset[actual_col].astype(float)
-                pred_raw = subset[target_col].astype(float)
-
-                mask = ~(actual_raw.isna() | pred_raw.isna() | np.isinf(actual_raw) | np.isinf(pred_raw))
-                actual = actual_raw[mask].reset_index(drop=True)
-                pred = pred_raw[mask].reset_index(drop=True)
-                smiles_masked = subset.get('smiles', pd.Series([None]*len(subset)))[mask].reset_index(drop=True)
-
-                n_vals = len(actual)
-                analyzed_path = os.path.join(path_to_preds, split_name, 'ultra_held_out', 'individual_dataset_results', pred_split_name)
-                path_if_none(analyzed_path)
-
-                # default metrics
-                pearson_r = pearson_p = spearman_r = kendall_r = rmse = np.nan
-
-                if n_vals >= 2:
-                    pearson_r, pearson_p = scipy.stats.pearsonr(actual, pred)
-                    spearman_r, _ = scipy.stats.spearmanr(actual, pred)
-                    kendall_r, _ = scipy.stats.kendalltau(actual, pred)
-                    rmse = np.sqrt(mean_squared_error(actual, pred))
-
-                    # plotting
-                    plt.figure()
-                    plt.scatter(pred, actual)
-                    try:
-                        xs = np.unique(pred)
-                        ys = np.poly1d(np.polyfit(pred, actual, 1))(xs)
-                        plt.plot(xs, ys)
-                    except Exception as e:
-                        print(f"Warning: polyfit failed for UHO {pred_split_name}/{actual_col}: {e}")
-                    plt.xlabel(f"Predicted {actual_col}")
-                    plt.ylabel(f"Experimental {actual_col}")
-                    plt.savefig(os.path.join(analyzed_path, f'pred_vs_actual_{actual_col}.png'))
-                    plt.close()
-
-                # Save pred vs actual data (aligned)
-                pd.DataFrame({
-                    'smiles': smiles_masked,
-                    'actual': actual,
-                    'predicted': pred
-                }).to_csv(os.path.join(analyzed_path, f'pred_vs_actual_{actual_col}_data.csv'), index=False)
-
-                metrics_rows.append({
-                    'dataset_ID': pred_split_name,
-                    'target': actual_col,
-                    'n': n_vals,
-                    'pearson': pearson_r,
-                    'pearson_p_val': pearson_p,
-                    'kendall': kendall_r,
-                    'spearman': spearman_r,
-                    'rmse': rmse,
-                    'note': "insufficient_data" if n_vals < min_values_for_analysis else ""
-                })
-
-        # Save metrics table
-        uho_results_path = os.path.join(path_to_preds, split_name, 'ultra_held_out')
-        path_if_none(uho_results_path)
-        metrics_df = pd.DataFrame(metrics_rows)
-        metrics_df.to_csv(os.path.join(uho_results_path, 'ultra_held_out_metrics.csv'), index=False)
-
-    except Exception as e:
-        print(f"Ultra-held-out analysis failed: {e}")
-
 
 def analyze_predictions_cv(split_name, pred_split_variables = ['Experiment_ID','Library_ID','Delivery_target','Route_of_administration'], path_to_preds = '../results/crossval_splits/', ensemble_number = 5, min_values_for_analysis = 10):
     all_ns = {}
@@ -843,7 +569,6 @@ def analyze_predictions_cv(split_name, pred_split_variables = ['Experiment_ID','
     except Exception as e:
         print(f"Ultra-held-out analysis failed: {e}")
 
-
 def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_merge', write_path = '../data'): 
     # Each folder contains the following files: 
     # main_data.csv: a csv file with columns: 'smiles', which should contain the SMILES of the ionizable lipid, the activity measurements for that measurement
@@ -1033,6 +758,106 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
     change_column_order(path, all_df)
     col_type_df.to_csv(write_path + '/col_type.csv', index = False)
 
+
+def cv_split(split_spec_fname, path_to_folders='../data',
+                       is_morgan=False, cv_fold=2, ultra_held_out_fraction=-1.0,
+                       min_unique_vals=2.0, test_is_valid=False,
+                       train_frac=0.8, valid_frac=0.1, test_frac=0.1,
+                       random_state=42):
+    """
+    Splits the dataset according to the specifications in split_spec_fname.
+    Uses sklearn to create a single fixed test set and splits the rest into train/valid.
+    Supports ultra held-out sets and maintains folder structure.
+
+    Parameters:
+        split_spec_fname: CSV specifying split/train rules
+        path_to_folders: folder containing all_data.csv, crossval_split_specs, etc.
+        is_morgan: whether to include Morgan fingerprints
+        cv_fold: number of CV folds (1–5)
+        ultra_held_out_fraction: fraction to hold out from all CV splits
+        min_unique_vals: minimum unique values for splitting
+        test_is_valid: if True, validation = test fold (used for in-silico screening)
+        train_frac, valid_frac, test_frac: fractions for train/valid/test (must sum to 1)
+        random_state: random seed for reproducibility
+    """
+
+    all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data.csv'))
+    split_df = pd.read_csv(os.path.join(path_to_folders, 'crossval_split_specs', split_spec_fname))
+    col_types = pd.read_csv(os.path.join(path_to_folders, 'col_type.csv'))
+
+    split_path = os.path.join(path_to_folders, 'crossval_splits', split_spec_fname[:-4])
+    if ultra_held_out_fraction > 0:
+        split_path += '_with_uho'
+    if is_morgan:
+        split_path += '_morgan'
+    if test_is_valid:
+        split_path += '_for_iss'
+
+    if ultra_held_out_fraction > 0:
+        path_if_none(os.path.join(split_path, 'ultra_held_out'))
+    
+    for i in range(cv_fold):
+        path_if_none(os.path.join(split_path, f'cv_{i}'))
+
+    # --- Collect permanent train, ultra-held-out, and CV data ---
+    perma_train = pd.DataFrame({})
+    ultra_held_out = pd.DataFrame({})
+    cv_data = pd.DataFrame({})
+
+    for _, row in split_df.iterrows():
+        dtypes = row['Data_types_for_component'].split(',')
+        vals = row['Values'].split(',')
+        df_to_concat = all_df.copy()
+
+        # Filter rows according to split spec
+        for i, dtype in enumerate(dtypes):
+            df_to_concat = df_to_concat[df_to_concat[dtype.strip()] == vals[i].strip()].reset_index(drop=True)
+
+        values_to_split = df_to_concat[row['Data_type_for_split']]
+        unique_values_to_split = list(set(values_to_split))
+
+        if row['Train_or_split'].lower() == 'train':
+            perma_train = pd.concat([perma_train, df_to_concat])
+        elif row['Train_or_split'].lower() == 'split':
+            cv_split_values, ultra_held_out_values = split_for_cv(unique_values_to_split, cv_fold, ultra_held_out_fraction)
+            ultra_held_out = pd.concat([ultra_held_out, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(ultra_held_out_values)]])
+            # Merge all CV split data (we'll split it by fraction later)
+            cv_data = pd.concat([cv_data, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(sum(cv_split_values, []))]])
+
+    # --- Save ultra held-out set ---
+    if ultra_held_out_fraction >= 0 and not ultra_held_out.empty:
+        y, x, w, m = split_df_by_col_type(ultra_held_out, col_types)
+        yxwm_to_csvs(y, x, w, m, split_path + '/ultra_held_out', 'test')
+
+    # --- Sanity check on fractions ---
+    if abs(train_frac + valid_frac + test_frac - 1.0) > 1e-6:
+        raise ValueError("train_frac + valid_frac + test_frac must sum to 1.0")
+
+    # --- Step 1: Split once into train+valid and fixed test ---
+    train_valid_df, test_df = train_test_split(
+        cv_data, test_size=test_frac, random_state=random_state, shuffle=True
+    )
+    y, x, w, m = split_df_by_col_type(test_df, col_types)
+    path_if_none(split_path + '/test')
+    yxwm_to_csvs(y, x, w, m, split_path + '/test', 'test')
+    
+    # --- Step 2: Split train_valid into train and valid ---
+    valid_size = valid_frac / (train_frac + valid_frac)
+    train_df, valid_df = train_test_split(
+        train_valid_df, test_size=valid_size, random_state=random_state, shuffle=True
+    )
+
+    # --- Step 3: Add permanent training data ---
+    if not perma_train.empty:
+        train_df = pd.concat([train_df, perma_train]).drop_duplicates().reset_index(drop=True)
+
+    # --- Save results into each cv folder (test stays fixed) ---
+    for i in range(cv_fold):
+        for df, split_type in zip([valid_df, train_df], ['valid', 'train']):
+            y, x, w, m = split_df_by_col_type(df, col_types)
+            yxwm_to_csvs(y, x, w, m, split_path + '/cv_' +str(i), split_type)
+
+
 def specified_cv_split(split_spec_fname, path_to_folders='../data',
                        is_morgan=False, cv_fold=2, ultra_held_out_fraction=-1.0,
                        min_unique_vals=2.0, test_is_valid=False):
@@ -1117,6 +942,8 @@ def specified_cv_split(split_spec_fname, path_to_folders='../data',
         for df, split_type in zip([test_df, valid_df, train_df], ['test', 'valid', 'train']):
             y, x, w, m = split_df_by_col_type(df, col_types)
             yxwm_to_csvs(y, x, w, m, split_path + '/cv_' + str(i), split_type)
+
+
 # these functions called in main 
 
 # called in merge_datasets
@@ -1230,7 +1057,7 @@ def main(argv):
         ultra_held_out = float(argv[3])
         is_morgan = False
         in_silico_screen = False
-        cv_num = 5
+        cv_num = 2
         if len(argv)>4:
             for i, arg in enumerate(argv):
                 if arg.replace('–', '-') == '--cv':
@@ -1240,12 +1067,12 @@ def main(argv):
                     is_morgan = True
                 if arg.replace('–', '-') == '--in_silico':
                     in_silico_screen = True
-        specified_cv_split(split ,cv_fold=cv_num, ultra_held_out_fraction = ultra_held_out, is_morgan = is_morgan, test_is_valid = in_silico_screen)
+        cv_split(split ,cv_fold=cv_num, ultra_held_out_fraction = ultra_held_out, is_morgan = is_morgan, test_is_valid = in_silico_screen)
 
     elif task_type == 'train':
         split_folder = argv[2]
         epochs = 50
-        cv_num = 5
+        cv_num = 2
         for i, arg in enumerate(argv):
             if arg.replace('–', '-') == '--epochs':
                 epochs = int(argv[i+1])
