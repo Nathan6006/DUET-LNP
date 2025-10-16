@@ -1,0 +1,7 @@
+fold,split_name,target,pearson,pearson_p_val,spearman,kendall,rmse,n_vals,note
+1,IR_4CR_ketone_4CR_Ketone_muscle_intramuscular,delivery,0.24758329967528042,0.5544027573231036,0.30952380952380953,0.21428571428571427,0.19469503182220313,8,insufficient_data
+1,IR_4CR_ketone_4CR_Ketone_muscle_intramuscular,toxicity,,,,,,0,insufficient_data
+1,Xue_CAD_LNP_Xue_CAD_LNP_nan_nan,delivery,,,,,,0,insufficient_data
+1,Xue_CAD_LNP_Xue_CAD_LNP_nan_nan,toxicity,0.39740275305666695,0.22616739694520244,0.44545454545454555,0.34545454545454546,0.1800792150861895,11,
+1,IR_4CR_ketone_4CR_Ketone_lung_epithelium_in_vitro,delivery,-0.4271641053493215,0.5728358946506784,-0.39999999999999997,-0.3333333333333334,0.324509951830913,4,insufficient_data
+1,IR_4CR_ketone_4CR_Ketone_lung_epithelium_in_vitro,toxicity,,,,,,0,insufficient_data
