@@ -1,4 +1,0 @@
-dataset_ID,target,n,pearson,pearson_p_val,kendall,spearman,rmse,note
-data_multitask_Li_enzyme_catalyzed_macrophage_in_vitro,quantified_delivery,5,0.5110414899100111,0.37887248632651616,0.6,0.7,1.2408505510980965,insufficient_data
-data_multitask_Li_enzyme_catalyzed_macrophage_in_vitro,quantified_toxicity,5,0.43175964312297127,0.46785905953261914,0.19999999999999998,0.0,1.1825535010332855,insufficient_data
-Lee_unsat_dendrimer_Lee_unsat_dendrimer_generic_cell_in_vitro,quantified_delivery,4,0.6543349854176725,0.34566501458232746,0.5477225575051662,0.632455532033676,0.5619458139684167,insufficient_data
