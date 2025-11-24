@@ -1,12 +1,19 @@
 import pandas as pd
 
-# Read the toxicity file
-toxicity_df = pd.read_csv("toxicity.csv")
+def keep_smiles_toxicity(input_file="3_tails.csv", output_file="3_tails_filtered.csv"):
+    """
+    Reads 3_tails.csv, keeps only 'smiles' and 'toxicity' columns,
+    and saves to a new CSV file.
+    """
+    # Read the CSV
+    df = pd.read_csv(input_file)
 
-# Filter rows where identifier == "a3"
-filtered_df = toxicity_df[toxicity_df["identifier"].str.contains("a3", na=False)]
+    # Keep only the desired columns
+    filtered_df = df[['smiles', 'toxicity']]
 
-# Keep the entire row (all columns)
-filtered_df.to_csv("3_tails.csv", index=False)
+    # Save to new file
+    filtered_df.to_csv(output_file, index=False)
+    print(f"Filtered file saved to {output_file}")
 
-print("✅ Full rows with identifier 'a3' saved to 3_tails.csv")
+# Example usage:
+keep_smiles_toxicity("3_tails.csv", "3_tails_filtered.csv")

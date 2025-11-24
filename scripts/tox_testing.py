@@ -2,8 +2,6 @@ import numpy as np
 import os
 import pandas as pd  
 from sklearn.metrics import mean_squared_error 
-from rdkit import Chem, DataStructs
-from rdkit.Chem import rdFingerprintGenerator
 import matplotlib.pyplot as plt 
 import scipy.stats
 import pickle
@@ -15,15 +13,11 @@ from pathlib import Path
 from chemprop import data, models, nn, featurizers 
 from lightning.pytorch.loggers import CSVLogger 
 from lightning.pytorch.callbacks import ModelCheckpoint 
-from sklearn.model_selection import train_test_split
-from helpers import path_if_none, change_column_order, load_datapoints
-from typing import List
-from rdkit.Chem import AllChem
+from helpers import path_if_none, change_column_order, load_datapoints, load_datapoints_tox_only
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from typing import List
 from sklearn.preprocessing import StandardScaler
-import joblib
 
 def train_cm(
     split_dir='../data',
@@ -32,11 +26,11 @@ def train_cm(
     epochs=50,
     save_dir='../data'
 ):
-    train_datapoints = load_datapoints(
+    train_datapoints = load_datapoints_tox_only(
         os.path.join(split_dir, 'train.csv'),
         os.path.join(split_dir, 'train_extra_x.csv')
     )
-    val_datapoints = load_datapoints(
+    val_datapoints = load_datapoints_tox_only(
         os.path.join(split_dir, 'valid.csv'),
         os.path.join(split_dir, 'valid_extra_x.csv')
     )
@@ -79,7 +73,8 @@ def train_cm(
         dropout=0.1,
         hidden_dim=600,
         n_layers=3,
-        activation="RELU"
+        activation="RELU",
+        criterion=nn.metrics.MAE()
     )
 
     metric_list = [nn.metrics.RMSE(), nn.metrics.MAE()]
@@ -95,8 +90,8 @@ def train_cm(
         filename="best",
         monitor="val/rmse",
         mode="min",
-        save_last=True,
-        save_top_k=1
+        save_top_k=1,
+        save_last=False
     )
     logger = CSVLogger(save_dir=save_dir, name="chemprop_runs")
 
@@ -116,7 +111,7 @@ def train_cm(
 
     torch.save(
         chemprop_model.state_dict(),
-        os.path.join(save_dir, "chemprop_chemelon_finetuned.pt")
+        os.path.join(save_dir, "model.pt")
     )
 
 def make_pred_vs_actual_tvt(
@@ -392,8 +387,47 @@ def analyze_predictions_cv_tvt(
                 })
 
         fold_df = pd.DataFrame(fold_results)
-        fold_df.to_csv(f"{crossval_results_path}/cv_{i}metrics.csv", index=False)
+        path_if_none(f"{crossval_results_path}/metrics/")
+        fold_df.to_csv(f"{crossval_results_path}/metrics/cv_{i}metrics.csv", index=False)
 
+    #create pooled metrics file
+    rows = []
+    for i in range(ensemble_number):
+        df = pd.read_csv(f"{path_to_preds}{split_name}/{tvt}/cv_{i}/predicted_vs_actual.csv")
+        pred_col = f'cv_{i}_pred_quantified_toxicity'
+        if pred_col not in df.columns:
+            continue
+
+        actual = df['quantified_toxicity']
+        pred   = df[pred_col]
+
+        # mask invalids
+        mask = ~(actual.isna() | pred.isna())
+        actual = actual[mask]
+        pred   = pred[mask]
+
+        if len(actual) >= 2:
+            pearson_r, pearson_p = scipy.stats.pearsonr(actual, pred)
+            spearman_r, _ = scipy.stats.spearmanr(actual, pred)
+            kendall_r, _ = scipy.stats.kendalltau(actual, pred)
+            rmse = np.sqrt(mean_squared_error(actual, pred))
+        else:
+            pearson_r = pearson_p = spearman_r = kendall_r = rmse = np.nan
+
+        rows.append({
+            'fold': i,
+            'pearson': pearson_r,
+            'pearson_p_val': pearson_p,
+            'spearman': spearman_r,
+            'kendall': kendall_r,
+            'rmse': rmse,
+            'n_vals': len(actual)
+        })
+
+    pooled_metrics_df = pd.DataFrame(rows)
+    pooled_metrics_df.to_csv(f"{path_to_preds}{split_name}/{tvt}/pooled_metrics.csv", index=False)
+        
+    
     # Ultra-held-out analysis
     try:
         preds_vs_actual = pd.read_csv(f"{path_to_preds}{split_name}/ultra_held_out/predicted_vs_actual.csv")
@@ -463,22 +497,22 @@ def analyze_predictions_cv_tvt(
 
 def main(argv):
     split_folder = argv[1]
-    # epochs = 50
-    # cv_num = 2
-    # for i, arg in enumerate(argv):
-    #     if arg.replace('–', '-') == '--epochs':
-    #         epochs = int(argv[i+1])
-    #         print('this many epochs: ',str(epochs))
-    #     if arg.replace('–', '-') == '--cv':
-    #         cv_num = int(argv[i+1])
-    #         print('this many folds: ',str(cv_num))
-    #     # if arg.replace('–', '-') == '--cm':
-    #     #     for cv in range(cv_num):
-    #     #         print("using cm")
-    #     #         split_dir = '../data/crossval_splits/'+split_folder+'/cv_'+str(cv)
-    #     #         save_dir = split_dir+'/model_'+str(cv)
-    #     #         train_cm(split_dir=split_dir,epochs=epochs, save_dir=save_dir)
-    #     #     return
+    epochs = 50
+    cv_num = 2
+    for i, arg in enumerate(argv):
+        if arg.replace('–', '-') == '--epochs':
+            epochs = int(argv[i+1])
+            print('this many epochs: ',str(epochs))
+        if arg.replace('–', '-') == '--cv':
+            cv_num = int(argv[i+1])
+            print('this many folds: ',str(cv_num))
+        # if arg.replace('–', '-') == '--cm':
+        #     for cv in range(cv_num):
+        #         print("using cm")
+        #         split_dir = '../data/crossval_splits/'+split_folder+'/cv_'+str(cv)
+        #         save_dir = split_dir+'/model_'+str(cv)
+        #         train_cm(split_dir=split_dir,epochs=epochs, save_dir=save_dir)
+        #     return
 
     # for cv in range(cv_num):
     #     split_dir = '../data/crossval_splits/'+split_folder+'/cv_'+str(cv)
@@ -517,8 +551,8 @@ if __name__ == '__main__':
 
 def train_basic(split_dir ='../data', smiles_column='smiles', target_columns = ["quantified_delivery", "quantified_toxicity"], epochs=50, save_dir='../data'):
 
-    train_datapoints = load_datapoints(split_dir+'/train.csv', split_dir+'/train_extra_x.csv')
-    val_datapoints   = load_datapoints(split_dir+'/valid.csv', split_dir+'/valid_extra_x.csv')
+    train_datapoints = load_datapoints_tox_only(split_dir+'/train.csv', split_dir+'/train_extra_x.csv')
+    val_datapoints   = load_datapoints_tox_only(split_dir+'/valid.csv', split_dir+'/valid_extra_x.csv')
     #test_datapoints  = load_datapoints(split_dir+'/test.csv', split_dir+'/test_extra_x.csv')
     
     #import chemeleon 

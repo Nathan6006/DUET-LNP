@@ -16,7 +16,7 @@ from chemprop import data, models, nn, featurizers
 from lightning.pytorch.loggers import CSVLogger 
 from lightning.pytorch.callbacks import ModelCheckpoint 
 from sklearn.model_selection import train_test_split
-from helpers import path_if_none, change_column_order, load_datapoints
+from helpers import path_if_none, change_column_order, load_datapoints_tox_only
 import joblib
 
 
@@ -51,8 +51,8 @@ def make_pred_vs_actual_tvt(split_folder, model_folder, ensemble_size = 5, stand
                 print("running predict")
                 checkpoint_path = model + '/model_'+str(cv)+'/best.ckpt'
                 loaded_model = models.MPNN.load_from_checkpoint(checkpoint_path)
-                
-                test_data = load_datapoints(
+
+                test_data = load_datapoints_tox_only(
                     os.path.join(data_dir, f'{tvt}.csv'),
                     os.path.join(data_dir, f'{tvt}_extra_x.csv')
                 )

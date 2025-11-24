@@ -15,7 +15,7 @@ from chemprop import data, models, nn, featurizers
 from lightning.pytorch.loggers import CSVLogger 
 from lightning.pytorch.callbacks import ModelCheckpoint 
 from sklearn.model_selection import train_test_split
-from helpers import path_if_none, change_column_order, load_datapoints
+from helpers import path_if_none, change_column_order, load_datapoints_tox_only
 from typing import List
 from rdkit.Chem import AllChem
 from sklearn.ensemble import RandomForestRegressor
@@ -27,8 +27,8 @@ import joblib
 
 def train_basic(split_dir ='../data', smiles_column='smiles', target_columns = ["quantified_delivery", "quantified_toxicity"], epochs=50, save_dir='../data'):
 
-    train_datapoints = load_datapoints(split_dir+'/train.csv', split_dir+'/train_extra_x.csv')
-    val_datapoints   = load_datapoints(split_dir+'/valid.csv', split_dir+'/valid_extra_x.csv')
+    train_datapoints = load_datapoints_tox_only(split_dir+'/train.csv', split_dir+'/train_extra_x.csv')
+    val_datapoints   = load_datapoints_tox_only(split_dir+'/valid.csv', split_dir+'/valid_extra_x.csv')
     #test_datapoints  = load_datapoints(split_dir+'/test.csv', split_dir+'/test_extra_x.csv')
     
     #import chemeleon 
@@ -99,11 +99,11 @@ def train_basic(split_dir ='../data', smiles_column='smiles', target_columns = [
 def train_cm(split_dir='../data', smiles_column='smiles', target_columns=["quantified_delivery", "quantified_toxicity"], epochs=50, save_dir='../data'):
     
 
-    train_datapoints = load_datapoints(
+    train_datapoints = load_datapoints_tox_only(
         os.path.join(split_dir, 'train.csv'),
         os.path.join(split_dir, 'train_extra_x.csv')
     )
-    val_datapoints = load_datapoints(
+    val_datapoints = load_datapoints_tox_only(
         os.path.join(split_dir, 'valid.csv'),
         os.path.join(split_dir, 'valid_extra_x.csv')
     )
@@ -151,7 +151,7 @@ def train_cm(split_dir='../data', smiles_column='smiles', target_columns=["quant
         mp, agg, ffn,
         #X_d_transform=X_d_transform,
         batch_norm=False,
-        metrics=metric_list
+        metrics=metric_list,
     )
 
     os.makedirs(save_dir, exist_ok=True)

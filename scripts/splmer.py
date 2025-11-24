@@ -6,45 +6,45 @@ from rdkit.Chem import Descriptors
 import sys
 import random
 from sklearn.model_selection import train_test_split
-from helpers import path_if_none, change_column_order, load_datapoints
+from helpers import path_if_none, change_column_order, load_datapoints_tox_only
 
 
 def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_merge', write_path = '../data'): 
-    # Each folder contains the following files: 
-    # main_data.csv: a csv file with columns: 'smiles', which should contain the SMILES of the ionizable lipid, the activity measurements for that measurement
-    # If the same ionizable lipid is measured multiple times (i.e. for different properties, or transfection in vitro and in vivo) make separate rows, one for each measurement
-    # formulations.csv: a csv file with columns:
-        # Cationic_Lipid_Mol_Ratio
-        # Phospholipid_Mol_Ratio
-        # Cholesterol_Mol_Ratio
-        # PEG_Lipid_mol_ratio
-        # Cationic_Lipid_to_mRNA_weight_ratio
-        # Helper_lipid_ID
-        # If the dataset contains only 1 formulation in it: still provide the formulations data thing but with only one row; the model will copy it
-        # Otherwise match the row to the data in formulations.csv
-    # individual_metadata.csv: metadata that contains as many rows as main_data, each row is certain metadata for each lipid
-        # For example, could contain the identity (SMILES) of the amine to be used in training/test splits, or contain a dosage if the dataset includes varying dosage
-        # Either includes a column called "Sample_weight" with weight for each sample (each ROW, that is; weight for a kind of experiment will be determined separately)
-            # alternatively, default sample weight of 1
-    # experiment_metadata.csv: contains metadata about particular dataset. This includes:
-        # Experiment_ID: each experiment will be given a unique ID.
-        # There will be two ROWS and any number of columns
+    """Each folder contains the following files: 
+    main_data.csv: a csv file with columns: 'smiles', which should contain the SMILES of the ionizable lipid, the activity measurements for that measurement
+    If the same ionizable lipid is measured multiple times (i.e. for different properties, or transfection in vitro and in vivo) make separate rows, one for each measurement
+    formulations.csv: a csv file with columns:
+        Cationic_Lipid_Mol_Ratio
+        Phospholipid_Mol_Ratio
+        Cholesterol_Mol_Ratio
+        PEG_Lipid_mol_ratio
+        Cationic_Lipid_to_mRNA_weight_ratio
+        Helper_lipid_ID
+        If the dataset contains only 1 formulation in it: still provide the formulations data thing but with only one row; the model will copy it
+        Otherwise match the row to the data in formulations.csv
+    individual_metadata.csv: metadata that contains as many rows as main_data, each row is certain metadata for each lipid
+        For example, could contain the identity (SMILES) of the amine to be used in training/test splits, or contain a dosage if the dataset includes varying dosage
+        Either includes a column called "Sample_weight" with weight for each sample (each ROW, that is; weight for a kind of experiment will be determined separately)
+            alternatively, default sample weight of 1
+    experiment_metadata.csv: contains metadata about particular dataset. This includes:
+        Experiment_ID: each experiment will be given a unique ID.
+        There will be two ROWS and any number of columns
 
-    # Based on these files, Merge_datasets will merge all the datasets into one dataset. In particular, it will output 2 files:
-        # all_merged.csv: each row  will contain all the data for a measurement (SMILES, info on dose/formulation/etc, metadata, sample weights, activity value)
-        # col_type.csv: two columns, column name and type. Four types: Y_val, X_val, X_val_cat (categorical X value), Metadata, Sample_weight
+    Based on these files, Merge_datasets will merge all the datasets into one dataset. In particular, it will output 2 files:
+        all_merged.csv: each row  will contain all the data for a measurement (SMILES, info on dose/formulation/etc, metadata, sample weights, activity value)
+        col_type.csv: two columns, column name and type. Four types: Y_val, X_val, X_val_cat (categorical X value), Metadata, Sample_weight
 
-    # Some metadata columns that should be held consistent, in terms of names:
-        # Purity ("Pure" or "Crude")
-        # ng_dose (for the dose, duh)
-        # Sample_weight
-        # Amine_SMILES
-        # Tail_SMILES
-        # Library_ID
-        # Experimenter_ID
-        # Experiment_ID
-        # Cargo (siRNA, DNA, mRNA, RNP are probably the relevant 4 options)
-        # Model_type (either the cell type or the name of the animal (probably "mouse"))
+    Some metadata columns that should be held consistent, in terms of names:
+        Purity ("Pure" or "Crude")
+        ng_dose (for the dose, duh)
+        Sample_weight
+        Amine_SMILES
+        Tail_SMILES
+        Library_ID
+        Experimenter_ID
+        Experiment_ID
+        Cargo (siRNA, DNA, mRNA, RNP are probably the relevant 4 options)
+        Model_type (either the cell type or the name of the animal (probably "mouse"))"""
     
     all_df = pd.DataFrame({})
     col_type = {'Column_name':[],'Type':[]}
@@ -67,7 +67,7 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
             y_val_cols = y_val_cols + list(main_temp.columns)
             for col in main_temp.columns:
                 if 'Unnamed' in col:
-                    print('\n\n\nTHERE IS A BS UNNAMED COLUMN IN FOLDER: ',folder,'\n\n')
+                    print('\n\n\nTHERE IS AN UNNAMED COLUMN IN FOLDER: ',folder,'\n\n')
             data_n = len(main_temp)
             formulation_temp = pd.read_csv(path_to_folders + '/' + folder + '/formulations.csv')
 
@@ -81,6 +81,9 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
                 print(len(formulation_temp))
                 to_raise = 'For experiment ID: ',folder,': Length of formulation file (', str(len(formulation_temp))#, ') doesn\'t match length of main datafile (',str(data_n),')'
                 raise ValueError(to_raise)
+            
+            if len(individual_temp) == 1:
+                individual_temp = pd.concat([individual_temp]*data_n,ignore_index = True)
 
             # Change formulations from mass to molar ratio
             form_cols = formulation_temp.columns
@@ -157,7 +160,7 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
 
 
     # Make the column type dict
-    extra_x_variables = ['Cationic_Lipid_Mol_Ratio','Phospholipid_Mol_Ratio','Cholesterol_Mol_Ratio','PEG_Lipid_Mol_Ratio','Cationic_Lipid_to_mRNA_weight_ratio']
+    extra_x_variables = ['Cationic_Lipid_Mol_Ratio','Phospholipid_Mol_Ratio','Cholesterol_Mol_Ratio','PEG_Lipid_Mol_Ratio','Cationic_Lipid_to_mRNA_weight_ratio', 'Num_tails', 'Num_carbon_in_tail', 'Dosage', 'Exposure_time']
     # ADD HELPER LIPID ID
     # extra_x_categorical = ['Delivery_target','Helper_lipid_ID','Route_of_administration','Batch_or_individual_or_barcoded','screen_id']
     extra_x_categorical = ['Delivery_target','Helper_lipid_ID','Route_of_administration','Batch_or_individual_or_barcoded','Cargo_type','Model_type']
@@ -185,7 +188,7 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
 
     col_type_df = pd.DataFrame(col_type)
 
-    norm_split_names, norm_del, norm_tox = generate_normalized_data_minmax(all_df)
+    norm_split_names, norm_del, norm_tox = generate_normalized_data(all_df)
     all_df['split_name_for_normalization'] = norm_split_names
     all_df.rename(columns = {'quantified_delivery':'unnormalized_delivery'}, inplace = True)
     all_df['quantified_delivery'] = norm_del
@@ -202,7 +205,7 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
 def cv_split(split_spec_fname, path_to_folders='../data',
                        is_morgan=False, cv_fold=2, ultra_held_out_fraction=-1.0,
                        min_unique_vals=2.0, test_is_valid=False,
-                       train_frac=0.7, valid_frac=0.125, test_frac=0.175,
+                       train_frac=0.7, valid_frac=.125, test_frac=0.175,
                        random_state=42):
     """
     Splits the dataset according to the specifications in split_spec_fname.
@@ -213,14 +216,13 @@ def cv_split(split_spec_fname, path_to_folders='../data',
         split_spec_fname: CSV specifying split/train rules
         path_to_folders: folder containing all_data.csv, crossval_split_specs, etc.
         is_morgan: whether to include Morgan fingerprints
-        cv_fold: number of CV folds (1–5)
+        cv_fold: number of CV folds (1-5)
         ultra_held_out_fraction: fraction to hold out from all CV splits
         min_unique_vals: minimum unique values for splitting
         test_is_valid: if True, validation = test fold (used for in-silico screening)
         train_frac, valid_frac, test_frac: fractions for train/valid/test (must sum to 1)
         random_state: random seed for reproducibility
     """
-
     all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data.csv'))
     split_df = pd.read_csv(os.path.join(path_to_folders, 'crossval_split_specs', split_spec_fname))
     col_types = pd.read_csv(os.path.join(path_to_folders, 'col_type.csv'))
@@ -239,7 +241,6 @@ def cv_split(split_spec_fname, path_to_folders='../data',
     for i in range(cv_fold):
         path_if_none(os.path.join(split_path, f'cv_{i}'))
 
-    # --- Collect permanent train, ultra-held-out, and CV data ---
     perma_train = pd.DataFrame({})
     ultra_held_out = pd.DataFrame({})
     cv_data = pd.DataFrame({})
@@ -249,7 +250,6 @@ def cv_split(split_spec_fname, path_to_folders='../data',
         vals = row['Values'].split(',')
         df_to_concat = all_df.copy()
 
-        # Filter rows according to split spec
         for i, dtype in enumerate(dtypes):
             df_to_concat = df_to_concat[df_to_concat[dtype.strip()] == vals[i].strip()].reset_index(drop=True)
 
@@ -261,19 +261,15 @@ def cv_split(split_spec_fname, path_to_folders='../data',
         elif row['Train_or_split'].lower() == 'split':
             cv_split_values, ultra_held_out_values = split_for_cv(unique_values_to_split, cv_fold, ultra_held_out_fraction)
             ultra_held_out = pd.concat([ultra_held_out, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(ultra_held_out_values)]])
-            # Merge all CV split data (we'll split it by fraction later)
             cv_data = pd.concat([cv_data, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(sum(cv_split_values, []))]])
 
-    # --- Save ultra held-out set ---
     if ultra_held_out_fraction >= 0 and not ultra_held_out.empty:
         y, x, w, m = split_df_by_col_type(ultra_held_out, col_types)
         yxwm_to_csvs(y, x, w, m, split_path + '/ultra_held_out', 'test')
 
-    # --- Sanity check on fractions ---
     if abs(train_frac + valid_frac + test_frac - 1.0) > 1e-6:
         raise ValueError("train_frac + valid_frac + test_frac must sum to 1.0")
 
-    # --- Step 1: Split once into train+valid and fixed test ---
     train_valid_df, test_df = train_test_split(
         cv_data, test_size=test_frac, random_state=random_state, shuffle=True
     )
@@ -281,56 +277,109 @@ def cv_split(split_spec_fname, path_to_folders='../data',
     path_if_none(split_path + '/test')
     yxwm_to_csvs(y, x, w, m, split_path + '/test', 'test')
     
-    # --- Step 2: Split train_valid into train and valid ---
     valid_size = valid_frac / (train_frac + valid_frac)
     train_df, valid_df = train_test_split(
         train_valid_df, test_size=valid_size, random_state=random_state, shuffle=True
     )
 
-    # --- Step 3: Add permanent training data ---
     if not perma_train.empty:
         train_df = pd.concat([train_df, perma_train]).drop_duplicates().reset_index(drop=True)
 
-    # --- Save results into each cv folder (test stays fixed) ---
     for i in range(cv_fold):
         for df, split_type in zip([valid_df, train_df], ['valid', 'train']):
             y, x, w, m = split_df_by_col_type(df, col_types)
             yxwm_to_csvs(y, x, w, m, split_path + '/cv_' +str(i), split_type)
 
-def generate_normalized_data_minmax(all_df, split_variables=['Experiment_ID','Library_ID','Delivery_target','Model_type','Route_of_administration']):
+def generate_normalized_data_(all_df, split_variables = ['Experiment_ID','Library_ID','Delivery_target','Model_type','Route_of_administration']):
     split_names = []
     norm_dict_del = {}
     norm_dict_tox = {}
-
-    # split names
     for index, row in all_df.iterrows():
-        split_name = '_'.join([str(row[vbl]) for vbl in split_variables])
-        split_names.append(split_name)
+        split_name = ''
+        for vbl in split_variables:
+            split_name = split_name + str(row[vbl])+'_'
+        split_names.append(split_name[:-1])
+    unique_split_names = set(split_names)
+    for split_name in unique_split_names:
+        data_subset = all_df[[spl==split_name for spl in split_names]]
+        norm_dict_del[split_name] = (np.mean(data_subset['quantified_delivery']), np.std(data_subset['quantified_delivery']))
+        norm_dict_tox[split_name] = (np.mean(data_subset['quantified_toxicity']), np.std(data_subset['quantified_toxicity']))
+    norm_delivery = []
+    norm_toxicity = []
+    for i, row in all_df.iterrows():
+        deli = row['quantified_delivery']
+        split_del = split_names[i]
+        std_del = norm_dict_del[split_del][1]
+        mn_del = norm_dict_del[split_del][0]
+        if pd.isna(deli):
+            norm_delivery.append(np.nan)
+        else:
+            norm_delivery.append((float(deli)-mn_del)/std_del)
 
+        tox = row['quantified_toxicity']
+        # split_tox = split_names[i]
+        # std_tox = norm_dict_tox[split_tox][1]
+        # mn_tox = norm_dict_tox[split_tox][0]
+        if pd.isna(tox):
+            norm_toxicity.append(np.nan)
+        else:
+            normarlized = float(tox)/100
+            if normarlized > 1:
+                normarlized=1
+            norm_toxicity.append(normarlized)
+
+    return split_names, norm_delivery, norm_toxicity
+
+def generate_normalized_data(all_df, split_variables = ['Experiment_ID','Library_ID','Delivery_target','Model_type','Route_of_administration']):
+    split_names = []
+    norm_dict_del = {}
+
+    for _, row in all_df.iterrows():
+        split_name = ''
+        for vbl in split_variables:
+            split_name = split_name + str(row[vbl])+'_'
+        split_names.append(split_name[:-1])
     unique_split_names = set(split_names)
 
     for split_name in unique_split_names:
-        data_subset = all_df[[spl == split_name for spl in split_names]]
-        norm_dict_del[split_name] = (data_subset['quantified_delivery'].min(), data_subset['quantified_delivery'].max())
-        norm_dict_tox[split_name] = (data_subset['quantified_toxicity'].min(), data_subset['quantified_toxicity'].max())
+        data_subset = all_df[[spl==split_name for spl in split_names]]
+        try:
+            norm_dict_del[split_name] = (
+                np.mean(data_subset['quantified_delivery']),
+                np.std(data_subset['quantified_delivery'])
+            )
+        except Exception:
+            norm_dict_del[split_name] = (np.nan, np.nan)
 
     norm_delivery = []
     norm_toxicity = []
 
+    # Normalize row by row
     for i, row in all_df.iterrows():
-        deli = row['quantified_delivery']
-        min_del, max_del = norm_dict_del[split_names[i]]
-        if pd.isna(deli) or min_del == max_del:
-            norm_delivery.append(np.nan)  # avoid division by zero
-        else:
-            norm_delivery.append((float(deli) - min_del) / (max_del - min_del))
+        split_name = split_names[i]
 
-        tox = row['quantified_toxicity']
-        min_tox, max_tox = norm_dict_tox[split_names[i]]
-        if pd.isna(tox) or min_tox == max_tox:
+        try:
+            deli = row['quantified_delivery']
+            mn_del, std_del = norm_dict_del[split_name]
+            if pd.isna(deli) or pd.isna(std_del) or std_del == 0:
+                norm_delivery.append(np.nan)
+            else:
+                norm_delivery.append((float(deli)-mn_del)/std_del)
+        except Exception:
+            print("no delivery", split_name)
+            norm_delivery.append(np.nan)
+
+        try:
+            tox = row['quantified_toxicity']
+            if pd.isna(tox):
+                norm_toxicity.append(np.nan)
+            else:
+                normalized = float(tox)/100
+                if normalized > 1:
+                    normalized = 1
+                norm_toxicity.append(normalized)
+        except Exception:
             norm_toxicity.append(np.nan)
-        else:
-            norm_toxicity.append((float(tox) - min_tox) / (max_tox - min_tox))
 
     return split_names, norm_delivery, norm_toxicity
 
@@ -378,7 +427,7 @@ def main(argv):
                     is_morgan = True
                 if arg.replace('–', '-') == '--in_silico':
                     in_silico_screen = True
-        cv_split(split ,cv_fold=cv_num, ultra_held_out_fraction = ultra_held_out, is_morgan = is_morgan, test_is_valid = in_silico_screen)
+        cv_split(split, cv_fold=cv_num, ultra_held_out_fraction = ultra_held_out, is_morgan = is_morgan, test_is_valid = in_silico_screen)
     
     elif task_type == 'merge':
         print("merge")
