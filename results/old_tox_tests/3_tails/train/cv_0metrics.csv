@@ -1,2 +1,0 @@
-fold,split_name,target,pearson,r^2,pearson_p_val,spearman,kendall,rmse,n_vals,note
-0,3_tails_3_tails_nan_in_vitro,toxicity,0.6192431232067258,0.3834620456388202,2.044209439893049e-05,0.6058161350844279,0.4435897435897436,0.1853112836559404,40,

@@ -12,6 +12,8 @@ Dosage,X_val
 Comment,Metadata
 Lipid_name,Metadata
 Num_tails,X_val
+Num_carbon_in_tail,X_val
+MolWt,X_val
 Experiment_ID,Metadata
 Purity,Metadata
 Mix_type,Metadata
@@ -31,14 +33,10 @@ screen_id,Metadata
 Sample_weight,Sample_weight
 quantified_delivery,Y_val
 identifier,Metadata
-Num_carbon_in_tail,X_val
-MolWt,Metadata
+Mol,Metadata
+Num tails,Metadata
 Helper_lipid_ID_DOPE,X_val
 Helper_lipid_ID_DSPC,X_val
-Route_of_administration_in_vitro,X_val
-Batch_or_individual_or_barcoded_Barcoded,X_val
-Batch_or_individual_or_barcoded_Batch,X_val
-Batch_or_individual_or_barcoded_Individual,X_val
 Cargo_type_mRNA,X_val
 Cargo_type_siRNA,X_val
 Model_type_HeLa,X_val

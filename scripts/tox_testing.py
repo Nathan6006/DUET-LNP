@@ -13,11 +13,272 @@ from pathlib import Path
 from chemprop import data, models, nn, featurizers 
 from lightning.pytorch.loggers import CSVLogger 
 from lightning.pytorch.callbacks import ModelCheckpoint 
-from helpers import path_if_none, change_column_order, load_datapoints, load_datapoints_tox_only
+from helpers import path_if_none, change_column_order, load_datapoints_rf, load_datapoints_tox_only
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
-from typing import List
 from sklearn.preprocessing import StandardScaler
+from rdkit import Chem
+from rdkit.Chem import rdFingerprintGenerator, DataStructs
+import xgboost as xgb
+
+#sys.argv = ['tox_testing.py', 'xg_1.1', '--basic', '--cv', '5']
+
+
+def smiles_to_fingerprint(smiles, radius=2, n_bits=2048, use_counts=False):
+    """
+    Convert a SMILES string into a Morgan fingerprint.
+    
+    Args:
+        use_counts (bool): If True, returns count vector (ECFP-Counts). 
+                           If False, returns bit vector (ECFP/Morgan).
+    """
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return np.zeros(n_bits)
+
+    # Correct Import usage for modern RDKit
+    gen = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=n_bits)
+
+    if use_counts:
+        # Returns counts of substructures (SparseIntVect)
+        fp = gen.GetCountFingerprint(mol)
+    else:
+        # Returns 0/1 bits (ExplicitBitVect)
+        # Note: Modern generators use GetFingerprint for the default bit vector, 
+        # NOT GetFingerprintAsBitVect (which is for legacy AllChem generators)
+        fp = gen.GetFingerprint(mol)
+
+    arr = np.zeros((n_bits,), dtype=int)
+    DataStructs.ConvertToNumpyArray(fp, arr)
+    return arr
+
+def dataset_to_numpy(datapoints, smiles_column="smiles"):
+    X, y = [], []
+    valid_indices = [] # Track valid indices to keep X and y aligned
+    
+    for i, dp in enumerate(datapoints):
+        # Safety check for missing extra features
+        extra_features = dp.get("x_d", [])
+        if extra_features is None: 
+            extra_features = []
+            
+        fp = smiles_to_fingerprint(dp[smiles_column])
+        
+        # Ensure dimensionality matches
+        feats = np.concatenate([fp, np.array(extra_features)])
+        X.append(feats)
+        
+        # specific handling for target existence
+        target = dp.get("y", [None])[0]
+        y.append(target)
+
+    return np.array(X), np.array(y)
+
+def train_rf(split_dir="../data", 
+             save_dir="../data",      # Reverted to save_dir to match your script call
+             cv_fold=0,               
+             smiles_column="smiles", 
+             target_columns=["quantified_toxicity"],
+             model_type="rf",         # New argument: "rf" or "xg"
+             n_estimators=200, 
+             max_depth=10, 
+             min_samples_leaf=15, 
+             max_features="sqrt"):
+    
+    # Ensure the specific fold/model directory exists before trying to save files into it.
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir, exist_ok=True)
+        print(f"Created directory: {save_dir}")
+
+    print(f"Loading data from {split_dir}...")
+    # Load raw datapoints
+    train_datapoints = load_datapoints_rf(
+        os.path.join(split_dir, "train.csv"),
+        os.path.join(split_dir, "train_extra_x.csv"),
+        smiles_column=smiles_column,
+        target_columns=target_columns
+    )
+    val_datapoints = load_datapoints_rf(
+        os.path.join(split_dir, "valid.csv"),
+        os.path.join(split_dir, "valid_extra_x.csv"),
+        smiles_column=smiles_column,
+        target_columns=target_columns
+    )
+
+    # --- Feature Scaling ---
+    # Fit StandardScaler on training extra features and save it
+    print("Fitting and saving scaler...")
+    train_x_d = [dp["x_d"] for dp in train_datapoints if dp["x_d"] is not None]
+    
+    if len(train_x_d) > 0:
+        scaler = StandardScaler()
+        scaler.fit(train_x_d)
+        
+        scaler_path = os.path.join(save_dir, "extra_features_scaler.pkl")
+        # This will now work because save_dir was created above
+        with open(scaler_path, "wb") as f:
+            pickle.dump(scaler, f)
+            
+        # Apply scaling to train data in memory
+        for dp in train_datapoints:
+            if dp["x_d"] is not None and len(dp["x_d"]) > 0:
+                dp["x_d"] = scaler.transform([dp["x_d"]])[0]
+        
+        # Apply scaling to val data in memory
+        for dp in val_datapoints:
+            if dp["x_d"] is not None and len(dp["x_d"]) > 0:
+                dp["x_d"] = scaler.transform([dp["x_d"]])[0]
+    else:
+        print("Warning: No extra features found to scale.")
+
+    # Load weights
+    train_weights = pd.read_csv(os.path.join(split_dir, "train_weights.csv"))["Sample_weight"].values
+
+    # Convert to numpy
+    X_train, y_train = dataset_to_numpy(train_datapoints, smiles_column)
+    X_val, y_val     = dataset_to_numpy(val_datapoints, smiles_column)
+
+    print(f"Training {model_type.upper()} for fold {cv_fold}...")
+    
+    if model_type == "rf":
+        model = RandomForestRegressor(
+            n_estimators=n_estimators,
+            max_depth=max_depth,
+            min_samples_leaf=min_samples_leaf,
+            max_features=max_features,
+            random_state=42,
+            n_jobs=-1
+        )
+    elif model_type == "xg":
+        # XGBoost Regressor
+        model = xgb.XGBRegressor(
+            n_estimators=n_estimators,
+            max_depth=max_depth,
+            n_jobs=-1,
+            random_state=42,
+            tree_method="hist"  # Often faster for larger datasets
+        )
+    else:
+        raise ValueError(f"Unknown model_type: {model_type}. Use 'rf' or 'xg'.")
+
+    # Both RF and XGBoost support sample_weight in fit()
+    model.fit(X_train, y_train, sample_weight=train_weights)
+
+    # Evaluate
+    y_pred = model.predict(X_val)
+    mse = mean_squared_error(y_val, y_pred)
+    mae = mean_absolute_error(y_val, y_pred)
+    print(f"Fold {cv_fold} Validation MSE: {mse:.4f}, MAE: {mae:.4f}")
+
+    model_path = os.path.join(save_dir, "basic_model.pkl")
+    with open(model_path, "wb") as f:
+        pickle.dump(model, f)
+    print(f"Saved model to {model_path}")
+
+def make_preds(
+    model_dir="../data",
+    data_dir="../data",
+    tvt="test",
+    cv=5,
+    df_test=None, # Changed default from pd.DataFrame type to None
+    preds_dir="../data",
+    rf=False
+):
+    print(f"Running predict for CV {cv}...")
+
+    # Load data ONCE to ensure alignment for both paths
+    target_datapoints = load_datapoints_rf(
+        os.path.join(data_dir, f"{tvt}.csv"),
+        os.path.join(data_dir, f"{tvt}_extra_x.csv"),
+        target_columns=["quantified_toxicity"]
+    )
+    
+    # Extract SMILES directly from the loaded datapoints to ensure row alignment
+    aligned_smiles = [dp["smiles"] for dp in target_datapoints]
+
+    if rf:
+        # --- Random Forest / XGBoost path ---
+        model_path = os.path.join(model_dir, f"model_{cv}", "basic_model.pkl")
+        
+        if not os.path.exists(model_path):
+            raise FileNotFoundError(f"Model not found at {model_path}. Check train_rf save paths.")
+
+        with open(model_path, "rb") as f:
+            rf_model = pickle.load(f)
+
+        # Load and apply scaler
+        scaler_path = os.path.join(model_dir, f"model_{cv}", "extra_features_scaler.pkl")
+        if os.path.exists(scaler_path):
+            with open(scaler_path, "rb") as f:
+                scaler = pickle.load(f)
+        else:
+            scaler = None
+            print("Warning: Scaler not found, proceeding without scaling extra features.")
+
+        # Build feature matrix
+        X = []
+        for dp in target_datapoints:
+            fp = smiles_to_fingerprint(dp["smiles"])
+            
+            # Ensure dp["x_d"] is array-like
+            x_d = np.array(dp["x_d"]) if dp["x_d"] is not None else np.array([])
+            
+            # Apply scaling if scaler exists and x_d is not empty
+            if scaler is not None and len(x_d) > 0:
+                x_d = scaler.transform([x_d])[0]
+                
+            feats = np.concatenate([fp, x_d])
+            X.append(feats)
+        X = np.array(X)
+
+        preds = rf_model.predict(X)
+
+    else:
+        # --- Neural net path (Chemprop) ---
+        test_data = load_datapoints_tox_only(
+            os.path.join(data_dir, f"{tvt}.csv"),
+            os.path.join(data_dir, f"{tvt}_extra_x.csv")
+        )
+        featurizer = featurizers.SimpleMoleculeMolGraphFeaturizer()
+        test_dataset = data.MoleculeDataset(test_data, featurizer=featurizer)
+
+        scaler_path = os.path.join(model_dir, f"model_{cv}", "extra_features_scaler.pkl")
+        with open(scaler_path, "rb") as f:
+            extra_features_scaler = pickle.load(f)
+        test_dataset.normalize_inputs("X_d", extra_features_scaler)
+
+        checkpoint_path = os.path.join(model_dir, f"model_{cv}", "best.ckpt")
+        loaded_model = models.MPNN.load_from_checkpoint(checkpoint_path)
+
+        test_loader = data.build_dataloader(test_dataset, shuffle=False)
+
+        with torch.inference_mode():
+            trainer = pl.Trainer(
+                logger=None,
+                enable_progress_bar=False,
+                accelerator="auto",
+                devices=1
+            )
+            preds = trainer.predict(loaded_model, test_loader)
+        preds = np.concatenate(preds, axis=0)
+
+    # Flatten predictions if necessary
+    if preds.ndim > 1 and preds.shape[1] == 1:
+        print("flattening preds")
+        preds = preds.flatten()
+
+    # Create DataFrame
+    current_predictions = pd.DataFrame({
+        "smiles": aligned_smiles, # Use the aligned smiles
+        f"cv_{cv}_pred_quantified_toxicity": preds
+    })
+
+    #print(f"Saving preds to {preds_dir}")
+    os.makedirs(preds_dir, exist_ok=True)
+    out_path = os.path.join(preds_dir, f"cv_{cv}_preds.csv")
+    current_predictions.to_csv(out_path, index=False)
+
+    return current_predictions
 
 def train_cm(
     split_dir='../data',
@@ -43,8 +304,10 @@ def train_cm(
     mp = nn.BondMessagePassing(**chemeleon_mp['hyper_parameters'])
     mp.load_state_dict(chemeleon_mp['state_dict'])
 
-    train_dset = data.MoleculeDataset(train_datapoints, featurizer)
-    val_dset = data.MoleculeDataset(val_datapoints, featurizer)
+    train_weights = pd.read_csv(os.path.join(split_dir, "train_weights.csv"))["Sample_weight"].values
+    val_weights   = pd.read_csv(os.path.join(split_dir, "valid_weights.csv"))["Sample_weight"].values
+    train_dset = data.MoleculeDataset(train_datapoints, featurizer, sample_weights=train_weights)
+    val_dset   = data.MoleculeDataset(val_datapoints, featurizer, sample_weights=val_weights)
 
     # Normalize extra features
     extra_features_scaler = train_dset.normalize_inputs("X_d")
@@ -119,7 +382,8 @@ def make_pred_vs_actual_tvt(
     model_folder,
     ensemble_size=5,
     standardize_predictions=False,
-    tvt='test'
+    tvt='test',
+    rf=False
 ):
     # Makes predictions on each split (train/valid/test) in a CV system
     # Now restricted to single target: quantified_toxicity
@@ -148,45 +412,18 @@ def make_pred_vs_actual_tvt(
                 current_predictions = pd.read_csv(f'{preds_dir}/cv_{cv}_preds.csv')
                 print("already have preds.csv")
             except:
-                print("running predict")
-                checkpoint_path = f'{model}/model_{cv}/best.ckpt'
-                loaded_model = models.MPNN.load_from_checkpoint(checkpoint_path)
-
-                test_data = load_datapoints(
-                    os.path.join(data_dir, f'{tvt}.csv'),
-                    os.path.join(data_dir, f'{tvt}_extra_x.csv')
-                )
-                featurizer = featurizers.SimpleMoleculeMolGraphFeaturizer()
-                test_dataset = data.MoleculeDataset(test_data, featurizer=featurizer)
-
-                # normalize extra features
-                scaler_path = os.path.join(f"{model}/model_{cv}/extra_features_scaler.pkl")
-                with open(scaler_path, "rb") as f:
-                    extra_features_scaler = pickle.load(f)
-                test_dataset.normalize_inputs("X_d", extra_features_scaler)
-                test_loader = data.build_dataloader(test_dataset, shuffle=False)
-
-                # run preds
-                with torch.inference_mode():
-                    trainer = pl.Trainer(logger=None, enable_progress_bar=False, accelerator="auto", devices=1)
-                    preds = trainer.predict(loaded_model, test_loader)
-                preds = np.concatenate(preds, axis=0)
-
-                # single target only
-                current_predictions = pd.DataFrame(preds, columns=["quantified_toxicity"])
-                current_predictions["smiles"] = df_test["smiles"].values
-                print("about to make preds.csv")
-                current_predictions.to_csv(f'{preds_dir}/cv_{cv}_preds.csv', index=False)
-
+                current_predictions = make_preds(model_dir=model, data_dir=data_dir, tvt=tvt, cv=cv, df_test=df_test, preds_dir=preds_dir, rf=rf)
+            
             current_predictions.drop(columns=['smiles'], inplace=True)
-            for col in current_predictions.columns:
-                if standardize_predictions:
-                    print("standardizing predictions")
-                    preds_to_standardize = current_predictions[col]
-                    std = np.std(preds_to_standardize)
-                    mean = np.mean(preds_to_standardize)
-                    current_predictions[col] = [(val - mean) / std for val in current_predictions[col]]
-                current_predictions.rename(columns={col: f'cv_{cv}_pred_{col}'}, inplace=True)
+
+            # for col in current_predictions.columns:
+            #     if standardize_predictions:
+            #         print("standardizing predictions")
+            #         preds_to_standardize = current_predictions[col]
+            #         std = np.std(preds_to_standardize)
+            #         mean = np.mean(preds_to_standardize)
+            #         current_predictions[col] = [(val - mean) / std for val in current_predictions[col]]
+            #     current_predictions.rename(columns={col: f'cv_{cv}_pred_{col}'}, inplace=True)
 
             output = pd.concat([output, current_predictions], axis=1)
 
@@ -391,7 +628,9 @@ def analyze_predictions_cv_tvt(
         fold_df.to_csv(f"{crossval_results_path}/metrics/cv_{i}metrics.csv", index=False)
 
     #create pooled metrics file
+    path_if_none(f"{path_to_preds}{split_name}/{tvt}/pooled")
     rows = []
+
     for i in range(ensemble_number):
         df = pd.read_csv(f"{path_to_preds}{split_name}/{tvt}/cv_{i}/predicted_vs_actual.csv")
         pred_col = f'cv_{i}_pred_quantified_toxicity'
@@ -411,6 +650,17 @@ def analyze_predictions_cv_tvt(
             spearman_r, _ = scipy.stats.spearmanr(actual, pred)
             kendall_r, _ = scipy.stats.kendalltau(actual, pred)
             rmse = np.sqrt(mean_squared_error(actual, pred))
+
+            # --- NEW: per-fold pooled plot ---
+            plt.figure()
+            plt.scatter(pred, actual, color='black')
+            plt.plot(np.unique(pred), np.poly1d(np.polyfit(pred, actual, 1))(np.unique(pred)))
+            plt.xlabel(f'Predicted toxicity (cv_{i})')
+            plt.ylabel('Quantified toxicity')
+            plt.title(f'Fold {i} pooled predictions vs actual')
+            plt.savefig(f"{path_to_preds}{split_name}/{tvt}/pooled/cv_{i}_pooled_pred_vs_actual.png")
+            plt.close()
+
         else:
             pearson_r = pearson_p = spearman_r = kendall_r = rmse = np.nan
 
@@ -424,9 +674,9 @@ def analyze_predictions_cv_tvt(
             'n_vals': len(actual)
         })
 
+    # save metrics
     pooled_metrics_df = pd.DataFrame(rows)
-    pooled_metrics_df.to_csv(f"{path_to_preds}{split_name}/{tvt}/pooled_metrics.csv", index=False)
-        
+    pooled_metrics_df.to_csv(f"{path_to_preds}{split_name}/{tvt}/pooled/pooled_metrics.csv", index=False)
     
     # Ultra-held-out analysis
     try:
@@ -499,6 +749,7 @@ def main(argv):
     split_folder = argv[1]
     epochs = 50
     cv_num = 2
+    basic=False
     for i, arg in enumerate(argv):
         if arg.replace('–', '-') == '--epochs':
             epochs = int(argv[i+1])
@@ -506,29 +757,26 @@ def main(argv):
         if arg.replace('–', '-') == '--cv':
             cv_num = int(argv[i+1])
             print('this many folds: ',str(cv_num))
-        # if arg.replace('–', '-') == '--cm':
-        #     for cv in range(cv_num):
-        #         print("using cm")
-        #         split_dir = '../data/crossval_splits/'+split_folder+'/cv_'+str(cv)
-        #         save_dir = split_dir+'/model_'+str(cv)
-        #         train_cm(split_dir=split_dir,epochs=epochs, save_dir=save_dir)
-        #     return
-
-    # for cv in range(cv_num):
-    #     split_dir = '../data/crossval_splits/'+split_folder+'/cv_'+str(cv)
-    #     save_dir = split_dir+'/model_'+str(cv)
-    #     train_cm(split_dir=split_dir,epochs=epochs, save_dir=save_dir)
-    
+        if arg.replace('–', '-') == '--basic':
+            print("using basic model")
+            basic = True
+    if basic:
+        for cv in range(cv_num):
+            split_dir = '../data/crossval_splits/'+split_folder+'/cv_'+str(cv)
+            save_dir = split_dir+'/model_'+str(cv)
+            train_rf(split_dir=split_dir, save_dir=save_dir, model_type="xg")
+    else:      
+        for cv in range(cv_num):
+            split_dir = '../data/crossval_splits/'+split_folder+'/cv_'+str(cv)
+            save_dir = split_dir+'/model_'+str(cv)
+            train_cm(split_dir=split_dir,epochs=epochs, save_dir=save_dir)
+        
     
     test_dir = split_folder
     model_dir = test_dir
-    cv = 2
     s = False
     to_eval = ["test", "train", "valid"]
     for i, arg in enumerate(argv):
-        if arg.replace('–', '-') == '--cv':
-            cv = int(argv[i+1])
-            print('this many folds: ',str(cv))
         if arg.replace('–', '-') == '--diff_model':
             model_dir = argv[i+1]
         if arg.replace('–', '-') == '--standardize':
@@ -536,9 +784,10 @@ def main(argv):
             print('standardize')
     for tvt in to_eval:
         print("make pva")
-        make_pred_vs_actual_tvt(test_dir, model_dir, ensemble_size = cv, standardize_predictions= s, tvt=tvt)
+        make_pred_vs_actual_tvt(test_dir, model_dir, ensemble_size = cv_num, standardize_predictions= s, tvt=tvt, rf=basic)
         print("analyze preds")
-        analyze_predictions_cv_tvt(test_dir, ensemble_number= cv, tvt=tvt)
+        print(cv)
+        analyze_predictions_cv_tvt(test_dir, ensemble_number= cv_num, tvt=tvt)
         print("done with:", tvt)
 
 
@@ -586,9 +835,7 @@ def train_basic(split_dir ='../data', smiles_column='smiles', target_columns = [
 
     X_d_transform = nn.ScaleTransform.from_standard_scaler(extra_features_scaler)
 
-    #sigmoid for activation
-    #cross entropy loss 
-    #train until loss near 0
+    #maybe try one sigmoidl layer for activation in the future 
     metric_list = [nn.metrics.RMSE(), nn.metrics.MAE()]
     chemprop_model = models.MPNN(
         mp, agg, ffn,

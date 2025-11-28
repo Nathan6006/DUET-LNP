@@ -5,7 +5,7 @@ from rdkit import Chem
 from rdkit.Chem import Descriptors 
 import sys
 import random
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, KFold
 from helpers import path_if_none, change_column_order, load_datapoints_tox_only
 
 
@@ -160,10 +160,10 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
 
 
     # Make the column type dict
-    extra_x_variables = ['Cationic_Lipid_Mol_Ratio','Phospholipid_Mol_Ratio','Cholesterol_Mol_Ratio','PEG_Lipid_Mol_Ratio','Cationic_Lipid_to_mRNA_weight_ratio', 'Num_tails', 'Num_carbon_in_tail', 'Dosage', 'Exposure_time']
+    extra_x_variables = ['Cationic_Lipid_Mol_Ratio','Phospholipid_Mol_Ratio','Cholesterol_Mol_Ratio','PEG_Lipid_Mol_Ratio','Cationic_Lipid_to_mRNA_weight_ratio', 'Num_tails', 'Num_carbon_in_tail', 'Dosage', 'Exposure_time', 'MolWt']
     # ADD HELPER LIPID ID
-    # extra_x_categorical = ['Delivery_target','Helper_lipid_ID','Route_of_administration','Batch_or_individual_or_barcoded','screen_id']
-    extra_x_categorical = ['Delivery_target','Helper_lipid_ID','Route_of_administration','Batch_or_individual_or_barcoded','Cargo_type','Model_type']
+    # extra_x_categorical = ['Delivery_target','Helper_lipid_ID','Route_of_administration','Batch_or_individual_or_barcoded','Cargo_type','Model_type']
+    extra_x_categorical = ['Helper_lipid_ID','Cargo_type','Model_type']
 
     # other_x_vals = ['Target_organ']
     # form_variables.append('Helper_lipid_ID')
@@ -200,95 +200,6 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
     print("creating all_data")
     change_column_order(path, all_df)
     col_type_df.to_csv(write_path + '/col_type.csv', index = False)
-
-
-def cv_split(split_spec_fname, path_to_folders='../data',
-                       is_morgan=False, cv_fold=2, ultra_held_out_fraction=-1.0,
-                       min_unique_vals=2.0, test_is_valid=False,
-                       train_frac=0.7, valid_frac=.125, test_frac=0.175,
-                       random_state=42):
-    """
-    Splits the dataset according to the specifications in split_spec_fname.
-    Uses sklearn to create a single fixed test set and splits the rest into train/valid.
-    Supports ultra held-out sets and maintains folder structure.
-
-    Parameters:
-        split_spec_fname: CSV specifying split/train rules
-        path_to_folders: folder containing all_data.csv, crossval_split_specs, etc.
-        is_morgan: whether to include Morgan fingerprints
-        cv_fold: number of CV folds (1-5)
-        ultra_held_out_fraction: fraction to hold out from all CV splits
-        min_unique_vals: minimum unique values for splitting
-        test_is_valid: if True, validation = test fold (used for in-silico screening)
-        train_frac, valid_frac, test_frac: fractions for train/valid/test (must sum to 1)
-        random_state: random seed for reproducibility
-    """
-    all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data.csv'))
-    split_df = pd.read_csv(os.path.join(path_to_folders, 'crossval_split_specs', split_spec_fname))
-    col_types = pd.read_csv(os.path.join(path_to_folders, 'col_type.csv'))
-
-    split_path = os.path.join(path_to_folders, 'crossval_splits', split_spec_fname[:-4])
-    if ultra_held_out_fraction > 0:
-        split_path += '_with_uho'
-    if is_morgan:
-        split_path += '_morgan'
-    if test_is_valid:
-        split_path += '_for_iss'
-
-    if ultra_held_out_fraction > 0:
-        path_if_none(os.path.join(split_path, 'ultra_held_out'))
-    
-    for i in range(cv_fold):
-        path_if_none(os.path.join(split_path, f'cv_{i}'))
-
-    perma_train = pd.DataFrame({})
-    ultra_held_out = pd.DataFrame({})
-    cv_data = pd.DataFrame({})
-
-    for _, row in split_df.iterrows():
-        dtypes = row['Data_types_for_component'].split(',')
-        vals = row['Values'].split(',')
-        df_to_concat = all_df.copy()
-
-        for i, dtype in enumerate(dtypes):
-            df_to_concat = df_to_concat[df_to_concat[dtype.strip()] == vals[i].strip()].reset_index(drop=True)
-
-        values_to_split = df_to_concat[row['Data_type_for_split']]
-        unique_values_to_split = list(set(values_to_split))
-
-        if row['Train_or_split'].lower() == 'train':
-            perma_train = pd.concat([perma_train, df_to_concat])
-        elif row['Train_or_split'].lower() == 'split':
-            cv_split_values, ultra_held_out_values = split_for_cv(unique_values_to_split, cv_fold, ultra_held_out_fraction)
-            ultra_held_out = pd.concat([ultra_held_out, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(ultra_held_out_values)]])
-            cv_data = pd.concat([cv_data, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(sum(cv_split_values, []))]])
-
-    if ultra_held_out_fraction >= 0 and not ultra_held_out.empty:
-        y, x, w, m = split_df_by_col_type(ultra_held_out, col_types)
-        yxwm_to_csvs(y, x, w, m, split_path + '/ultra_held_out', 'test')
-
-    if abs(train_frac + valid_frac + test_frac - 1.0) > 1e-6:
-        raise ValueError("train_frac + valid_frac + test_frac must sum to 1.0")
-
-    train_valid_df, test_df = train_test_split(
-        cv_data, test_size=test_frac, random_state=random_state, shuffle=True
-    )
-    y, x, w, m = split_df_by_col_type(test_df, col_types)
-    path_if_none(split_path + '/test')
-    yxwm_to_csvs(y, x, w, m, split_path + '/test', 'test')
-    
-    valid_size = valid_frac / (train_frac + valid_frac)
-    train_df, valid_df = train_test_split(
-        train_valid_df, test_size=valid_size, random_state=random_state, shuffle=True
-    )
-
-    if not perma_train.empty:
-        train_df = pd.concat([train_df, perma_train]).drop_duplicates().reset_index(drop=True)
-
-    for i in range(cv_fold):
-        for df, split_type in zip([valid_df, train_df], ['valid', 'train']):
-            y, x, w, m = split_df_by_col_type(df, col_types)
-            yxwm_to_csvs(y, x, w, m, split_path + '/cv_' +str(i), split_type)
 
 def generate_normalized_data_(all_df, split_variables = ['Experiment_ID','Library_ID','Delivery_target','Model_type','Route_of_administration']):
     split_names = []
@@ -383,32 +294,132 @@ def generate_normalized_data(all_df, split_variables = ['Experiment_ID','Library
 
     return split_names, norm_delivery, norm_toxicity
 
-# these functions only used in cv_split
-def split_df_by_col_type(df,col_types):
-    # Splits into 4 dataframes: y_vals, x_vals, sample_weights, metadata
+def cv_split(split_spec_fname, path_to_folders='../data',
+                       is_morgan=False, cv_fold=2, ultra_held_out_fraction=-1.0,
+                       min_unique_vals=2.0, test_is_valid=False,
+                       train_frac=0.7, valid_frac=.125, test_frac=0.175,
+                       random_state=42):
+    """
+    Splits the dataset according to the specifications in split_spec_fname.
+    Uses sklearn to create a single fixed test set and splits the rest into K-fold train/valid.
+    
+    UPDATED: Now correctly rotates the validation fold using KFold logic.
+    """
+    # Load Data
+    all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data.csv'))
+    split_df = pd.read_csv(os.path.join(path_to_folders, 'crossval_split_specs', split_spec_fname))
+    col_types = pd.read_csv(os.path.join(path_to_folders, 'col_type.csv'))
+
+    # Determine Output Paths
+    split_path = os.path.join(path_to_folders, 'crossval_splits', split_spec_fname[:-4])
+    if ultra_held_out_fraction > 0:
+        split_path += '_with_uho'
+    if is_morgan:
+        split_path += '_morgan'
+    if test_is_valid:
+        split_path += '_for_iss'
+
+    # Create Directories
+    if ultra_held_out_fraction > 0:
+        path_if_none(os.path.join(split_path, 'ultra_held_out'))
+    
+    for i in range(cv_fold):
+        path_if_none(os.path.join(split_path, f'cv_{i}'))
+
+    # Initialize Containers
+    perma_train = pd.DataFrame({})
+    ultra_held_out = pd.DataFrame({})
+    cv_data = pd.DataFrame({})
+
+    # Process Split Rules
+    for _, row in split_df.iterrows():
+        dtypes = row['Data_types_for_component'].split(',')
+        vals = row['Values'].split(',')
+        df_to_concat = all_df.copy()
+
+        for i, dtype in enumerate(dtypes):
+            df_to_concat = df_to_concat[df_to_concat[dtype.strip()] == vals[i].strip()].reset_index(drop=True)
+
+        values_to_split = df_to_concat[row['Data_type_for_split']]
+        unique_values_to_split = list(set(values_to_split))
+
+        if row['Train_or_split'].lower() == 'train':
+            perma_train = pd.concat([perma_train, df_to_concat])
+        elif row['Train_or_split'].lower() == 'split':
+            # This helper effectively just shuffles unique values here
+            cv_split_values, ultra_held_out_values = split_for_cv(unique_values_to_split, cv_fold, ultra_held_out_fraction)
+            
+            ultra_held_out = pd.concat([ultra_held_out, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(ultra_held_out_values)]])
+            
+            # We collect ALL potential CV data here. The actual K-Fold happens later.
+            cv_data = pd.concat([cv_data, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(sum(cv_split_values, []))]])
+
+    # Save Ultra Held Out
+    if ultra_held_out_fraction >= 0 and not ultra_held_out.empty:
+        y, x, w, m = split_df_by_col_type(ultra_held_out, col_types)
+        yxwm_to_csvs(y, x, w, m, split_path + '/ultra_held_out', 'test')
+
+    if abs(train_frac + valid_frac + test_frac - 1.0) > 1e-6:
+        raise ValueError("train_frac + valid_frac + test_frac must sum to 1.0")
+
+    # 1. Create the fixed Test Set
+    # We remove the test set first so it doesn't leak into CV
+    train_valid_df, test_df = train_test_split(
+        cv_data, test_size=test_frac, random_state=random_state, shuffle=True
+    )
+    
+    # Save Test Set
+    y, x, w, m = split_df_by_col_type(test_df, col_types)
+    path_if_none(split_path + '/test')
+    yxwm_to_csvs(y, x, w, m, split_path + '/test', 'test')
+    
+    # 2. Perform Real K-Fold Cross Validation on the remaining data
+    # Reset index is crucial so KFold indices align with the dataframe
+    train_valid_df = train_valid_df.reset_index(drop=True)
+    
+    kf = KFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
+    
+    # Iterate through the folds
+    for i, (train_index, valid_index) in enumerate(kf.split(train_valid_df)):
+        
+        fold_train = train_valid_df.iloc[train_index]
+        fold_valid = train_valid_df.iloc[valid_index]
+        
+        # Add the 'perma_train' data (data hardcoded to always be in train) to the training fold
+        if not perma_train.empty:
+            fold_train = pd.concat([fold_train, perma_train]).drop_duplicates().reset_index(drop=True)
+        
+        # Save Valid
+        y, x, w, m = split_df_by_col_type(fold_valid, col_types)
+        yxwm_to_csvs(y, x, w, m, split_path + '/cv_' + str(i), 'valid')
+
+        # Save Train
+        y, x, w, m = split_df_by_col_type(fold_train, col_types)
+        yxwm_to_csvs(y, x, w, m, split_path + '/cv_' + str(i), 'train')
+
+# Helper functions required for the script to run independently
+
+def split_df_by_col_type(df, col_types):
     y_vals_cols = col_types.Column_name[col_types.Type == 'Y_val']
     x_vals_cols = col_types.Column_name[col_types.Type == 'X_val']
     xvals_df = df[x_vals_cols]
     weight_cols = col_types.Column_name[col_types.Type == 'Sample_weight']
     metadata_cols = col_types.Column_name[col_types.Type.isin(['Metadata','X_val_categorical'])]
-    return df[y_vals_cols], xvals_df ,df[weight_cols] ,df[metadata_cols]
+    return df[y_vals_cols], xvals_df, df[weight_cols], df[metadata_cols]
 
-def yxwm_to_csvs(y, x, w, m, path,settype):
-    # y is y values,  x is x values, w is weights, m is metadata
-    # set_type is either train, valid, or test
-    y.to_csv(path+'/'+settype+'.csv', index = False)
-    x.to_csv(path + '/' + settype + '_extra_x.csv', index = False)
-    w.to_csv(path + '/' + settype + '_weights.csv', index = False)
-    m.to_csv(path + '/' + settype + '_metadata.csv', index = False)
+def yxwm_to_csvs(y, x, w, m, path, settype):
+    y.to_csv(os.path.join(path, settype+'.csv'), index=False)
+    x.to_csv(os.path.join(path, settype + '_extra_x.csv'), index=False)
+    w.to_csv(os.path.join(path, settype + '_weights.csv'), index=False)
+    m.to_csv(os.path.join(path, settype + '_metadata.csv'), index=False)
 
-def split_for_cv(vals,cv_fold, held_out_fraction):
-    # randomly splits vals into cv_fold groups, plus held_out_fraction of vals are completely held out. So for example split_for_cv(vals,5,0.1) will hold out 10% of data and randomly put 18% into each of 5 folds
+def split_for_cv(vals, cv_fold, held_out_fraction):
     random.seed(42)
     random.shuffle(vals)
-    held_out_vals = vals[:int(held_out_fraction*len(vals))]
-    cv_vals = vals[int(held_out_fraction*len(vals)):]
+    held_out_len = int(held_out_fraction * len(vals)) if held_out_fraction > 0 else 0
+    held_out_vals = vals[:held_out_len]
+    cv_vals = vals[held_out_len:]
     return [cv_vals[i::cv_fold] for i in range(cv_fold)], held_out_vals
-
 
 def main(argv):
     task_type = argv[1] 

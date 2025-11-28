@@ -42,3 +42,21 @@ def load_datapoints_tox_only(smiles_csv, extra_csv, smiles_column='smiles', targ
         for smi, y, xf in zip(smis, ys, extra_features)
     ]
     return datapoints
+
+def load_datapoints_rf(smiles_csv, extra_csv, smiles_column='smiles',
+                       target_columns=["quantified_toxicity"]):
+    df_smi = pd.read_csv(smiles_csv)
+    df_extra = pd.read_csv(extra_csv)
+
+    smis = df_smi[smiles_column].values
+    ys = df_smi[target_columns].values
+    extra_features = df_extra.to_numpy(dtype=float)
+
+    datapoints = []
+    for smi, y, xf in zip(smis, ys, extra_features):
+        datapoints.append({
+            "smiles": smi,
+            "y": y,
+            "x_d": xf
+        })
+    return datapoints

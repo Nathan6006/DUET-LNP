@@ -1,2 +1,0 @@
-fold,split_name,target,pearson,r^2,pearson_p_val,spearman,kendall,rmse,n_vals,note
-1,Xue_CAD_LNP_Xue_CAD_LNP_nan_in_vitro,toxicity,0.1839632800398839,0.03384248840303275,0.3135094707021263,0.20565908719664797,0.13177173713829024,0.027502031693162548,32,
