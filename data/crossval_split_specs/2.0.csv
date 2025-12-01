@@ -1,8 +1,0 @@
-Data_types_for_component,Values,Data_type_for_split,Train_or_split
-Experiment_ID,Xue_CAD_LNP,smiles,split
-Experiment_ID,Yu_Aminoglycoside,smiles,train
-Experiment_ID,Lee_unsat,smiles,split
-Experiment_ID,Zhang_Aminoglycoside,smiles,train
-Experiment_ID,Farbiak_dendrimer_HeLa,smiles,train
-Experiment_ID,Farbiak_dendrimer_igrov1,smiles,train
-Experiment_ID,Miller_Zwitter,smiles,split

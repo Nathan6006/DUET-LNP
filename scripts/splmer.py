@@ -297,7 +297,7 @@ def generate_normalized_data(all_df, split_variables = ['Experiment_ID','Library
 def cv_split(split_spec_fname, path_to_folders='../data',
                        is_morgan=False, cv_fold=2, ultra_held_out_fraction=-1.0,
                        min_unique_vals=2.0, test_is_valid=False,
-                       train_frac=0.7, valid_frac=.125, test_frac=0.175,
+                       train_frac=0.7, valid_frac=.1, test_frac=0.2,
                        random_state=42):
     """
     Splits the dataset according to the specifications in split_spec_fname.

@@ -40,4 +40,5 @@ Helper_lipid_ID_DSPC,X_val
 Cargo_type_mRNA,X_val
 Cargo_type_siRNA,X_val
 Model_type_HeLa,X_val
+Model_type_HepG2,X_val
 Model_type_IGROV1,X_val

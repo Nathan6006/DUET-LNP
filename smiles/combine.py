@@ -3,6 +3,79 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 
 def attach_tails_to_core(core_smiles, tail_smiles):
+    core_mol = Chem.MolFromSmiles(core_smiles)
+    tail_mol = Chem.MolFromSmiles(tail_smiles)
+
+    if not core_mol or not tail_mol:
+        raise ValueError("Invalid SMILES strings provided.")
+
+    # --- STEP 1: PREPARE THE TAIL (Exactly as before) ---
+    tail_dummy = None
+    for atom in tail_mol.GetAtoms():
+        if atom.GetAtomicNum() == 0:
+            tail_dummy = atom
+            break
+            
+    if not tail_dummy:
+        raise ValueError("Tail molecule must contain a wildcard (*)")
+
+    anchor = tail_dummy.GetNeighbors()[0]
+    
+    # FREEZE VALENCE: Prevent "Ghost Hydrogen" errors on the alkyne
+    anchor.SetNumExplicitHs(anchor.GetTotalNumHs())
+    anchor.SetNoImplicit(True)
+    anchor.SetIntProp("is_anchor", 1)
+
+    # Remove the dummy atom from the tail
+    ed_tail = Chem.EditableMol(tail_mol)
+    ed_tail.RemoveAtom(tail_dummy.GetIdx())
+    tail_frag = ed_tail.GetMol()
+
+    # Re-order atoms so Anchor is Atom 0
+    new_anchor_idx = -1
+    for atom in tail_frag.GetAtoms():
+        if atom.HasProp("is_anchor"):
+            new_anchor_idx = atom.GetIdx()
+            break
+            
+    new_order = [new_anchor_idx] + [i for i in range(tail_frag.GetNumAtoms()) if i != new_anchor_idx]
+    tail_frag_ordered = Chem.RenumberAtoms(tail_frag, new_order)
+
+    # --- STEP 2: ITERATIVE REPLACEMENT (The Fix) ---
+    
+    current_mol = core_mol
+    dummy_pattern = Chem.MolFromSmarts('[#0]') # Pattern matching any *
+
+    while True:
+        # Check if there are any wildcards left
+        if not current_mol.HasSubstructMatch(dummy_pattern):
+            break
+        
+        # ReplaceSubstructs with replaceAll=False returns a tuple of possibilities.
+        # We take [0] (the first possibility) to replace exactly one wildcard.
+        # This updates the graph safely for the next iteration.
+        res = Chem.ReplaceSubstructs(current_mol, dummy_pattern, tail_frag_ordered, replaceAll=False)
+        
+        if not res:
+            break
+            
+        current_mol = res[0]
+        
+        # Optional: Sanitize in between steps to ensure graph integrity
+        try:
+            Chem.SanitizeMol(current_mol)
+        except:
+            pass
+
+    # --- STEP 3: FINAL CLEANUP ---
+    try:
+        Chem.SanitizeMol(current_mol)
+    except Exception as e:
+        print(f"Final Sanitization Warning: {e}")
+
+    return Chem.MolToSmiles(current_mol, isomericSmiles=True)
+
+def attach_tails_to_core_old(core_smiles, tail_smiles):
     """
     Attaches a tail molecule to all wildcard (*) positions on a core molecule.
     
@@ -80,8 +153,8 @@ def attach_tails_to_core(core_smiles, tail_smiles):
 # --- Main Execution ---
 if __name__ == "__main__":
     # Example Data
-    tail_input = "*C(O)CCCCCCCCCC"
-    core_input = "*N(*)CCC(O)C(=O)NC1CC(N(*)*)C(OC2OC(CN(*)*)C(O)C(O)C2O)C(O)C1OC1OC(CO)C(O)C(N(*)*)C1O"
+    tail_input = "*c1ccc(CCCCCCCCCC)cc1"
+    core_input = "*NC(=N)CCCSCCC(=O)OCCCCCCCCCCCCCC"
 
     print(f"Core: {core_input}")
     print(f"Tail: {tail_input}")
