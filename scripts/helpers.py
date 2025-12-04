@@ -1,6 +1,10 @@
 import os 
 import pandas as pd
 from chemprop import data 
+from rdkit import Chem
+import numpy as np
+from rdkit.Chem import rdFingerprintGenerator, DataStructs
+
 
 
 # general helper functions 
@@ -60,3 +64,32 @@ def load_datapoints_rf(smiles_csv, extra_csv, smiles_column='smiles',
             "x_d": xf
         })
     return datapoints
+
+
+def smiles_to_fingerprint(smiles, radius=2, n_bits=2048, use_counts=False):
+    """
+    Convert a SMILES string into a Morgan fingerprint.
+    
+    Args:
+        use_counts (bool): If True, returns count vector (ECFP-Counts). 
+                           If False, returns bit vector (ECFP/Morgan).
+    """
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return np.zeros(n_bits)
+
+    # Correct Import usage for modern RDKit
+    gen = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=n_bits)
+
+    if use_counts:
+        # Returns counts of substructures (SparseIntVect)
+        fp = gen.GetCountFingerprint(mol)
+    else:
+        # Returns 0/1 bits (ExplicitBitVect)
+        # Note: Modern generators use GetFingerprint for the default bit vector, 
+        # NOT GetFingerprintAsBitVect (which is for legacy AllChem generators)
+        fp = gen.GetFingerprint(mol)
+
+    arr = np.zeros((n_bits,), dtype=int)
+    DataStructs.ConvertToNumpyArray(fp, arr)
+    return arr

@@ -201,46 +201,6 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
     change_column_order(path, all_df)
     col_type_df.to_csv(write_path + '/col_type.csv', index = False)
 
-def generate_normalized_data_(all_df, split_variables = ['Experiment_ID','Library_ID','Delivery_target','Model_type','Route_of_administration']):
-    split_names = []
-    norm_dict_del = {}
-    norm_dict_tox = {}
-    for index, row in all_df.iterrows():
-        split_name = ''
-        for vbl in split_variables:
-            split_name = split_name + str(row[vbl])+'_'
-        split_names.append(split_name[:-1])
-    unique_split_names = set(split_names)
-    for split_name in unique_split_names:
-        data_subset = all_df[[spl==split_name for spl in split_names]]
-        norm_dict_del[split_name] = (np.mean(data_subset['quantified_delivery']), np.std(data_subset['quantified_delivery']))
-        norm_dict_tox[split_name] = (np.mean(data_subset['quantified_toxicity']), np.std(data_subset['quantified_toxicity']))
-    norm_delivery = []
-    norm_toxicity = []
-    for i, row in all_df.iterrows():
-        deli = row['quantified_delivery']
-        split_del = split_names[i]
-        std_del = norm_dict_del[split_del][1]
-        mn_del = norm_dict_del[split_del][0]
-        if pd.isna(deli):
-            norm_delivery.append(np.nan)
-        else:
-            norm_delivery.append((float(deli)-mn_del)/std_del)
-
-        tox = row['quantified_toxicity']
-        # split_tox = split_names[i]
-        # std_tox = norm_dict_tox[split_tox][1]
-        # mn_tox = norm_dict_tox[split_tox][0]
-        if pd.isna(tox):
-            norm_toxicity.append(np.nan)
-        else:
-            normarlized = float(tox)/100
-            if normarlized > 1:
-                normarlized=1
-            norm_toxicity.append(normarlized)
-
-    return split_names, norm_delivery, norm_toxicity
-
 def generate_normalized_data(all_df, split_variables = ['Experiment_ID','Library_ID','Delivery_target','Model_type','Route_of_administration']):
     split_names = []
     norm_dict_del = {}
@@ -297,7 +257,7 @@ def generate_normalized_data(all_df, split_variables = ['Experiment_ID','Library
 def cv_split(split_spec_fname, path_to_folders='../data',
                        is_morgan=False, cv_fold=2, ultra_held_out_fraction=-1.0,
                        min_unique_vals=2.0, test_is_valid=False,
-                       train_frac=0.7, valid_frac=.1, test_frac=0.2,
+                       train_frac=0.65, valid_frac=.175, test_frac=0.175,
                        random_state=42):
     """
     Splits the dataset according to the specifications in split_spec_fname.
@@ -305,12 +265,10 @@ def cv_split(split_spec_fname, path_to_folders='../data',
     
     UPDATED: Now correctly rotates the validation fold using KFold logic.
     """
-    # Load Data
     all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data.csv'))
     split_df = pd.read_csv(os.path.join(path_to_folders, 'crossval_split_specs', split_spec_fname))
     col_types = pd.read_csv(os.path.join(path_to_folders, 'col_type.csv'))
 
-    # Determine Output Paths
     split_path = os.path.join(path_to_folders, 'crossval_splits', split_spec_fname[:-4])
     if ultra_held_out_fraction > 0:
         split_path += '_with_uho'
@@ -319,14 +277,12 @@ def cv_split(split_spec_fname, path_to_folders='../data',
     if test_is_valid:
         split_path += '_for_iss'
 
-    # Create Directories
     if ultra_held_out_fraction > 0:
         path_if_none(os.path.join(split_path, 'ultra_held_out'))
     
     for i in range(cv_fold):
         path_if_none(os.path.join(split_path, f'cv_{i}'))
 
-    # Initialize Containers
     perma_train = pd.DataFrame({})
     ultra_held_out = pd.DataFrame({})
     cv_data = pd.DataFrame({})
@@ -397,7 +353,7 @@ def cv_split(split_spec_fname, path_to_folders='../data',
         y, x, w, m = split_df_by_col_type(fold_train, col_types)
         yxwm_to_csvs(y, x, w, m, split_path + '/cv_' + str(i), 'train')
 
-# Helper functions required for the script to run independently
+# Helper functions for cv split
 
 def split_df_by_col_type(df, col_types):
     y_vals_cols = col_types.Column_name[col_types.Type == 'Y_val']

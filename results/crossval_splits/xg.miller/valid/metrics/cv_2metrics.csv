@@ -1,0 +1,2 @@
+fold,split_name,target,pearson,r^2,pearson_p_val,spearman,kendall,rmse,n_vals,note
+2,Miller_Zwitter_Miller_ZAL_FFL_in_vitro,toxicity,0.4920136122966127,0.24207739468516154,0.12422723249735339,0.1266870603301328,0.1075828707279838,0.17198410208550993,11,

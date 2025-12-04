@@ -21,7 +21,6 @@ Cargo_type,Metadata
 Experimenter_ID,Metadata
 Model_type,Metadata
 Exposure_time,X_val
-Target_or_delivered_gene,Metadata
 Delivery_target,Metadata
 Route_of_administration,Metadata
 Experiment_weight,Metadata

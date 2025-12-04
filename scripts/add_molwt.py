@@ -5,7 +5,8 @@ from rdkit.Chem import Descriptors
 
 # List of folders to process
 folders = [
-    "../data/data_files_to_merge/Han_branched"
+    "../data/data_files_to_merge/Han_a3"
+    # "../data/data_files_to_merge/Han_branched"
     # "../data/data_files_to_merge/Han_amidine"
     # "../data/data_files_to_merge/Miller_Zwitter"
     # "../data/data_files_to_merge/3_tails",

@@ -34,7 +34,7 @@ for _, row in cell_viability.iterrows():
         raise ValueError(f"Missing SMILES for {lipid_name}: tail={prefix}, core={part}")
 
     # Combine using attach_tails_to_core
-    full_smiles = attach_tails_to_core(tail_smiles, core_smiles)
+    full_smiles = attach_tails_to_core(core_smiles, tail_smiles)
 
     # Append to results
     rows.append({
