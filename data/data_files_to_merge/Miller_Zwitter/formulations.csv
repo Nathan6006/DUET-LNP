@@ -1,4 +1,4 @@
-Formulation,Cationic_Lipid_Mol_Ratio,Phospholipid_Mol_Ratio,Cholesterol_Mol_Ratio,PEG_Lipid_Mol_Ratio,Helper_lipid_ID,Cationic_Lipid_to_mRNA_weight_ratio,Comment
+Formulation,Ionizable_Lipid_Mol_Ratio,Phospholipid_Mol_Ratio,Cholesterol_Mol_Ratio,PEG_Lipid_Mol_Ratio,Helper_lipid_ID,Ionizable_Lipid_to_mRNA_weight_ratio,Comment
 ZAL_form,56.49717514,0,43.50282486,0,None,26.65774436,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da"
 ZAL_form,56.49717514,0,43.50282486,0,None,29.82172932,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da"
 ZAL_form,56.49717514,0,43.50282486,0,None,15.81443609,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da"

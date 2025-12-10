@@ -1,4 +1,4 @@
-Formulation,Cationic_Lipid_Mol_Ratio,Phospholipid_Mol_Ratio,Cholesterol_Mol_Ratio,PEG_Lipid_Mol_Ratio,Helper_lipid_ID,Cationic_Lipid_to_mRNA_weight_ratio,Comment,Dosage
+Formulation,Ionizable_Lipid_Mol_Ratio,Phospholipid_Mol_Ratio,Cholesterol_Mol_Ratio,PEG_Lipid_Mol_Ratio,Helper_lipid_ID,Ionizable_Lipid_to_mRNA_weight_ratio,Comment,Dosage
 Unsat_dendrimer,23.80952381,23.80952381,47.61904762,4.761904762,DOPE,10.77588088,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2693",25
 Unsat_dendrimer,23.80952381,23.80952381,47.61904762,4.761904762,DOPE,10.04013539,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2694",25
 Unsat_dendrimer,23.80952381,23.80952381,47.61904762,4.761904762,DOPE,10.19245476,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2695",25

@@ -174,7 +174,7 @@ def make_pred_vs_actual_tvt(
 
             output = pd.concat([output, current_predictions], axis=1)
 
-            pred_split_variables = ['Experiment_ID', 'Library_ID', 'Delivery_target', 'Route_of_administration']
+            pred_split_variables = ['Experiment_ID']
             output['Prediction_split_name'] = output.apply(
                 lambda row: '_'.join(str(row[v]) for v in pred_split_variables),
                 axis=1
@@ -253,7 +253,7 @@ def make_pred_vs_actual_tvt(
 
 def analyze_predictions_cv_tvt(
     split_name,
-    pred_split_variables=['Experiment_ID','Library_ID','Delivery_target','Route_of_administration'],
+    pred_split_variables=['Experiment_ID'],
     path_to_preds='../results/crossval_splits/',
     ensemble_number=5,
     min_values_for_analysis=10,

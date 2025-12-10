@@ -1,0 +1,45 @@
+Formulation,Helper_lipid_ID,Comment,Lipid_name,Experiment_ID,Purity,Mix_type,Cargo_type,Experimenter_ID,Model_type,Delivery_target,Route_of_administration,Experiment_weight,Library_ID,Goal,Batch_or_individual_or_barcoded,Value_name,screen_id
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2693",2A2-3T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2697",4A1-3T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2700",2A2-3C,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2704",4A1-3C,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2707",2A2-SC8,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2711",4A1-SC8,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2714",2A2-Ne,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2718",4A1-Ne,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2721",2A2-4T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2725",4A1-4T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2728",2A2-4C,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2732",4A1-4C,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2735",2A2-SC8,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2739",4A1-SC8,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2742",2A2-Far,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2746",4A1-Far,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2749",2A2-SC6,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2753",4A1-SC6,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2756",2A2-2T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2760",4A1-2T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2763",2A2-2C,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2767",4A1-2C,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2770",2A2-5,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2774",4A1-5,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2777",2A2-Cit,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2781",4A1-Cit,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Han_a3,DOPE,,A5-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,B5-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,A7-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,B7-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,A15-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,B15-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,A19-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,B19-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,A23-3,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,B23-3,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,A27-4,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,B27-4,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,C6-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,C13-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,C17-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,C21-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,C25-4,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,C29-6,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3

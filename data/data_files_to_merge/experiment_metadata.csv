@@ -3,8 +3,8 @@ Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,24,FLL,in_vitro,1,Xue_CAD_LNP,max,B
 Yu_Aminoglycoside,Pure,Microfluidic,mRNA,xyu,IGROV1,24,FLL,in_vitro,1,Siegwart_Amino,max,Batch,Cell_viability,Yu_Aminoglycoside
 Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,24,FFL,in_vitro,1,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
 Zhang_Aminoglycoside,Pure,Microfluidic,siRNA,zhang,HeLa,24,FFL,in_vitro,1,Zhang_Aminoglycoside,max,Individual,Cell_viability,Zhang_Aminoglycoside
-Farbiak_Dendrimer_HeLa,Pure,Microfluidic,mRNA,farbiak,HeLa,24,FFL,in_vitro,.25,Farbiak_dendrimer_HeLa,max,Individual,Cell_viability,Farbiak_dendrimer_HeLa
-Farbiak_Dendrimer_igrov1,Pure,Microfluidic,mRNA,farbiak,IGROV1,24,FFL,in_vitro,.25,Farbiak_dendrimer_igrov1,max,Individual,Cell_viability,Farbiak_dendrimer_igrov1
+Farbiak_Dendrimer_HeLa,Pure,Microfluidic,mRNA,farbiak,HeLa,24,FFL,in_vitro,.5,Farbiak_dendrimer_HeLa,max,Individual,Cell_viability,Farbiak_dendrimer_HeLa
+Farbiak_Dendrimer_igrov1,Pure,Microfluidic,mRNA,farbiak,IGROV1,24,FFL,in_vitro,.5,Farbiak_dendrimer_igrov1,max,Individual,Cell_viability,Farbiak_dendrimer_igrov1
 Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,24,FFL,in_vitro,1,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
 Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,24,FFL,in_vitro,1,Han_amidine,max,Individual,Cell_viability,Han_amidine
 Han_branched,Crude,Hand,mRNA,Han,HepG2,24,FFL,in_vitro,.5,Han_branched,max,Individual,Cell_viability,Han_branched

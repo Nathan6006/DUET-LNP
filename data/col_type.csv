@@ -2,12 +2,12 @@ Column_name,Type
 smiles,Y_val
 quantified_toxicity,Y_val
 Formulation,Metadata
-Cationic_Lipid_Mol_Ratio,X_val
+Ionizable_Lipid_Mol_Ratio,X_val
 Phospholipid_Mol_Ratio,X_val
 Cholesterol_Mol_Ratio,X_val
 PEG_Lipid_Mol_Ratio,X_val
 Helper_lipid_ID,Metadata
-Cationic_Lipid_to_mRNA_weight_ratio,X_val
+Ionizable_Lipid_to_mRNA_weight_ratio,X_val
 Dosage,X_val
 Comment,Metadata
 Lipid_name,Metadata
@@ -30,10 +30,6 @@ Batch_or_individual_or_barcoded,Metadata
 Value_name,Metadata
 screen_id,Metadata
 Sample_weight,Sample_weight
-quantified_delivery,Y_val
-identifier,Metadata
-Mol,Metadata
-Num tails,Metadata
 Helper_lipid_ID_DOPE,X_val
 Helper_lipid_ID_DSPC,X_val
 Cargo_type_mRNA,X_val

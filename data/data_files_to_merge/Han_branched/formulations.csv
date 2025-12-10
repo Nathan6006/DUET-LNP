@@ -1,4 +1,4 @@
-Dosage,Formulation,Helper_lipid_ID,Cationic_Lipid_Mol_Ratio,Phospholipid_Mol_Ratio,Cholesterol_Mol_Ratio,PEG_Lipid_Mol_Ratio,Cationic_Lipid_to_mRNA_weight_ratio
+Dosage,Formulation,Helper_lipid_ID,Ionizable_Lipid_Mol_Ratio,Phospholipid_Mol_Ratio,Cholesterol_Mol_Ratio,PEG_Lipid_Mol_Ratio,Ionizable_Lipid_to_mRNA_weight_ratio
 15,Han_branched,DOPE,40.0,10.164751344086024,19.559226690805648,1.1343862500000004,10.0
 15,Han_branched,DOPE,40.0,12.050100806451617,23.187055476529174,1.3447912500000005,10.0
 15,Han_branched,DOPE,40.0,13.935450268817215,26.81488426225271,1.5551962500000014,10.0

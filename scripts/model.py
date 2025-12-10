@@ -8,7 +8,7 @@ def main(argv):
     split_folder = argv[1]
     epochs = 50
     cv_num = 2
-    basic=True
+    basic=False
     for i, arg in enumerate(argv):
         if arg.replace('–', '-') == '--epochs':
             epochs = int(argv[i+1])

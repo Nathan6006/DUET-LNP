@@ -1,4 +1,4 @@
-identifier,Num_tails,Num_carbon_in_tail,MolWt
+Lipid_name,Num_tails,Num_carbon_in_tail,MolWt
 HG-EP6,5,6,1028.3290000000002
 HG-EP8,5,8,1168.5990000000002
 HG-EP10,5,10,1308.8690000000006

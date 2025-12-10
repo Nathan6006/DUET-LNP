@@ -1,0 +1,89 @@
+Formulation,Helper_lipid_ID,Comment,Lipid_name,Experiment_ID,Purity,Mix_type,Cargo_type,Experimenter_ID,Model_type,Delivery_target,Route_of_administration,Experiment_weight,Library_ID,Goal,Batch_or_individual_or_barcoded,Value_name,screen_id
+Lxue,DOPE,Tox,4-a2-6b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,14T-O9,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,25T-O12,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Lxue,DOPE,Tox,12-a3-7b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Lxue,DOPE,Tox,5-a2-9b2,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,6T-O9,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Lxue,DOPE,Tox,11-a2-9b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA2-Ac10,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA6-Ac18,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2774",4A1-5,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Lxue,DOPE,Tox,8-a2-9b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,8T-O9,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Lxue,DOPE,Tox,4-a3-7b2,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA3-Ep14,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA2-Ep12,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,17T-O16,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA5-Ep10,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA2-Ep10,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+Lxue,DOPE,Tox,12-a3-6b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Han_a3,DOPE,,B30-4,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2722",2A9-4T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,7T-O14,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA5-Ep12,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2762",6A3-2T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Han_a3,DOPE,,C13-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,18T-O12,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Lxue,DOPE,Tox,6-a2-9b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Lxue,DOPE,Tox,7-a3-8b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA1-Ac8,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2758",2A9V-2T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA4-Ac12,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+Lxue,DOPE,Tox,4-a3-9b2,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2775",4A3-5,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,23T-O12,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,20T-O14,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Han_a3,DOPE,,A23-3,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA1-Ac16,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,10T-O16,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Lxue,DOPE,Tox,9-a2-7,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2696",3A4-3T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2759",3A4-2T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Han_a3,DOPE,,B13-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2732",4A1-4C,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Han_a3,DOPE,,B4-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Lxue,DOPE,Tox,12-a3-9b2,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Lxue,DOPE,Tox,11-a2-6b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2746",4A1-Far,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2745",3A4-Far,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Lxue,DOPE,Tox,9-a2-6,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Han_a3,DOPE,,B28-4,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,15T-O14,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Lxue,DOPE,Tox,2-a3-8b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Lxue,DOPE,Tox,4-a2-8b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,11T-O9,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Lxue,DOPE,Tox,12-a3-8b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2719",4A3-Ne,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2780",3A4-Cit,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Lxue,DOPE,Tox,10-a2-7b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Han_a3,DOPE,,B25-4,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA4-Ac14,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+Han_a3,DOPE,,C20-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Lxue,DOPE,Tox,1-a3-9b2,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Han_a3,DOPE,,C8-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2749",2A2-SC6,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,11T-O14,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2703",3A4-3C,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Lxue,DOPE,Tox,8-a2-6,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Lxue,DOPE,Tox,4-a2-9b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Lxue,DOPE,Tox,1-a2-6b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2777",2A2-Cit,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2754",4A3-SC6,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Lxue,DOPE,Tox,6-a3-8b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Lxue,DOPE,Tox,9-a3-9b2,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA2-Ac8,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+Han_a3,DOPE,,A26-4,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Han_a3,DOPE,,B2-2,Han_a3,Crude,Hand,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_a3,max,Individual,Cell_viability,Han_a3
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2702",2A9V-3C,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Lxue,DOPE,Tox,4-a3-8b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Lxue,DOPE,Tox,4-a2-7b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,4T-O9,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2748",6A3-Far,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2765",2A9V-2C,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA6-Ep8,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+Han_amidine,DOPE,Computed with aid lipid molwt as 865,23T-O14,Han_amidine,Crude,Microfluidic,mRNA,Han,HepG2,FFL,in_vitro,1.0,Han_amidine,max,Individual,Cell_viability,Han_amidine
+Lxue,DOPE,Tox,6-a3-7b2,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
+ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA2-Ac16,Miller_Zwitter,Crude,Hand,siRNA,miller,HeLa,FFL,in_vitro,1.0,Miller_ZAL,max,Individual,Cell_viability,Miller_Zwitter
+Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2727",6A3-4T,Lee_unsat,Pure,Hand,mRNA,slee,IGROV1,FFL,in_vitro,1.0,Lee_unsat_dendrimer,max,Individual,Cell_viability,Lee_unsat
+Lxue,DOPE,Tox,9-a2-6b,Xue_CAD_LNP,Pure,Microfluidic,mRNA,lxue,HeLa,FLL,in_vitro,1.0,Xue_CAD_LNP,max,Barcoded,Cell_viability,Xue_CAD_LNP
