@@ -1,2 +1,0 @@
-fold,split_name,target,pearson,r^2,pearson_p_val,spearman,kendall,rmse,n_vals,note
-2,Lee_unsat_Lee_unsat_dendrimer_nan_in_vitro,toxicity,0.30399834018174576,0.09241499083325642,0.336726664553636,0.28525983292826773,0.27242750174728897,0.03149169303735958,12,

@@ -2,13 +2,17 @@ import sys
 from training_funcs import train_basic, train_cm
 from analyze_funcs import make_pred_vs_actual_tvt, analyze_predictions_cv_tvt
 
+"""
+script to trains a model with architectures that can be selected
+"""
+
 #sys.argv = ['tox_testing.py', 'xg_1.1', '--basic', '--cv', '5']
 
 def main(argv):
     split_folder = argv[1]
     epochs = 50
-    cv_num = 2
-    basic=False
+    cv_num = 5
+    basic=True
     for i, arg in enumerate(argv):
         if arg.replace('–', '-') == '--epochs':
             epochs = int(argv[i+1])
@@ -23,7 +27,7 @@ def main(argv):
         for cv in range(cv_num):
             split_dir = '../data/crossval_splits/'+split_folder+'/cv_'+str(cv)
             save_dir = split_dir+'/model_'+str(cv)
-            train_basic(split_dir=split_dir, save_dir=save_dir, model_type="xg")
+            train_basic(split_dir=split_dir, save_dir=save_dir, cv_fold=cv_num, target_columns = ["class_0", "class_1", "class_2"])
     else:      
         for cv in range(cv_num):
             split_dir = '../data/crossval_splits/'+split_folder+'/cv_'+str(cv)
@@ -43,10 +47,10 @@ def main(argv):
             print('standardize')
     for tvt in to_eval:
         print("make pva")
-        make_pred_vs_actual_tvt(test_dir, model_dir, ensemble_size = cv_num, standardize_predictions= s, tvt=tvt, rf=basic)
+        make_pred_vs_actual_tvt(test_dir, model_dir, ensemble_size = cv_num, tvt=tvt, target_columns = ["class_0", "class_1", "class_2"])
         print("analyze preds")
         print(cv)
-        analyze_predictions_cv_tvt(test_dir, ensemble_number= cv_num, tvt=tvt)
+        analyze_predictions_cv_tvt(test_dir, ensemble_number= cv_num, tvt=tvt, target_columns = ["class_0", "class_1", "class_2"])
         print("done with:", tvt)
 
 

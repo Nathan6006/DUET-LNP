@@ -1,30 +1,25 @@
 import numpy as np 
 import os
 import pandas as pd  
-from sklearn.metrics import mean_squared_error 
-import matplotlib.pyplot as plt 
-import scipy.stats
+from sklearn.metrics import mean_squared_error, accuracy_score, f1_score, log_loss 
 import pickle
-import sys
-import random
 from lightning import pytorch as pl 
 import torch 
-from pathlib import Path
 from chemprop import data, models, nn, featurizers 
 from lightning.pytorch.loggers import CSVLogger 
 from lightning.pytorch.callbacks import ModelCheckpoint 
-from helpers import path_if_none, change_column_order, load_datapoints_rf, load_datapoints_tox_only
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.preprocessing import StandardScaler
-from rdkit import Chem
 import xgboost as xgb
-from helpers import smiles_to_fingerprint
+from helpers import smiles_to_fingerprint, path_if_none, change_column_order, load_datapoints_basic, load_datapoints_tox_only
 
+"""
+training functions
+"""
 
 def dataset_to_numpy(datapoints, smiles_column="smiles"):
     X, y = [], []
-    valid_indices = [] # Track valid indices to keep X and y aligned
     
     for i, dp in enumerate(datapoints):
         # Safety check for missing extra features
@@ -39,28 +34,26 @@ def dataset_to_numpy(datapoints, smiles_column="smiles"):
         X.append(feats)
         
         # specific handling for target existence
-        target = dp.get("y", [None])[0]
+        target = dp.get("y", [None])
         y.append(target)
 
     return np.array(X), np.array(y)
 
 def train_basic(split_dir="../data", 
-             save_dir="../data",      # Reverted to save_dir to match your script call
+             save_dir="../data",
              cv_fold=0,               
              smiles_column="smiles", 
-             target_columns=["quantified_toxicity"],
-             model_type="xg",         # New argument: "rf" or "xg"
-             max_features="sqrt"):
+             target_columns=["class_0", "class_1", "class_2", "class_3"]):
     
     path_if_none(save_dir)
 
-    train_datapoints = load_datapoints_rf(
+    train_datapoints = load_datapoints_basic(
         os.path.join(split_dir, "train.csv"),
         os.path.join(split_dir, "train_extra_x.csv"),
         smiles_column=smiles_column,
         target_columns=target_columns
     )
-    val_datapoints = load_datapoints_rf(
+    val_datapoints = load_datapoints_basic(
         os.path.join(split_dir, "valid.csv"),
         os.path.join(split_dir, "valid_extra_x.csv"),
         smiles_column=smiles_column,
@@ -94,56 +87,59 @@ def train_basic(split_dir="../data",
     train_weights = pd.read_csv(os.path.join(split_dir, "train_weights.csv"))["Sample_weight"].values
 
     # Convert to numpy
-    X_train, y_train = dataset_to_numpy(train_datapoints, smiles_column)
-    X_val, y_val     = dataset_to_numpy(val_datapoints, smiles_column)
+    X_train, y_train_hot = dataset_to_numpy(train_datapoints, smiles_column)
+    X_val, y_val_hot = dataset_to_numpy(val_datapoints, smiles_column)
+    y_train = np.argmax(y_train_hot, axis=1)
+    y_val   = np.argmax(y_val_hot, axis=1)
 
-    print(f"Training {model_type.upper()} for fold {cv_fold}...")
+    model = xgb.XGBClassifier(
+        n_estimators=500,
+        learning_rate=0.03,
+        max_depth=6,
+        min_child_weight=5,
+        subsample=0.8,
+        colsample_bytree=0.7,
+        reg_lambda=2,
+        reg_alpha=1,
+        gamma=0,
+        n_jobs=-1,
+        random_state=42,
+        tree_method="hist",
+        early_stopping_rounds=50,  # Stop if valid loss doesn't improve for 50 rounds
+        objective="multi:softprob",
+        eval_metric="mlogloss",
+        num_class=len(target_columns)
 
-    if model_type == 'xg':
-        model = xgb.XGBRegressor(
-            n_estimators=500,
-            learning_rate=0.03,
-            max_depth=6,
-            min_child_weight=5,
-            subsample=0.8,
-            colsample_bytree=0.7,
-            reg_lambda=2,
-            reg_alpha=1,
-            gamma=0,
-            n_jobs=-1,
-            random_state=42,
-            tree_method="hist",
-            early_stopping_rounds=50  # Stop if valid loss doesn't improve for 50 rounds
-        )
+    )
 
-        model.fit(
-            X_train, y_train,
-            sample_weight=train_weights,
-            eval_set=[(X_train, y_train), (X_val, y_val)], 
-            verbose=False
-        )
-        print(f"Best iteration: {model.best_iteration}")
-
-    elif model_type == "rf":
-        model = RandomForestRegressor(
-            n_estimators=200,
-            max_depth=10,
-            min_samples_leaf=15,
-            max_features=max_features,
-            random_state=42,
-            n_jobs=-1
-        )
-        model.fit(X_train, y_train, sample_weight=train_weights)
-
-    else:
-        raise ValueError(f"Unknown model_type: {model_type}. Use 'rf' or 'xg'.")
+    model.fit(
+        X_train, y_train,
+        sample_weight=train_weights,
+        eval_set=[(X_train, y_train), (X_val, y_val)], 
+        verbose=False
+    )
+    print(f"Best iteration: {model.best_iteration}")
 
 
-    # Evaluate
-    y_pred = model.predict(X_val)
-    mse = mean_squared_error(y_val, y_pred)
-    mae = mean_absolute_error(y_val, y_pred)
-    print(f"Fold {cv_fold} Validation MSE: {mse:.4f}, MAE: {mae:.4f}")
+    y_pred_class = model.predict(X_val)
+    
+    # Get probabilities (for Log Loss)
+    y_pred_proba = model.predict_proba(X_val)
+
+    # 1. Accuracy: Simple percentage of correct answers
+    acc = accuracy_score(y_val, y_pred_class)
+    
+    # 2. F1 Score (Weighted): Balances Precision and Recall
+    # We MUST specify average='weighted' (or 'macro') for multiclass data
+    f1 = f1_score(y_val, y_pred_class, average='weighted')
+    
+    # 3. Log Loss: Measures confidence (penalizes confident wrong answers)
+    ll = log_loss(y_val, y_pred_proba)
+
+    print(f"Fold {cv_fold} Validation Metrics:")
+    print(f"  Accuracy: {acc:.4f}")
+    print(f"  F1 Score: {f1:.4f}")
+    print(f"  Log Loss: {ll:.4f}")
 
     model_path = os.path.join(save_dir, "basic_model.pkl")
     with open(model_path, "wb") as f:

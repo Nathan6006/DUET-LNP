@@ -1,3 +1,0 @@
-fold,split_name,target,pearson,r^2,pearson_p_val,spearman,kendall,rmse,n_vals,note
-1,Xue_CAD_LNP_Xue_CAD_LNP_nan_in_vitro,toxicity,0.48654984075625746,0.2367307475399395,0.021663901415969945,0.38601290655330023,0.3226952608963427,0.02233798561015471,22,
-1,Aminoglycoside_Yu_Siegwart_Amino_nan_in_vitro,toxicity,,,,,,0.01649531955672781,6,insufficient_data

@@ -1,2 +1,2 @@
-Formulation,Ionizable_Lipid_Mol_Ratio,Phospholipid_Mol_Ratio,Cholesterol_Mol_Ratio,PEG_Lipid_Mol_Ratio,Helper_lipid_ID,Ionizable_Lipid_to_mRNA_weight_ratio,Comment,Dosage
-Han_amidine,17.3,12.5,24.2,1,DOPE,10,Computed with aid lipid molwt as 865,15
+Formulation,Ionizable_Lipid_Mol_Ratio,Phospholipid_Mol_Ratio,Cholesterol_Mol_Ratio,PEG_Lipid_Mol_Ratio,Helper_lipid_ID,Ionizable_Lipid_to_mRNA_weight_ratio,Comment,Dose/Cells
+Han_amidine,17.3,12.5,24.2,1,DOPE,10,Computed with aid lipid molwt as 865,30.0

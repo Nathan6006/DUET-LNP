@@ -2,251 +2,187 @@ import os
 import pandas as pd  
 import sys
 import random
-from sklearn.model_selection import train_test_split, KFold
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import train_test_split, StratifiedKFold
 from helpers import path_if_none, perform_scaffold_split
 
-def cv_split(split_spec_fname, path_to_folders='../data',
-                       is_morgan=False, cv_fold=2, ultra_held_out_fraction=-1.0,
-                       min_unique_vals=2.0, test_is_valid=False,
-                       train_frac=0.65, valid_frac=.175, test_frac=0.175,
-                       random_state=42, 
-                       split_type='scaffold',  # 'random', 'stratified', 'scaffold'
-                       smiles_col='smiles'):
+"""
+script that splits data from all_data.csv to spilt files 
+"""
+
+def cv_split_stratified(split_spec_fname, path_to_folders='../data',
+                       cv_fold=5, ultra_held_out_fraction=-1.0,
+                       test_frac=0.2, random_state=42, 
+                       y_stratify_col='toxicity_class'):
     
+    # --- 1. Load Data ---
     all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data.csv'))
     split_df = pd.read_csv(os.path.join(path_to_folders, 'crossval_split_specs', split_spec_fname))
     col_types = pd.read_csv(os.path.join(path_to_folders, 'col_type.csv'))
 
-    split_path = os.path.join(path_to_folders, 'crossval_splits', split_spec_fname[:-4])
-    
-    # Append split type to folder name so we don't overwrite standard random splits
-    if split_type != 'random':
-        split_path += f'_{split_type}'
-        
+    # --- 2. Setup Directories ---
+    split_name = split_spec_fname.replace('.csv', '')
+    split_path = os.path.join(path_to_folders, 'crossval_splits', split_name)
     if ultra_held_out_fraction > 0:
         split_path += '_with_uho'
-    if is_morgan:
-        split_path += '_morgan'
-    if test_is_valid:
-        split_path += '_for_iss'
-
-    # Create Directories
+    
     path_if_none(split_path)
+    path_if_none(os.path.join(split_path, 'test'))
     if ultra_held_out_fraction > 0:
         path_if_none(os.path.join(split_path, 'ultra_held_out'))
-    for i in range(cv_fold):
-        path_if_none(os.path.join(split_path, f'cv_{i}'))
 
-    perma_train = pd.DataFrame({})
-    ultra_held_out = pd.DataFrame({})
-    cv_data = pd.DataFrame({})
+    # --- 3. Partition Data into Pools ---
+    perma_train, standard_pool, context_pool = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
     for _, row in split_df.iterrows():
-        dtypes = row['Data_types_for_component'].split(',')
-        vals = row['Values'].split(',')
-        df_to_concat = all_df.copy()
-
-        # Filter down to specific subset based on specs
-        for i, dtype in enumerate(dtypes):
-            df_to_concat = df_to_concat[df_to_concat[dtype.strip()] == vals[i].strip()].reset_index(drop=True)
-
-        values_to_split = df_to_concat[row['Data_type_for_split']]
-        unique_values_to_split = list(set(values_to_split))
-
-        if row['Train_or_split'].lower() == 'train':
-            # This data is ALWAYS in training (never validation or test)
-            perma_train = pd.concat([perma_train, df_to_concat])
-            
-        elif row['Train_or_split'].lower() == 'split':
-            # This data is eligible for Splitting (Test/Train/CV)
-            
-            # NOTE: We keep the original logic here for "Ultra Held Out"
-            # The "split_for_cv" helper is used purely to peel off the Ultra Held Out set
-            # The remaining data is passed to our new logic as "cv_data"
-            
-            cv_split_values, ultra_held_out_values = split_for_cv(unique_values_to_split, cv_fold, ultra_held_out_fraction)
-            
-            # Add to Ultra Held Out
-            ultra_held_out = pd.concat([ultra_held_out, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(ultra_held_out_values)]])
-            
-            # Add to CV pool (Test + Train + Valid)
-            # We combine the lists from split_for_cv because we will re-split them ourselves using KFold/Stratified/Scaffold
-            cv_data = pd.concat([cv_data, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(sum(cv_split_values, []))]])
-
-    # Save Ultra Held Out
-    if ultra_held_out_fraction >= 0 and not ultra_held_out.empty:
-        y, x, w, m = split_df_by_col_type(ultra_held_out, col_types)
-        yxwm_to_csvs(y, x, w, m, split_path + '/ultra_held_out', 'test')
-
-    if abs(train_frac + valid_frac + test_frac - 1.0) > 1e-6:
-        raise ValueError("train_frac + valid_frac + test_frac must sum to 1.0")
-    
-    # --- 2. Apply New Splitting Logic on `cv_data` ---
-    
-    cv_data = cv_data.reset_index(drop=True)
-    
-    if split_type == 'scaffold':
-        print(f"Performing Scaffold Split using {smiles_col}...")
-        train_valid_df, test_df, kf_iterator = perform_scaffold_split(
-            cv_data, smiles_col, n_splits=cv_fold, test_frac=test_frac, random_state=random_state
-        )
-    
-    else:
-        # Determine Stratification Column if needed
-        stratify_col = None
-        if split_type == 'stratified':
-            print("Performing Stratified Split...")
-            y_col_name = col_types[col_types['Type'] == 'Y_val']['Column_name'].values[0]
-            stratify_col = cv_data[y_col_name]
+        dtypes = [d.strip() for d in row['Data_types_for_component'].split(',')]
+        vals = [v.strip() for v in row['Values'].split(',')]
         
-        # 2a. Split Fixed Test Set
-        train_valid_df, test_df = train_test_split(
-            cv_data, 
-            test_size=test_frac, 
-            random_state=random_state, 
-            shuffle=True,
-            stratify=stratify_col
-        )
+        subset = all_df.copy()
+        for dtype, val in zip(dtypes, vals):
+            subset = subset[subset[dtype].astype(str) == str(val)]
         
-        # 2b. Prepare K-Fold Iterator
-        train_valid_df = train_valid_df.reset_index(drop=True)
-        
-        if split_type == 'stratified':
-            # Re-fetch stratify column for the subset
-            y_col_name = col_types[col_types['Type'] == 'Y_val']['Column_name'].values[0]
-            stratify_col_subset = train_valid_df[y_col_name]
-            
-            kf = StratifiedKFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
-            kf_iterator = kf.split(train_valid_df, stratify_col_subset)
-        else:
-            kf = KFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
-            kf_iterator = kf.split(train_valid_df)
+        if subset.empty: continue
 
-    # Save Fixed Test Set
-    y, x, w, m = split_df_by_col_type(test_df, col_types)
-    path_if_none(split_path + '/test')
-    yxwm_to_csvs(y, x, w, m, split_path + '/test', 'test')
-    
-    # --- 3. Iterate Folds and Save ---
-    
-    for i, (train_index, valid_index) in enumerate(kf_iterator):
-        
-        fold_train = train_valid_df.iloc[train_index]
-        fold_valid = train_valid_df.iloc[valid_index]
-        
-        # Merge perma_train (data forced to be in train via split_spec) into the training fold
-        if not perma_train.empty:
-            fold_train = pd.concat([fold_train, perma_train]).drop_duplicates().reset_index(drop=True)
-        
-        # Save Valid
-        y, x, w, m = split_df_by_col_type(fold_valid, col_types)
-        yxwm_to_csvs(y, x, w, m, split_path + '/cv_' + str(i), 'valid')
+        mode = row['Train_or_split'].lower()
+        if mode == 'train':
+            perma_train = pd.concat([perma_train, subset])
+        elif mode == 'split':
+            standard_pool = pd.concat([standard_pool, subset])
+        elif mode == 'split_context':
+            context_pool = pd.concat([context_pool, subset])
 
-        # Save Train
-        y, x, w, m = split_df_by_col_type(fold_train, col_types)
-        yxwm_to_csvs(y, x, w, m, split_path + '/cv_' + str(i), 'train')
-
-def cv_split_old(split_spec_fname, path_to_folders='../data',
-                       is_morgan=False, cv_fold=2, ultra_held_out_fraction=-1.0,
-                       min_unique_vals=2.0, test_is_valid=False,
-                       train_frac=0.65, valid_frac=.175, test_frac=0.175,
-                       random_state=42):
-    """
-    Splits the dataset according to the specifications in split_spec_fname.
-    Uses sklearn to create a single fixed test set and splits the rest into K-fold train/valid.
-    
-    UPDATED: Now correctly rotates the validation fold using KFold logic.
-    """
-    all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data.csv'))
-    split_df = pd.read_csv(os.path.join(path_to_folders, 'crossval_split_specs', split_spec_fname))
-    col_types = pd.read_csv(os.path.join(path_to_folders, 'col_type.csv'))
-
-    split_path = os.path.join(path_to_folders, 'crossval_splits', split_spec_fname[:-4])
-    if ultra_held_out_fraction > 0:
-        split_path += '_with_uho'
-    if is_morgan:
-        split_path += '_morgan'
-    if test_is_valid:
-        split_path += '_for_iss'
-
-    if ultra_held_out_fraction > 0:
-        path_if_none(os.path.join(split_path, 'ultra_held_out'))
-    
-    for i in range(cv_fold):
-        path_if_none(os.path.join(split_path, f'cv_{i}'))
-
-    perma_train = pd.DataFrame({})
-    ultra_held_out = pd.DataFrame({})
-    cv_data = pd.DataFrame({})
-
-    # Process Split Rules
-    for _, row in split_df.iterrows():
-        dtypes = row['Data_types_for_component'].split(',')
-        vals = row['Values'].split(',')
-        df_to_concat = all_df.copy()
-
-        for i, dtype in enumerate(dtypes):
-            df_to_concat = df_to_concat[df_to_concat[dtype.strip()] == vals[i].strip()].reset_index(drop=True)
-
-        values_to_split = df_to_concat[row['Data_type_for_split']]
-        unique_values_to_split = list(set(values_to_split))
-
-        if row['Train_or_split'].lower() == 'train':
-            perma_train = pd.concat([perma_train, df_to_concat])
-        elif row['Train_or_split'].lower() == 'split':
-            # This helper effectively just shuffles unique values here
-            cv_split_values, ultra_held_out_values = split_for_cv(unique_values_to_split, cv_fold, ultra_held_out_fraction)
-            
-            ultra_held_out = pd.concat([ultra_held_out, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(ultra_held_out_values)]])
-            
-            # We collect ALL potential CV data here. The actual K-Fold happens later.
-            cv_data = pd.concat([cv_data, df_to_concat[df_to_concat[row['Data_type_for_split']].isin(sum(cv_split_values, []))]])
-
-    # Save Ultra Held Out
-    if ultra_held_out_fraction >= 0 and not ultra_held_out.empty:
-        y, x, w, m = split_df_by_col_type(ultra_held_out, col_types)
-        yxwm_to_csvs(y, x, w, m, split_path + '/ultra_held_out', 'test')
-
-    if abs(train_frac + valid_frac + test_frac - 1.0) > 1e-6:
-        raise ValueError("train_frac + valid_frac + test_frac must sum to 1.0")
-
-    # 1. Create the fixed Test Set
-    # We remove the test set first so it doesn't leak into CV
-    train_valid_df, test_df = train_test_split(
-        cv_data, test_size=test_frac, random_state=random_state, shuffle=True
+    # --- 4. Perform Splitting ---
+    # A) Process Context Data (Grouped by Lipid, with UHO)
+    ctx_uho, ctx_test, ctx_cv_pool, ctx_folds = get_context_splits(
+        context_pool, cv_fold, test_frac, ultra_held_out_fraction, y_stratify_col
     )
     
-    # Save Test Set
-    y, x, w, m = split_df_by_col_type(test_df, col_types)
-    path_if_none(split_path + '/test')
-    yxwm_to_csvs(y, x, w, m, split_path + '/test', 'test')
-    
-    # 2. Perform Real K-Fold Cross Validation on the remaining data
-    # Reset index is crucial so KFold indices align with the dataframe
-    train_valid_df = train_valid_df.reset_index(drop=True)
-    
-    kf = KFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
-    
-    # Iterate through the folds
-    for i, (train_index, valid_index) in enumerate(kf.split(train_valid_df)):
-        
-        fold_train = train_valid_df.iloc[train_index]
-        fold_valid = train_valid_df.iloc[valid_index]
-        
-        # Add the 'perma_train' data (data hardcoded to always be in train) to the training fold
-        if not perma_train.empty:
-            fold_train = pd.concat([fold_train, perma_train]).drop_duplicates().reset_index(drop=True)
-        
-        # Save Valid
-        y, x, w, m = split_df_by_col_type(fold_valid, col_types)
-        yxwm_to_csvs(y, x, w, m, split_path + '/cv_' + str(i), 'valid')
+    # B) Process Standard Data (Row-level, with UHO)
+    std_uho, std_test, std_train_val = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+    if not standard_pool.empty:
+        # Standard UHO split
+        if ultra_held_out_fraction > 0:
+            std_cv_test, std_uho = train_test_split(
+                standard_pool, test_size=ultra_held_out_fraction, 
+                random_state=random_state, stratify=standard_pool[y_stratify_col]
+            )
+        else:
+            std_cv_test = standard_pool
 
-        # Save Train
-        y, x, w, m = split_df_by_col_type(fold_train, col_types)
-        yxwm_to_csvs(y, x, w, m, split_path + '/cv_' + str(i), 'train')
+        # Standard Test split
+        adj_test_size = test_frac / (1 - ultra_held_out_fraction) if ultra_held_out_fraction > 0 else test_frac
+        std_train_val, std_test = train_test_split(
+            std_cv_test, test_size=adj_test_size, 
+            random_state=random_state, stratify=std_cv_test[y_stratify_col]
+        )
+
+    # --- 5. Save Results ---
+    # 5a. Save Ultra Held Out
+    final_uho = pd.concat([std_uho, ctx_uho], ignore_index=True)
+    if not final_uho.empty:
+        y, x, w, m = split_df_by_col_type(final_uho, col_types)
+        yxwm_to_csvs(y, x, w, m, os.path.join(split_path, 'ultra_held_out'), 'test')
+
+    # 5b. Save Global Test Set
+    final_test = pd.concat([std_test, ctx_test], ignore_index=True)
+    y, x, w, m = split_df_by_col_type(final_test, col_types)
+    yxwm_to_csvs(y, x, w, m, os.path.join(split_path, 'test'), 'test')
+
+    # 5c. Save CV Folds
+    skf = StratifiedKFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
+    std_fold_gen = list(skf.split(std_train_val, std_train_val[y_stratify_col])) if not std_train_val.empty else []
+
+    for i in range(cv_fold):
+        path_if_none(os.path.join(split_path, f'cv_{i}'))
+        
+        # Build training set: Perma + Std Fold Train + Ctx Fold Train
+        f_train = pd.concat([
+            perma_train,
+            std_train_val.iloc[std_fold_gen[i][0]] if std_fold_gen else pd.DataFrame(),
+            ctx_cv_pool.loc[ctx_folds[i][0]] if ctx_folds else pd.DataFrame()
+        ], ignore_index=True)
+        
+        # Build validation set: Std Fold Val + Ctx Fold Val
+        f_val = pd.concat([
+            std_train_val.iloc[std_fold_gen[i][1]] if std_fold_gen else pd.DataFrame(),
+            ctx_cv_pool.loc[ctx_folds[i][1]] if ctx_folds else pd.DataFrame()
+        ], ignore_index=True)
+
+        # Save Fold
+        for df, name in [(f_train, 'train'), (f_val, 'valid')]:
+            y_f, x_f, w_f, m_f = split_df_by_col_type(df, col_types)
+            yxwm_to_csvs(y_f, x_f, w_f, m_f, os.path.join(split_path, f'cv_{i}'), name)
+
+    print(f"Full stratified split finished at {split_path}")
+
 
 # Helper functions for cv split
+def get_context_splits(df, cv_fold, test_frac, uho_frac, y_col, group_col='Lipid_name', random_state=42):
+    """
+    Groups lipids and performs standard fold splitting (1/K validation).
+    Uses the MINIMUM class value (most potent) for stratification.
+    """
+    if df.empty:
+        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), []
+
+    # 1. Identify "worst-case" class per lipid across all conditions/datasets
+    group_repr = df.groupby(group_col)[y_col].min().reset_index()
+    group_repr.rename(columns={y_col: 'strat_label'}, inplace=True)
+
+    # 2. Safety: Identify classes with fewer members than cv_fold
+    # These are the cause of the UserWarning. We move them to a forced training pool.
+    counts = group_repr['strat_label'].value_counts()
+    small_classes = counts[counts < cv_fold].index.tolist()
+    
+    forced_train_lipids = group_repr[group_repr['strat_label'].isin(small_classes)][group_col].tolist()
+    # The pool we can safely stratify
+    strat_pool = group_repr[~group_repr['strat_label'].isin(small_classes)].copy()
+
+    # 3. Stage 1: Separate Ultra-Held-Out (UHO)
+    uho_df = pd.DataFrame()
+    if uho_frac > 0:
+        cv_test_ids, uho_ids = train_test_split(
+            strat_pool[group_col], test_size=uho_frac, 
+            random_state=random_state, stratify=strat_pool['strat_label']
+        )
+        uho_df = df[df[group_col].isin(uho_ids)].copy()
+        strat_pool = strat_pool[strat_pool[group_col].isin(cv_test_ids)]
+
+    # 4. Stage 2: Separate Test Set
+    # Scale test_frac to the remainder
+    adj_test_size = test_frac / (1 - (uho_frac if uho_frac > 0 else 0))
+    cv_ids, test_ids = train_test_split(
+        strat_pool[group_col], test_size=adj_test_size, 
+        random_state=random_state, stratify=strat_pool['strat_label']
+    )
+    test_df = df[df[group_col].isin(test_ids)].copy()
+    
+    # The CV Pool includes the stratified lipids + the lipids from small classes
+    cv_pool_df = df[df[group_col].isin(cv_ids) | df[group_col].isin(forced_train_lipids)].copy()
+    cv_pool_repr = strat_pool[strat_pool[group_col].isin(cv_ids)]
+
+    # 5. Stage 3: Generate CV Folds (Standard 1/K Split)
+    skf = StratifiedKFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
+    
+    fold_map = {}
+    # We only stratify the lipids that have enough members to fill all folds
+    for fold_idx, (_, val_idx) in enumerate(skf.split(cv_pool_repr[group_col], cv_pool_repr['strat_label'])):
+        for lip in cv_pool_repr.iloc[val_idx][group_col].values:
+            fold_map[lip] = fold_idx
+
+    cv_folds = []
+    for i in range(cv_fold):
+        # Validation: Only contains lipids from the stratified pool assigned to this fold
+        val_idx = cv_pool_df[cv_pool_df[group_col].map(fold_map) == i].index
+        
+        # Training: Contains lipids from other folds + ALL forced_train_lipids
+        train_idx = cv_pool_df[(cv_pool_df[group_col].map(fold_map) != i) | 
+                              (cv_pool_df[group_col].isin(forced_train_lipids))].index
+        
+        cv_folds.append((train_idx, val_idx))
+
+    return uho_df, test_df, cv_pool_df, cv_folds
+
 
 def split_df_by_col_type(df, col_types):
     y_vals_cols = col_types.Column_name[col_types.Type == 'Y_val']
@@ -269,22 +205,17 @@ def split_for_cv(vals, cv_fold, held_out_fraction):
     held_out_vals = vals[:held_out_len]
     cv_vals = vals[held_out_len:]
     return [cv_vals[i::cv_fold] for i in range(cv_fold)], held_out_vals
+
 def main(argv):
     split = argv[1]
     ultra_held_out = float(argv[2])
-    is_morgan = False
-    in_silico_screen = False
-    cv_num = 2
+    cv_num = 5
     if len(argv)>3:
         for i, arg in enumerate(argv):
             if arg.replace('–', '-') == '--cv':
                 cv_num = int(argv[i+1])
                 print('this many folds: ',str(cv_num))
-            if arg.replace('–', '-') == '--morgan':
-                is_morgan = True
-            if arg.replace('–', '-') == '--in_silico':
-                in_silico_screen = True
-    cv_split(split, cv_fold=cv_num, ultra_held_out_fraction = ultra_held_out, is_morgan = is_morgan, test_is_valid = in_silico_screen)
+    cv_split_stratified(split, cv_fold=cv_num, ultra_held_out_fraction = ultra_held_out)
 
     
 if __name__ == '__main__':

@@ -5,9 +5,12 @@ from rdkit import Chem
 import numpy as np
 from rdkit.Chem import rdFingerprintGenerator, DataStructs
 from collections import defaultdict
-from sklearn.model_selection import StratifiedKFold
 from rdkit import Chem
 from rdkit.Chem.Scaffolds import MurckoScaffold
+
+"""
+helper functions
+"""
 
 def generate_scaffolds(df, smiles_col='SMILES'):
     """Generates Murcko Scaffolds for a dataframe."""
@@ -94,25 +97,10 @@ def path_if_none(newpath):
     if not os.path.exists(newpath):
         os.makedirs(newpath)
 
-def load_datapoints(smiles_csv, extra_csv, smiles_column='smiles', target_columns = ["quantified_delivery", "quantified_toxicity"]):
-    df_smi = pd.read_csv(smiles_csv)
-    df_extra = pd.read_csv(extra_csv)
-
-    smis = df_smi[smiles_column].values
-    ys = df_smi[target_columns].values
-    extra_features = df_extra.to_numpy(dtype=float)
-
-    datapoints = [
-        data.MoleculeDatapoint.from_smi(smi, y, x_d=xf)
-        for smi, y, xf in zip(smis, ys, extra_features)
-    ]
-    return datapoints
-
-def change_column_order(path, all_df, first_cols = ['smiles','quantified_toxicity','unnormalized_toxicity']):
+def change_column_order(path, all_df, first_cols = ['smiles','toxicity_class','exact_toxicity']):
     other_cols = [col for col in all_df.columns if col not in first_cols]
     all_df = all_df[first_cols + other_cols]
     all_df.to_csv(path, index=False)
-
 
 
 def load_datapoints_tox_only(smiles_csv, extra_csv, smiles_column='smiles', target_columns = ["quantified_toxicity"]):
@@ -129,7 +117,7 @@ def load_datapoints_tox_only(smiles_csv, extra_csv, smiles_column='smiles', targ
     ]
     return datapoints
 
-def load_datapoints_rf(smiles_csv, extra_csv, smiles_column='smiles',
+def load_datapoints_basic(smiles_csv, extra_csv, smiles_column='smiles',
                        target_columns=["quantified_toxicity"]):
     df_smi = pd.read_csv(smiles_csv)
     df_extra = pd.read_csv(extra_csv)
@@ -156,6 +144,7 @@ def smiles_to_fingerprint(smiles, radius=2, n_bits=2048, use_counts=False):
         use_counts (bool): If True, returns count vector (ECFP-Counts). 
                            If False, returns bit vector (ECFP/Morgan).
     """
+
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
         return np.zeros(n_bits)

@@ -3,13 +3,15 @@ import os
 import pandas as pd  
 from rdkit import Chem 
 from rdkit.Chem import Descriptors 
-import sys
-import random
-from sklearn.model_selection import train_test_split, KFold
 from helpers import path_if_none, change_column_order
+from sklearn.utils.class_weight import compute_class_weight
 
+"""
+script for merging data from individual folders into all_data.csv
+"""
 
 def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_merge', write_path = '../data'): 
+ 
     """Each folder contains the following files: 
     main_data.csv: a csv file with columns: 'smiles', which should contain the SMILES of the ionizable lipid, the activity measurements for that measurement
     If the same ionizable lipid is measured multiple times (i.e. for different properties, or transfection in vitro and in vivo) make separate rows, one for each measurement
@@ -49,13 +51,12 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
     col_type = {'Column_name':[],'Type':[]}
     experiment_df = pd.read_csv(path_to_folders + '/experiment_metadata.csv')
     if experiment_list == None:
-        print("370")
         experiment_list = list(experiment_df.Experiment_ID)
     y_val_cols = []
     helper_mol_weights = pd.read_csv(path_to_folders + '/Component_molecular_weights.csv')
 
     for folder in experiment_list:
-        print("folder", folder)
+        print("Creating folder:", folder)
         contin = False
         try:
             main_temp = pd.read_csv(path_to_folders + '/' + folder + '/main_data.csv')
@@ -63,7 +64,8 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
         except:
             pass
         if contin:
-            y_val_cols = y_val_cols + list(main_temp.columns)
+            # y_val_cols = y_val_cols + list(main_temp.columns)
+            y_val_cols = ["smiles", "toxicity_class"]
             for col in main_temp.columns:
                 if 'Unnamed' in col:
                     print('\n\n\nTHERE IS AN UNNAMED COLUMN IN FOLDER: ',folder,'\n\n')
@@ -77,7 +79,6 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
             if len(formulation_temp) == 1:
                 formulation_temp = pd.concat([formulation_temp]*data_n,ignore_index = True)
             elif len(formulation_temp) != data_n:
-                print(len(formulation_temp))
                 to_raise = 'For experiment ID: ',folder,': Length of formulation file (', str(len(formulation_temp))#, ') doesn\'t match length of main datafile (',str(data_n),')'
                 raise ValueError(to_raise)
             
@@ -128,7 +129,6 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
 
         
             if len(individual_temp) != data_n:
-                print(len(individual_temp))
                 raise ValueError('For experiment ID: ',folder,': Length of individual metadata file  (',len(individual_temp), ') doesn\'t match length of main datafile (',data_n,')')
             experiment_temp = experiment_df[experiment_df.Experiment_ID == folder]
             experiment_temp = pd.concat([experiment_temp]*data_n, ignore_index = True).reset_index(drop = True)
@@ -140,9 +140,7 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
             experiment_temp = experiment_temp.drop(columns = to_drop)
             folder_df = pd.concat([main_temp, formulation_temp, individual_temp], axis = 1).reset_index(drop = True)
             folder_df = pd.concat([folder_df, experiment_temp], axis = 1)
-            # print(folder_df.columns)
             if 'Sample_weight' not in folder_df.columns:
-                # print(folder)
                 # folder_df['Sample_weight'] = [float(folder_df.Experiment_weight[i])/list(folder_df.smiles).count(smile) for i,smile in enumerate(folder_df.smiles)]
                 folder_df['Sample_weight'] = [float(folder_df.Experiment_weight[i]) for i,smile in enumerate(folder_df.smiles)]
             all_df = pd.concat([all_df,folder_df], ignore_index = True)
@@ -159,8 +157,8 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
 
 
     # Make the column type dict
-    extra_x_variables = ['Ionizable_Lipid_Mol_Ratio','Phospholipid_Mol_Ratio','Cholesterol_Mol_Ratio','PEG_Lipid_Mol_Ratio','Ionizable_Lipid_to_mRNA_weight_ratio', 'Num_tails', 'Num_carbon_in_tail', 'Dosage', 'Exposure_time', 'MolWt']
-    # ADD HELPER LIPID ID
+    extra_x_variables = ['Ionizable_Lipid_Mol_Ratio','Phospholipid_Mol_Ratio','Cholesterol_Mol_Ratio','PEG_Lipid_Mol_Ratio','Ionizable_Lipid_to_mRNA_weight_ratio', 'Num_tails', 'Num_carbon_in_tail', 'Dose/Cells', 'MolWt'] # no exposure time for now since its always 24
+
     # extra_x_categorical = ['Delivery_target','Helper_lipid_ID','Route_of_administration','Batch_or_individual_or_barcoded','Cargo_type','Model_type']
     extra_x_categorical = ['Helper_lipid_ID','Cargo_type','Model_type']
 
@@ -171,6 +169,23 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
         dummies = pd.get_dummies(all_df[x_cat], prefix = x_cat)
         all_df = pd.concat([all_df, dummies], axis = 1)
         extra_x_variables = extra_x_variables + list(dummies.columns)
+
+    # Update the unpacking to include the new ohe_df
+    split_names, class_values, ohe_df = generate_classes(all_df)
+    
+    all_df['split_name_for_normalization'] = split_names
+    all_df.rename(columns = {'quantified_toxicity':'exact_toxicity'}, inplace = True)
+    
+    # Add the OHE columns to the main dataframe
+    all_df = pd.concat([all_df, ohe_df], axis=1)
+    
+    # Keep the original integer class for weighting purposes
+    all_df['toxicity_class'] = class_values 
+    
+    # Register the OHE columns as Y values
+    y_val_cols = list(ohe_df.columns) 
+    y_val_cols.append("smiles")
+    all_df = generate_weights(all_df)
 
     for column in all_df.columns:
         col_type['Column_name'].append(column)
@@ -187,47 +202,73 @@ def merge_datasets(experiment_list, path_to_folders = '../data/data_files_to_mer
 
     col_type_df = pd.DataFrame(col_type)
 
-    norm_split_names, norm_tox = generate_normalized_data(all_df)
-    all_df['split_name_for_normalization'] = norm_split_names
-    # all_df.rename(columns = {'quantified_delivery':'unnormalized_delivery'}, inplace = True)
-    # all_df['quantified_delivery'] = norm_del
-    all_df.rename(columns = {'quantified_toxicity':'unnormalized_toxicity'}, inplace = True)
-    all_df['quantified_toxicity'] = norm_tox
     
-    all_df = all_df.replace({True: 1.0, False: 0.0})
+    # all_df = all_df.replace({True: 1.0, False: 0.0})    
+    all_df = all_df.where(all_df != True, 1.0).where(all_df != False, 0.0)
+    all_df["MolWt"] = np.log1p(all_df["MolWt"])
+    all_df["Dose/Cells"] = np.log1p(all_df["Dose/Cells"])
+
+
     path = write_path + '/all_data.csv'
     print("creating all_data")
     change_column_order(path, all_df)
     col_type_df.to_csv(write_path + '/col_type.csv', index = False)
 
-def generate_normalized_data(all_df, split_variables = ['Experiment_ID']):
+def generate_classes(all_df, split_variables = ['Experiment_ID']):
     split_names = []
-
     for _, row in all_df.iterrows():
         split_name = ''
         for vbl in split_variables:
             split_name = split_name + str(row[vbl])+'_'
         split_names.append(split_name[:-1])
 
-    norm_toxicity = []
-
-    # Normalize row by row
+    classified_toxicity = []
     for i, row in all_df.iterrows():
-        split_name = split_names[i]
-
         try:
             tox = row['quantified_toxicity']
             if pd.isna(tox):
-                norm_toxicity.append(np.nan)
+                classified_toxicity.append(np.nan)
             else:
-                normalized = round(float(tox)/100, 7)
-                if normalized > 1:
-                    normalized = 1
-                norm_toxicity.append(normalized)
+                # if tox > 90: class_value = 0
+                # elif 90 >= tox > 80: class_value = 1
+                # elif 80 >= tox > 70: class_value = 2
+                # else:
+                #     class_value = 3
+                if tox > 80: class_value = 0
+                elif 80 >= tox > 70: class_value = 1
+                else:
+                    class_value = 2
+                
+                classified_toxicity.append(class_value)
         except Exception:
-            norm_toxicity.append(np.nan)
+            classified_toxicity.append(np.nan)
 
-    return split_names, norm_toxicity
+    # Create dummies with prefix so we can identify them later
+    ohe_df = pd.get_dummies(classified_toxicity, prefix='class', dummy_na=False)
+    # Convert True/False to 1.0/0.0
+    ohe_df = ohe_df.astype(float) 
+    
+    # We still return classified_toxicity as a list/series for the weight calculation
+    return split_names, classified_toxicity, ohe_df
+
+def generate_weights(all_df):
+    """
+    Adjusts the 'weights' column in the dataframe based on the distribution
+    of 'toxicity_class' (0, 1, 2).
+        New_Weight = Old_Weight * Class_Balancing_Multiplier
+    """
+    unique_classes = np.unique(all_df['toxicity_class'])
+    y = all_df['toxicity_class'].values
+    class_weights = compute_class_weight(
+        class_weight='balanced', 
+        classes=unique_classes, 
+        y=y
+    )
+    weight_dict = dict(zip(unique_classes, class_weights))
+    class_multipliers = all_df['toxicity_class'].map(weight_dict)
+    all_df['Sample_weight'] = all_df['Sample_weight'] * class_multipliers
+
+    return all_df
 
 def main():
     merge_datasets(None)
