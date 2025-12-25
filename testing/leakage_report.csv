@@ -1,0 +1,7 @@
+Lipid_name,smiles,Experiment_ID,location
+4A3-SC8,N(CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC)(CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC)CCCN(C)CCCN(CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC)(CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC),Lee_unsat,cv_0_train; cv_0_valid; cv_1_train; cv_2_train; cv_3_train; cv_3_valid; cv_4_train
+4A3-SC6,N(CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC)(CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC)CCCN(C)CCCN(CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC)(CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC),Lee_unsat,cv_0_train; cv_1_train; cv_2_train; cv_3_valid; cv_4_train; test_set
+4A3-SC6,CCCCCCSCC(C)C(=O)OCCOC(=O)CCN(CCCN(C)CCCN(CCC(=O)OCCOC(=O)C(C)CSCCCCCC)CCC(=O)OCCOC(=O)C(C)CSCCCCCC)CCC(=O)OCCOC(=O)C(C)CSCCCCCC,Farbiak_Dendrimer_HeLa,cv_0_train; cv_1_train; cv_2_train; cv_3_valid; cv_4_train; test_set
+4A3-SC8,CCCCCCCCSCC(C)C(=O)OCCOC(=O)CCN(CCCN(C)CCCN(CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC)CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC)CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC,Farbiak_Dendrimer_HeLa,cv_0_train; cv_0_valid; cv_1_train; cv_2_train; cv_3_train; cv_3_valid; cv_4_train
+4A3-SC6,CCCCCCSCC(C)C(=O)OCCOC(=O)CCN(CCCN(C)CCCN(CCC(=O)OCCOC(=O)C(C)CSCCCCCC)CCC(=O)OCCOC(=O)C(C)CSCCCCCC)CCC(=O)OCCOC(=O)C(C)CSCCCCCC,Farbiak_Dendrimer_igrov1,cv_0_train; cv_1_train; cv_2_train; cv_3_valid; cv_4_train; test_set
+4A3-SC8,CCCCCCCCSCC(C)C(=O)OCCOC(=O)CCN(CCCN(C)CCCN(CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC)CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC)CCC(=O)OCCOC(=O)C(C)CSCCCCCCCC,Farbiak_Dendrimer_igrov1,cv_0_train; cv_0_valid; cv_1_train; cv_2_train; cv_3_train; cv_3_valid; cv_4_train

@@ -86,6 +86,15 @@ def make_preds_basic(
     # 2. Get Hard Class Labels
     hard_preds = np.argmax(probs, axis=1)
 
+    # # get probs for classes 1 and 2
+    # p12 = probs[:, [1, 2]]
+    # best_class = np.argmax(p12, axis=1)      # 0 or 1 → maps to class 1 or 2
+    # best_prob = np.max(p12, axis=1)
+
+    # mask = best_prob >= 0.65
+    # hard_preds[mask] = best_class[mask] + 1
+
+
     # 3. Create DataFrame with ALL info dynamically
     pred_data = {
         "smiles": aligned_smiles,

@@ -79,8 +79,8 @@ def attach_tails_to_core(core_smiles, tail_smiles):
 # --- Main Execution ---
 if __name__ == "__main__":
     # Example Data
-    tail_input = "*c1ccc(CCCCCCCCCC)cc1"
-    core_input = "*NC(=N)CCCSCCC(=O)OCCCCCCCCCCCCCC"
+    tail_input = "*N(CCCCCCCC)CCCCCCCC"
+    core_input = "**CCOP(=O)(O)OCCCCCCCCC"
 
     print(f"Core: {core_input}")
     print(f"Tail: {tail_input}")

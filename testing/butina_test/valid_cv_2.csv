@@ -1,0 +1,9 @@
+Dataset,Total,Class_0,Class_1,Class_2
+Han_amidine,13,13,0,0
+Han_branched,72,50,18,4
+Lee_unsat,14,14,0,0
+Lin_peptide,15,8,0,7
+Miller_Zwitter,13,13,0,0
+Xue_CAD_LNP,16,16,0,0
+Zhang_Aminoglycoside,1,0,0,1
+Total,144,114,18,12

@@ -1,6 +1,0 @@
-fold,accuracy,kappa,log_loss,macro_f1,weighted_f1,macro_precision,macro_recall,n_vals,note
-0,0.0,0.0,1.7012794446081096,0.0,0.0,0.0,0.0,3,insufficient_data
-1,0.0,0.0,1.872576634858861,0.0,0.0,0.0,0.0,3,insufficient_data
-2,0.0,0.0,2.063927353379157,0.0,0.0,0.0,0.0,3,insufficient_data
-3,0.0,0.0,1.458314897566966,0.0,0.0,0.0,0.0,3,insufficient_data
-4,0.0,0.0,1.9032284214264996,0.0,0.0,0.0,0.0,3,insufficient_data

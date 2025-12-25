@@ -10,13 +10,14 @@ to the correct molar ratios.
 
 # List of folders to process
 folders = [
-    "../data/data_files_to_merge/Lin_peptide"
+    "../data/data_files_to_merge/Liu_iphos"
+    # "../data/data_files_to_merge/Lin_peptide"
     # "../data/data_files_to_merge/Han_a3,"
     # "../data/data_files_to_merge/Han_branched,"
     # "../data/data_files_to_merge/Han_amidine,"
     # "../data/data_files_to_merge/Miller_Zwitter,"
     # "../data/data_files_to_merge/3_tails",
-    # "../data/data_files_to_merge/Lee_unsat",
+    # "../data/data_files_to_merge/Lee_unsat"
     # "../data/data_files_to_merge/Farbiak_dendrimer_Hek",
     # "../data/data_files_to_merge/Farbiak_dendrimer_HeLa",
     # "../data/data_files_to_merge/Farbiak_dendrimer_igrov1",

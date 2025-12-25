@@ -1,89 +1,118 @@
+import sys
 import pandas as pd
 import numpy as np
 from rdkit import Chem
 from rdkit import DataStructs
 from rdkit.Chem import rdFingerprintGenerator
+import os
 
-def get_fingerprints(smiles_series, radius=2, nBits=2048):
+def get_count_fingerprints(smiles_series):
     """
-    Converts a pandas Series of SMILES strings to a list of Morgan Fingerprints
-    using the modern rdFingerprintGenerator API.
-    """
-    # Create the generator once (more efficient)
-    mfgen = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=nBits)
+    Uses Count-Based Morgan Fingerprints via the modern Generator API.
     
+    - includeChirality=True: Distinguishes stereoisomers (Cis vs Trans).
+    - GetCountFingerprint: Returns counts (SparseIntVect) rather than bits.
+      This is crucial for lipids to distinguish chain lengths (e.g. C12 vs C14).
+    """
+    # Instantiate the modern generator once
+    # Radius=2 is standard (equivalent to ECFP4)
+    mfgen = rdFingerprintGenerator.GetMorganGenerator(
+        radius=2, 
+        includeChirality=True
+    )
+
     fps = []
-    
-    for smile in smiles_series:
-        try:
-            mol = Chem.MolFromSmiles(smile)
-            if mol is not None:
-                fp = mfgen.GetFingerprint(mol)
-                fps.append(fp)
-        except:
-            pass
-            
+    valid_indices = []
+
+    for idx, smile in enumerate(smiles_series):
+        mol = Chem.MolFromSmiles(smile)
+        if mol is not None:
+            # Generate Count-Based Fingerprint (SparseIntVect)
+            # This captures the frequency of substructures, not just presence/absence
+            fp = mfgen.GetCountFingerprint(mol)
+            fps.append(fp)
+            valid_indices.append(idx)
+
     return fps
 
 def calculate_similarity_metrics(query_fps, reference_fps):
     """
-    For each fingerprint in query_fps:
-      1. Calculates similarity to ALL reference_fps.
-      2. Extracts the MAX similarity (nearest neighbor).
-      3. Extracts the MEAN similarity (average distance to set).
+    Calculates Tanimoto similarity on Count Vectors.
+    RDKit handles SparseIntVect Tanimoto internally (Intersection / Union).
     """
-    if not query_fps or not reference_fps:
-        return [], []
-
     max_sims = []
     mean_sims = []
     
-    # Iterate through each molecule in the query set (Test Set)
     for q_fp in query_fps:
-        # Calculate similarity against ALL training molecules
-        # BulkTanimotoSimilarity returns a list of scores
+        # Calculate bulk similarity (1 query vs all references)
         sims = DataStructs.BulkTanimotoSimilarity(q_fp, reference_fps)
         
-        # Metric 1: Max Similarity (Did we memorize a specific molecule?)
-        max_sims.append(max(sims))
-        
-        # Metric 2: Mean Similarity (How distinct is this molecule from the whole set?)
-        mean_sims.append(np.mean(sims))
-        
+        if sims:
+            max_sims.append(max(sims))      # Nearest neighbor score
+            mean_sims.append(np.mean(sims)) # Average similarity
+        else:
+            max_sims.append(0.0)
+            mean_sims.append(0.0)
+
     return max_sims, mean_sims
 
-def main():
-    # 1. Load the datasets
-    try:
-        df_train = pd.read_csv('../data/crossval_splits/three/cv_0/train.csv')
-        df_valid = pd.read_csv('../data/crossval_splits/three/cv_0/valid.csv')
-        df_test = pd.read_csv('../data/crossval_splits/three/test/test.csv')
-    except FileNotFoundError as e:
-        print(f"Error: Could not find file. {e}")
-        return
+def find_duplicates(test_smiles, train_smiles):
+    """
+    Strict duplicate check using Canonical SMILES strings.
+    """
+    train_canon = set()
+    for s in train_smiles:
+        mol = Chem.MolFromSmiles(s)
+        if mol:
+            train_canon.add(Chem.MolToSmiles(mol, canonical=True))
+            
+    duplicates = []
+    for s in test_smiles:
+        mol = Chem.MolFromSmiles(s)
+        if mol:
+            canon_s = Chem.MolToSmiles(mol, canonical=True)
+            if canon_s in train_canon:
+                duplicates.append(s)
+                
+    return duplicates
 
-    train_fps = get_fingerprints(df_train['smiles'])
-    test_fps = get_fingerprints(df_test['smiles'])
+def main(argv):
+    # --- 1. SETUP ---
+    # Update paths to match your actual files
+    df_train = pd.read_csv(f'../data/crossval_splits/{argv[1]}/cv_2/train.csv')
+    df_test = pd.read_csv(f'../data/crossval_splits/{argv[1]}/test/test.csv')
 
-    test_max_sims, test_mean_sims = calculate_similarity_metrics(test_fps, train_fps)
+    print(f"Loaded {len(df_train)} training and {len(df_test)} test molecules.")
 
-    # 4. Aggregating Results
-    avg_max_sim = np.mean(test_max_sims)
+    # --- 2. DUPLICATE CHECK (String Match) ---
+    print("\nChecking for strict duplicates (Canonical SMILES)...")
+    dups = find_duplicates(df_test['smiles'], df_train['smiles'])
     
-    avg_mean_sim = np.mean(test_mean_sims)
-    min_mean_sim = np.min(test_mean_sims)
-    max_mean_sim = np.max(test_mean_sims)
+    if dups:
+        print(f"WARNING: Found {len(dups)} strict duplicates (Identical strings).")
+    else:
+        print("SUCCESS: No strict duplicates found.")
 
-    # 5. Output Report
-    print(f"SIMILARITY ANALYSIS RESULTS")
-    
-    print(f"\nMETRIC 1: Nearest Neighbor Analysis (Leakage Check)")
-    print(f"Average Maximum Similarity: {avg_max_sim:.4f}")
+    # --- 3. SIMILARITY METRICS (Count-Based Morgan) ---
+    print("\nCalculating similarity metrics (Count-Based Morgan + Chirality)...")
+    train_fps = get_count_fingerprints(df_train['smiles'])
+    test_fps = get_count_fingerprints(df_test['smiles'])
 
-    print(f"\nMETRIC 2: Mean Similarity Analysis (Distinctness Check)")
-    print(f"Average Mean Similarity:    {avg_mean_sim:.4f}")
-    print(f"Range of Mean Similarities: {min_mean_sim:.4f} - {max_mean_sim:.4f}")
+    test_max_sims, test_mean_sims = calculate_similarity_metrics(
+        test_fps, train_fps
+    )
+
+    # --- 4. PRINT RESULTS ---
+    print("\n--- SIMILARITY ANALYSIS RESULTS ---")
+    print("Method: Morgan Generator (Count-Based, Radius=2, with Chirality)")
     
+    print("\nMETRIC 1: Max Similarity (Nearest Neighbor)")
+    print(f"  Average: {np.mean(test_max_sims):.4f}")
+    print(f"  Range:   {np.min(test_max_sims):.4f} - {np.max(test_max_sims):.4f}")
+    
+    print("\nMETRIC 2: Mean Similarity (Global Similarity)")
+    print(f"  Average: {np.mean(test_mean_sims):.4f}")
+    print(f"  Range:   {np.min(test_mean_sims):.4f} - {np.max(test_mean_sims):.4f}")
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)

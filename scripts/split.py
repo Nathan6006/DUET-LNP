@@ -1,13 +1,387 @@
 import os
-import pandas as pd  
+import pandas as pd
 import sys
+import numpy as np
 import random
 from sklearn.model_selection import train_test_split, StratifiedKFold
-from helpers import path_if_none, perform_scaffold_split
+from rdkit import Chem
+from rdkit import DataStructs
+from rdkit.Chem import rdFingerprintGenerator
+from rdkit.ML.Cluster import Butina
+from helpers import path_if_none
+from sklearn.cluster import AgglomerativeClustering
 
-"""
-script that splits data from all_data.csv to spilt files 
-"""
+class LogicalUnit:
+    def __init__(self, smiles, indices, labels):
+        self.smiles = smiles
+        self.indices = indices  # List of original DF indices
+        self.size = len(indices)
+        # Rule: The group is treated as the class of the LOWEST value in the group
+        self.effective_class = min(labels) 
+        self.original_labels = labels
+
+    def __repr__(self):
+        return f"Unit(Cls={self.effective_class}, Sz={self.size})"
+
+def group_into_logical_units(df, smiles_col, y_col):
+    """
+    Groups dataframe rows by SMILES. 
+    Returns a list of LogicalUnit objects.
+    """
+    units = []
+    # Group by SMILES to find identicals
+    grouped = df.groupby(smiles_col)
+    
+    for s, group in grouped:
+        indices = group.index.tolist()
+        labels = group[y_col].tolist()
+        units.append(LogicalUnit(s, indices, labels))
+        
+    return units
+
+# ==========================================
+# 3. CORE STRATIFICATION LOGIC
+# ==========================================
+
+def get_fingerprints_and_matrix(units):
+    """
+    Computes distance matrix for Logical Units based on their SMILES.
+    """
+    mols = [Chem.MolFromSmiles(u.smiles) for u in units]
+    # Filter out invalid mols (though should be rare if data is clean)
+    valid_data = [(i, m) for i, m in enumerate(mols) if m is not None]
+    
+    # Map back which unit corresponds to which valid mol
+    valid_indices = [x[0] for x in valid_data]
+    valid_mols = [x[1] for x in valid_data]
+    
+    fpgen = rdFingerprintGenerator.GetAtomPairGenerator(fpSize=2048)
+    fps = [fpgen.GetFingerprint(m) for m in valid_mols]
+    
+    n_fps = len(fps)
+    dist_matrix = np.zeros((n_fps, n_fps))
+    
+    # Calculate Distances
+    for i in range(1, n_fps):
+        sims = DataStructs.BulkTanimotoSimilarity(fps[i], fps[:i])
+        for j, sim in enumerate(sims):
+            dist = 1.0 - sim
+            dist_matrix[i, j] = dist
+            dist_matrix[j, i] = dist 
+            
+    return valid_indices, dist_matrix
+
+def shatter_cluster_into_units(cluster_obj, units_map):
+    """
+    Breaks a Cluster (group of similar Units) back down into individual Logical Units.
+    We CANNOT split a Logical Unit, so this is the finest granularity we have.
+    """
+    unit_indices = cluster_obj['unit_indices']
+    broken_pieces = []
+    
+    for u_idx in unit_indices:
+        unit = units_map[u_idx]
+        broken_pieces.append({
+            'type': 'unit', # Mark as a single indivisible unit
+            'unit_indices': [u_idx],
+            'counts': {unit.effective_class: unit.size},
+            'total': unit.size
+        })
+    return broken_pieces
+
+def perform_grouped_stratification(df, smiles_col, y_col, 
+                                   cv_folds=5, test_frac=0.175, uho_frac=0.0):
+    
+    if df.empty: return df
+    print(f"-> Grouping Identical Contexts...")
+    
+    # 1. Create Indivisible Units
+    all_units = group_into_logical_units(df, smiles_col, y_col)
+    print(f"   Reduced {len(df)} rows to {len(all_units)} unique structural units.")
+
+    # 2. Compute Clustering on Units
+    valid_ptr, dist_matrix = get_fingerprints_and_matrix(all_units)
+    
+    # Map matrix indices back to all_units list indices
+    # valid_ptr[matrix_index] = all_units_index
+    
+    print("   Clustering Units...")
+    lt_dists = []
+    n_fps = len(valid_ptr)
+    for i in range(1, n_fps):
+        lt_dists.extend(dist_matrix[i, :i].tolist())
+    
+    raw_clusters = Butina.ClusterData(lt_dists, n_fps, 0.4, isDistData=True)
+    
+    # 3. Build Pool of Clusters
+    pool = []
+    for c_idx, member_matrix_indices in enumerate(raw_clusters):
+        # Convert matrix indices -> unit list indices
+        unit_indices = [valid_ptr[mi] for mi in member_matrix_indices]
+        
+        c_counts = {}
+        total_size = 0
+        
+        for u_idx in unit_indices:
+            u = all_units[u_idx]
+            c_counts[u.effective_class] = c_counts.get(u.effective_class, 0) + u.size
+            total_size += u.size
+            
+        pool.append({
+            'type': 'cluster',
+            'id': f"c_{c_idx}",
+            'unit_indices': unit_indices,
+            'counts': c_counts,
+            'total': total_size
+        })
+
+    # 4. Define Requirements
+    # Note: We are now counting "effective class" sizes
+    test_min = {0: 100, 1: 10, 2: 10}
+    cv_min   = {0: 100, 1: 7, 2: 10}
+    classes = sorted(list(set(df[y_col])))
+
+    bins = []
+    # Test Bin
+    bins.append({
+        'name': 'test',
+        'min': test_min,
+        'current': {k: 0 for k in classes},
+        'items': [] # Stores unit indices
+    })
+    
+    # CV Bins
+    cv_bins = []
+    for i in range(cv_folds):
+        cv_bins.append({
+            'name': f'cv_{i}',
+            'min': cv_min,
+            'current': {k: 0 for k in classes},
+            'items': []
+        })
+    bins.extend(cv_bins)
+
+    final_assignments = {} # smiles -> bin_name
+
+    # ==========================================
+    # PHASE 1: TEST SET (Strict Requirement)
+    # ==========================================
+    print("   Phase 1: Filling Test Set...")
+    test_bin = bins[0]
+    
+    for p_class in [1, 2, 0]: # Rare first
+        while test_bin['current'].get(p_class, 0) < test_bin['min'].get(p_class, 0):
+            needed = test_bin['min'][p_class] - test_bin['current'][p_class]
+            
+            # Find best cluster/unit
+            best_idx = -1
+            best_score = -1
+            
+            for i, item in enumerate(pool):
+                cnt = item['counts'].get(p_class, 0)
+                if cnt > 0:
+                    # Density heuristic
+                    score = cnt / item['total']
+                    if score > best_score:
+                        best_score = score
+                        best_idx = i
+            
+            if best_idx == -1:
+                print(f"      WARNING: Ran out of Class {p_class} for Test Set!")
+                break
+            
+            cand = pool.pop(best_idx)
+            
+            # Check for massive overflow/waste
+            # If cand is a single Unit, we MUST take it or leave it (indivisible)
+            wasteful = cand['counts'][p_class] > (needed + 5)
+            too_heavy = cand['total'] > (needed + 10)
+            
+            if (wasteful or too_heavy) and cand['type'] == 'cluster':
+                # Shatter Cluster -> Logical Units
+                frags = shatter_cluster_into_units(cand, all_units)
+                pool.extend(frags)
+                # Restart search with smaller pieces
+            else:
+                # Assign
+                test_bin['items'].extend(cand['unit_indices'])
+                for k, v in cand['counts'].items(): test_bin['current'][k] += v
+
+    # ==========================================
+    # PHASE 2: CV MINIMUMS
+    # ==========================================
+    print("   Phase 2: Filling CV Minimums...")
+    
+    for p_class in [1, 2, 0]:
+        while True:
+            # Who needs it?
+            neediest_bin = None
+            max_deficit = 0
+            for b in cv_bins:
+                defic = b['min'].get(p_class, 0) - b['current'].get(p_class, 0)
+                if defic > max_deficit:
+                    max_deficit = defic
+                    neediest_bin = b
+            
+            if neediest_bin is None: break 
+            
+            # Find candidate
+            best_idx = -1
+            best_score = -1
+            for i, item in enumerate(pool):
+                cnt = item['counts'].get(p_class, 0)
+                if cnt > 0:
+                    score = cnt / item['total']
+                    if score > best_score:
+                        best_score = score
+                        best_idx = i
+            
+            if best_idx == -1: break
+            
+            cand = pool.pop(best_idx)
+            needed = neediest_bin['min'][p_class] - neediest_bin['current'][p_class]
+            
+            # Fit Check
+            wasteful = cand['counts'][p_class] > (needed + 5)
+            too_heavy = cand['total'] > (needed + 20)
+            
+            if (wasteful or too_heavy) and cand['type'] == 'cluster':
+                frags = shatter_cluster_into_units(cand, all_units)
+                pool.extend(frags)
+            else:
+                neediest_bin['items'].extend(cand['unit_indices'])
+                for k, v in cand['counts'].items(): neediest_bin['current'][k] += v
+
+    # ==========================================
+    # PHASE 3: CLEANUP (Force Assign All Remaining)
+    # ==========================================
+    print("   Phase 3: Distributing Remaining Units...")
+    
+    # Sort remaining pool by size (descending) to place large rocks first
+    pool.sort(key=lambda x: x['total'], reverse=True)
+    
+    while pool:
+        cand = pool.pop(0)
+        
+        # Assign to the CV fold that is smallest (by total count)
+        # We exclude Test set from this phase to prevent over-stuffing it
+        target_bin = sorted(cv_bins, key=lambda b: sum(b['current'].values()))[0]
+        
+        target_bin['items'].extend(cand['unit_indices'])
+        for k, v in cand['counts'].items():
+            target_bin['current'][k] += v
+
+    # ==========================================
+    # MAPPING BACK TO DATAFRAME
+    # ==========================================
+    # Assign bin names to SMILES
+    smiles_to_bin = {}
+    for b in bins:
+        for u_idx in b['items']:
+            u = all_units[u_idx]
+            smiles_to_bin[u.smiles] = b['name']
+            
+    df['split_group'] = df[smiles_col].map(smiles_to_bin).fillna('skipped')
+    
+    print("\n  Final Stratified Report (Groups + Cleanup):")
+    print(f"    {'BIN':<10} | {'ACTUAL (Rows)':<30} | {'MIN REQUIRED':<25}")
+    print("-" * 75)
+    for b in bins:
+        print(f"    {b['name']:<10} | {b['current']} | {b['min']}")
+
+    return df
+
+# ==========================================
+# 4. MAIN WRAPPER
+# ==========================================
+
+def cv_split_butina(split_spec_fname, path_to_folders='../data',
+                    cv_fold=5, ultra_held_out_fraction=-1.0,
+                    test_frac=0.175, random_state=42, 
+                    y_stratify_col='toxicity_class'):
+    
+    print(f"Starting Process: {split_spec_fname}")
+
+    # 1. Load Data
+    all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data.csv'))
+    split_df = pd.read_csv(os.path.join(path_to_folders, 'crossval_split_specs', split_spec_fname))
+    col_types = pd.read_csv(os.path.join(path_to_folders, 'col_type.csv'))
+
+    split_name = split_spec_fname.replace('.csv', '')
+    split_path = os.path.join(path_to_folders, 'crossval_splits', split_name)
+    if ultra_held_out_fraction > 0: split_path += '_with_uho'
+    
+    os.makedirs(os.path.join(split_path, 'test'), exist_ok=True)
+    if ultra_held_out_fraction > 0: 
+        os.makedirs(os.path.join(split_path, 'ultra_held_out'), exist_ok=True)
+
+    # 2. Filter & Merge
+    perma_train = pd.DataFrame()
+    split_pool = pd.DataFrame() 
+
+    for _, row in split_df.iterrows():
+        dtypes = [d.strip() for d in row['Data_types_for_component'].split(',')]
+        vals = [v.strip() for v in row['Values'].split(',')]
+        subset = all_df.copy()
+        
+        for dtype, val in zip(dtypes, vals):
+            subset = subset[subset[dtype].astype(str) == str(val)]
+        if subset.empty: continue
+
+        # Handle 'split_context' explicitly as the pool for grouping
+        role = row['Train_or_split'].lower()
+        if role == 'train':
+            perma_train = pd.concat([perma_train, subset])
+        elif role == 'split_context' or role == 'split':
+            split_pool = pd.concat([split_pool, subset])
+
+    # 3. RUN STRATIFICATION
+    if not split_pool.empty:
+        split_pool = perform_grouped_stratification(
+            split_pool, 
+            smiles_col='smiles', 
+            y_col=y_stratify_col,
+            cv_folds=cv_fold, 
+            test_frac=test_frac, 
+            uho_frac=ultra_held_out_fraction
+        )
+
+    # 4. Save Logic
+    def save_group(df_subset, save_path, set_name):
+        if df_subset.empty: return
+        y, x, w, m = split_df_by_col_type(df_subset, col_types)
+        yxwm_to_csvs(y, x, w, m, save_path, set_name)
+
+    # A. UHO
+    if 'split_group' in split_pool.columns:
+        uho = split_pool[split_pool['split_group'] == 'ultra_held_out']
+        save_group(uho, os.path.join(split_path, 'ultra_held_out'), 'test')
+
+        # B. Test
+        test = split_pool[split_pool['split_group'] == 'test']
+        save_group(test, os.path.join(split_path, 'test'), 'test')
+
+        # C. CV Folds
+        for i in range(cv_fold):
+            fold_dir = os.path.join(split_path, f'cv_{i}')
+            os.makedirs(fold_dir, exist_ok=True)
+            
+            # Validation
+            val_df = split_pool[split_pool['split_group'] == f'cv_{i}']
+            
+            # Train
+            train_groups = [f'cv_{j}' for j in range(cv_fold) if j != i]
+            pool_train = split_pool[split_pool['split_group'].isin(train_groups)]
+            
+            full_train = pd.concat([perma_train, pool_train], ignore_index=True)
+            
+            save_group(full_train, fold_dir, 'train')
+            save_group(val_df, fold_dir, 'valid')
+
+    print(f"Done. Saved to {split_path}")
+
+
+
 
 def cv_split_stratified(split_spec_fname, path_to_folders='../data',
                        cv_fold=5, ultra_held_out_fraction=-1.0,
@@ -205,6 +579,7 @@ def split_for_cv(vals, cv_fold, held_out_fraction):
     held_out_vals = vals[:held_out_len]
     cv_vals = vals[held_out_len:]
     return [cv_vals[i::cv_fold] for i in range(cv_fold)], held_out_vals
+
 
 def main(argv):
     split = argv[1]

@@ -1,0 +1,367 @@
+import numpy as np
+import os
+import pandas as pd
+import random
+import sys
+from helpers import path_if_none
+from sklearn.model_selection import StratifiedKFold, train_test_split
+from sklearn.utils.class_weight import compute_class_weight
+from scipy.stats import gaussian_kde
+
+"""
+Regression version of cv_split_stratified.
+Stratifies based on binned continuous toxicity values.
+"""
+
+def cv_split_stratified(split_spec_fname, path_to_folders='../data',
+                       cv_fold=5, ultra_held_out_fraction=-1.0,
+                       test_frac=0.2, random_state=42, 
+                       y_target_col='quantified_toxicity'): 
+    
+    # --- 1. Load Data ---
+    all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data_regression.csv'))
+    split_df = pd.read_csv(os.path.join(path_to_folders, 'crossval_split_specs', split_spec_fname))
+    col_types = pd.read_csv(os.path.join(path_to_folders, 'col_types_regression.csv'))
+
+    # --- 2. Setup Directories ---
+    split_name = split_spec_fname.replace('.csv', '')
+    split_path = os.path.join(path_to_folders, 'crossval_splits', split_name)
+    if ultra_held_out_fraction > 0:
+        split_path += '_with_uho'
+    
+    path_if_none(split_path)
+    path_if_none(os.path.join(split_path, 'test'))
+    if ultra_held_out_fraction > 0:
+        path_if_none(os.path.join(split_path, 'ultra_held_out'))
+
+    # --- 3. Partition Data into Pools ---
+    perma_train, standard_pool, context_pool = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+
+    for _, row in split_df.iterrows():
+        dtypes = [d.strip() for d in row['Data_types_for_component'].split(',')]
+        vals = [v.strip() for v in row['Values'].split(',')]
+        
+        subset = all_df.copy()
+        for dtype, val in zip(dtypes, vals):
+            subset = subset[subset[dtype].astype(str) == str(val)]
+        
+        if subset.empty: continue
+
+        mode = row['Train_or_split'].lower()
+        if mode == 'train':
+            perma_train = pd.concat([perma_train, subset])
+        elif mode == 'split':
+            standard_pool = pd.concat([standard_pool, subset])
+        elif mode == 'split_context':
+            context_pool = pd.concat([context_pool, subset])
+
+    # --- Helper: Create Bins for Continuous Stratification ---
+    # We create a temporary column 'strat_bin' to allow StratifiedKFold to work on regression data
+    def add_strat_bins(df, target_col, n_bins=5):
+        if df.empty: return df
+        # drop na targets
+        df = df.dropna(subset=[target_col]).copy()
+        try:
+            # Try qcut first for equal-sized bins
+            df['strat_bin'] = pd.qcut(df[target_col], q=n_bins, labels=False, duplicates='drop')
+        except:
+            # Fallback to cut if qcut fails (e.g., too many identical values)
+            df['strat_bin'] = pd.cut(df[target_col], bins=n_bins, labels=False)
+        return df
+
+    # --- 4. Perform Splitting ---
+    
+    # A) Process Context Data (Grouped by Lipid, with UHO)
+    # Note: get_context_splits handles its own binning internally
+    ctx_uho, ctx_test, ctx_cv_pool, ctx_folds = get_context_splits(
+        context_pool, cv_fold, test_frac, ultra_held_out_fraction, y_target_col
+    )
+    
+    # B) Process Standard Data (Row-level, with UHO)
+    std_uho, std_test, std_train_val = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+    
+    if not standard_pool.empty:
+        # Add bins for stratification
+        standard_pool = add_strat_bins(standard_pool, y_target_col)
+        
+        # Standard UHO split
+        if ultra_held_out_fraction > 0:
+            std_cv_test, std_uho = train_test_split(
+                standard_pool, test_size=ultra_held_out_fraction, 
+                random_state=random_state, stratify=standard_pool['strat_bin']
+            )
+        else:
+            std_cv_test = standard_pool
+
+        # Standard Test split
+        adj_test_size = test_frac / (1 - ultra_held_out_fraction) if ultra_held_out_fraction > 0 else test_frac
+        std_train_val, std_test = train_test_split(
+            std_cv_test, test_size=adj_test_size, 
+            random_state=random_state, stratify=std_cv_test['strat_bin']
+        )
+        
+        # Clean up temporary bin column
+        for df in [std_uho, std_test, std_train_val]:
+            if 'strat_bin' in df.columns:
+                df.drop(columns=['strat_bin'], inplace=True)
+
+    # --- 5. Save Results ---
+    # 5a. Save Ultra Held Out
+    final_uho = pd.concat([std_uho, ctx_uho], ignore_index=True)
+    if not final_uho.empty:
+        y, x, w, m = split_df_by_col_type(final_uho, col_types)
+        yxwm_to_csvs(y, x, w, m, os.path.join(split_path, 'ultra_held_out'), 'test')
+
+    # 5b. Save Global Test Set
+    final_test = pd.concat([std_test, ctx_test], ignore_index=True)
+    y, x, w, m = split_df_by_col_type(final_test, col_types)
+    yxwm_to_csvs(y, x, w, m, os.path.join(split_path, 'test'), 'test')
+
+    # 5c. Save CV Folds
+    # Re-calculate bins for the training/val pool specifically for CV
+    if not std_train_val.empty:
+        std_train_val = add_strat_bins(std_train_val, y_target_col)
+        skf = StratifiedKFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
+        # Stratify using the bin
+        std_fold_gen = list(skf.split(std_train_val, std_train_val['strat_bin']))
+        std_train_val.drop(columns=['strat_bin'], inplace=True) # clean up
+    else:
+        std_fold_gen = []
+
+    for i in range(cv_fold):
+        path_if_none(os.path.join(split_path, f'cv_{i}'))
+        
+        # Build training set: Perma + Std Fold Train + Ctx Fold Train
+        f_train = pd.concat([
+            perma_train,
+            std_train_val.iloc[std_fold_gen[i][0]] if std_fold_gen else pd.DataFrame(),
+            ctx_cv_pool.loc[ctx_folds[i][0]] if ctx_folds else pd.DataFrame()
+        ], ignore_index=True)
+        
+        # Build validation set: Std Fold Val + Ctx Fold Val
+        f_val = pd.concat([
+            std_train_val.iloc[std_fold_gen[i][1]] if std_fold_gen else pd.DataFrame(),
+            ctx_cv_pool.loc[ctx_folds[i][1]] if ctx_folds else pd.DataFrame()
+        ], ignore_index=True)
+        
+        f_train = generate_weights_bin(f_train)
+        # Save Fold
+        for df, name in [(f_train, 'train'), (f_val, 'valid')]:
+            y_f, x_f, w_f, m_f = split_df_by_col_type(df, col_types)
+            yxwm_to_csvs(y_f, x_f, w_f, m_f, os.path.join(split_path, f'cv_{i}'), name)
+
+    print(f"Full stratified split finished at {split_path}")
+
+
+# Helper functions for cv split
+def get_context_splits(df, cv_fold, test_frac, uho_frac, y_col, group_col='smiles', random_state=42):
+    """
+    Groups lipids and performs stratified splitting based on MEAN toxicity per lipid.
+    """
+    if df.empty:
+        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), []
+
+    # 1. Identify representative value (mean toxicity) per lipid
+    group_repr = df.groupby(group_col)[y_col].mean().reset_index()
+    
+    # 2. Bin the continuous values for stratification
+    # We use qcut to create 5 bins (quintiles) of toxicity
+    try:
+        group_repr['strat_label'] = pd.qcut(group_repr[y_col], q=5, labels=False, duplicates='drop')
+    except:
+        group_repr['strat_label'] = pd.cut(group_repr[y_col], bins=5, labels=False)
+
+    # 3. Safety: Identify bins with fewer members than cv_fold
+    counts = group_repr['strat_label'].value_counts()
+    small_classes = counts[counts < cv_fold].index.tolist()
+    
+    forced_train_lipids = group_repr[group_repr['strat_label'].isin(small_classes)][group_col].tolist()
+    # The pool we can safely stratify
+    strat_pool = group_repr[~group_repr['strat_label'].isin(small_classes)].copy()
+
+    # 4. Stage 1: Separate Ultra-Held-Out (UHO)
+    uho_df = pd.DataFrame()
+    if uho_frac > 0:
+        cv_test_ids, uho_ids = train_test_split(
+            strat_pool[group_col], test_size=uho_frac, 
+            random_state=random_state, stratify=strat_pool['strat_label']
+        )
+        uho_df = df[df[group_col].isin(uho_ids)].copy()
+        strat_pool = strat_pool[strat_pool[group_col].isin(cv_test_ids)]
+
+    # 5. Stage 2: Separate Test Set
+    adj_test_size = test_frac / (1 - (uho_frac if uho_frac > 0 else 0))
+    cv_ids, test_ids = train_test_split(
+        strat_pool[group_col], test_size=adj_test_size, 
+        random_state=random_state, stratify=strat_pool['strat_label']
+    )
+    test_df = df[df[group_col].isin(test_ids)].copy()
+    
+    # The CV Pool includes the stratified lipids + the lipids from small classes
+    cv_pool_df = df[df[group_col].isin(cv_ids) | df[group_col].isin(forced_train_lipids)].copy()
+    cv_pool_repr = strat_pool[strat_pool[group_col].isin(cv_ids)]
+
+    # 6. Stage 3: Generate CV Folds (Standard 1/K Split)
+    skf = StratifiedKFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
+    
+    fold_map = {}
+    # We only stratify the lipids that have enough members to fill all folds
+    for fold_idx, (_, val_idx) in enumerate(skf.split(cv_pool_repr[group_col], cv_pool_repr['strat_label'])):
+        for lip in cv_pool_repr.iloc[val_idx][group_col].values:
+            fold_map[lip] = fold_idx
+
+    cv_folds = []
+    for i in range(cv_fold):
+        # Validation: Only contains lipids from the stratified pool assigned to this fold
+        val_idx = cv_pool_df[cv_pool_df[group_col].map(fold_map) == i].index
+        
+        # Training: Contains lipids from other folds + ALL forced_train_lipids
+        train_idx = cv_pool_df[(cv_pool_df[group_col].map(fold_map) != i) | 
+                              (cv_pool_df[group_col].isin(forced_train_lipids))].index
+        
+        cv_folds.append((train_idx, val_idx))
+
+    return uho_df, test_df, cv_pool_df, cv_folds
+
+
+def split_df_by_col_type(df, col_types):
+    y_vals_cols = col_types.Column_name[col_types.Type == 'Y_val']
+    x_vals_cols = col_types.Column_name[col_types.Type == 'X_val']
+    xvals_df = df[x_vals_cols]
+    weight_cols = col_types.Column_name[col_types.Type == 'Sample_weight']
+    metadata_cols = col_types.Column_name[col_types.Type.isin(['Metadata','X_val_categorical'])]
+    return df[y_vals_cols], xvals_df, df[weight_cols], df[metadata_cols]
+
+def yxwm_to_csvs(y, x, w, m, path, settype):
+    y.to_csv(os.path.join(path, settype+'.csv'), index=False)
+    x.to_csv(os.path.join(path, settype + '_extra_x.csv'), index=False)
+    w.to_csv(os.path.join(path, settype + '_weights.csv'), index=False)
+    m.to_csv(os.path.join(path, settype + '_metadata.csv'), index=False)
+
+
+# weighting functions 
+def generate_weights_bin(all_df):
+    """
+    Adjusts the 'Sample_weight' column based on class balance
+    of 'toxicity_class' (0, 1, 2).
+
+    New_Weight = Old_Weight * Class_Balancing_Multiplier
+    Also reports Effective Sample Size (ESS).
+    """
+    # Ensure weight column exists
+    if 'Sample_weight' not in all_df.columns:
+        all_df['Sample_weight'] = 1.0
+
+    # Only use rows with labels to compute class weights
+    mask = ~all_df['toxicity_class'].isna()
+    y = all_df.loc[mask, 'toxicity_class'].values
+    unique_classes = np.unique(y)
+
+    class_weights = compute_class_weight(
+        class_weight='balanced',
+        classes=unique_classes,
+        y=y
+    )
+    weight_dict = dict(zip(unique_classes, class_weights))
+
+    # Apply class multipliers
+    class_multipliers = all_df['toxicity_class'].map(weight_dict)
+    all_df['Sample_weight'] *= class_multipliers.fillna(1.0)
+
+    # ---- ESS computation (only labeled rows) ----
+    w = all_df.loc[mask, 'Sample_weight'].values
+    ess = (w.sum() ** 2) / np.sum(w ** 2)
+
+    print(
+        f"Binned weighting complete | "
+        f"ESS = {ess:.1f} / {mask.sum()} "
+        f"({ess / mask.sum():.2%} effective)"
+    )
+
+    return all_df
+
+def generate_weights_gkde(
+    all_df,
+    target_col='quantified_toxicity',
+    power=0.4,
+    bandwidth='silverman',          # data-driven
+    clip_max=25.0,
+    upper_bound=1.0,
+    reflect_frac=2.0,           # reflect within k * std of boundary
+    verbose=True
+):
+
+
+    mask = ~all_df[target_col].isna() & ~np.isinf(all_df[target_col])
+    y = all_df.loc[mask, target_col].to_numpy(dtype=float)
+
+    if len(y) < 2:
+        kde_multipliers = np.ones(len(all_df))
+        ess = len(y)
+    else:
+        # -----------------------------
+        # Reflect only near upper bound
+        # -----------------------------
+        y_std = np.std(y)
+        reflect_mask = (upper_bound - y) < (reflect_frac * y_std)
+        y_reflected = 2 * upper_bound - y[reflect_mask]
+
+        y_combined = np.concatenate([y, y_reflected])
+
+        # -----------------------------
+        # Data-driven bandwidth
+        # -----------------------------
+        if bandwidth in ("scott", "silverman"):
+            kde = gaussian_kde(y_combined, bw_method=bandwidth)
+        else:
+            # scale numeric bandwidth by data spread
+            kde = gaussian_kde(y_combined, bw_method=bandwidth * np.std(y_combined))
+
+        # Density correction (half mass is reflected)
+        densities = kde(y) * 2
+        densities = np.maximum(densities, 1e-6)
+
+        # -----------------------------
+        # Inverse density weighting
+        # -----------------------------
+        weights = 1.0 / (densities ** power)
+
+        # Clip FIRST
+        weights = np.clip(weights, a_min=None, a_max=clip_max)
+
+        # Normalize AFTER clipping
+        weights /= weights.mean()
+
+        # -----------------------------
+        # Effective Sample Size (ESS)
+        # -----------------------------
+        ess = (weights.sum() ** 2) / np.sum(weights ** 2)
+
+        kde_series = pd.Series(weights, index=all_df.loc[mask].index)
+        kde_multipliers = all_df.index.map(kde_series).fillna(1.0)
+
+    if 'Sample_weight' not in all_df.columns:
+        all_df['Sample_weight'] = 1.0
+
+    all_df['Sample_weight'] *= kde_multipliers
+
+    if verbose:
+        print(f"KDE weighting complete | ESS = {ess:.1f} / {mask.sum()} samples")
+
+    return all_df
+
+
+def main(argv):
+    split = argv[1]
+    ultra_held_out = float(argv[2])
+    cv_num = 5
+    if len(argv)>3:
+        for i, arg in enumerate(argv):
+            if arg.replace('–', '-') == '--cv':
+                cv_num = int(argv[i+1])
+                print('this many folds: ',str(cv_num))
+    cv_split_stratified(split, cv_fold=cv_num, ultra_held_out_fraction = ultra_held_out)
+
+    
+if __name__ == '__main__':
+    main(sys.argv)

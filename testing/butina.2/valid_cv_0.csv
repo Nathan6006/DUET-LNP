@@ -1,0 +1,13 @@
+Dataset,Total,Class_0,Class_1,Class_2
+Farbiak_Dendrimer_HeLa,4,2,1,1
+Farbiak_Dendrimer_igrov1,4,3,0,1
+Han_a3,26,26,0,0
+Han_amidine,20,20,0,0
+Lee_unsat,19,19,0,0
+Lin_peptide,13,8,1,4
+Liu_iphos,105,105,0,0
+Miller_Zwitter,16,16,0,0
+Xue_CAD_LNP,34,34,0,0
+Yu_Aminoglycoside,13,13,0,0
+Zhang_Aminoglycoside,5,4,0,1
+Total,259,250,2,7

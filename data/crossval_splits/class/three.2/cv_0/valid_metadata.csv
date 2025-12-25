@@ -1,0 +1,237 @@
+exact_toxicity,Formulation,Helper_lipid_ID,Comment,Lipid_name,Experiment_ID,Cargo_type,Model_type,Experiment_weight,split_name_for_normalization,toxicity_class
+100.69666666666666,Lxue,DOPE,Tox,7-a2-6,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+119.66759,xyu,DOPE,,HG-EP10-1,Yu_Aminoglycoside,mRNA,IGROV1,1.0,Yu_Aminoglycoside,0
+104.5977011,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2773",3A4-5,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+95.0,Liu_iphos,MDOA,,27A3-P13,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.59386973,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2710",3A4-SC8,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+97.48666666666666,Lxue,DOPE,Tox,4-a2-8,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,23A3-P4,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,25A2-P13,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+91.76245211,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2744",2A9V-Far,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+95.0,Liu_iphos,MDOA,,20A3-P4,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+92.05,Han_a3,DOPE,,A9-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+90.43715847,zhang,DSPC,,AM-C11,Zhang_Aminoglycoside,siRNA,HeLa,1.0,Zhang_Aminoglycoside,0
+95.0,Liu_iphos,MDOA,,20A3-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,17A1-P7,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+97.25,Han_a3,DOPE,,A12-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+99.5,Han_amidine,DOPE,Computed with aid lipid molwt as 865,21T-O16,Han_amidine,mRNA,HepG2,1.0,Han_amidine,0
+95.0,Liu_iphos,MDOA,,24A2-P11,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+104.5,Han_amidine,DOPE,Computed with aid lipid molwt as 865,3T-O12,Han_amidine,mRNA,HepG2,1.0,Han_amidine,0
+83.33333333,Lin_peptide,DSPC,,a14-2,Lin_peptide,mRNA,MDA_MB,1.0,Lin_peptide,0
+95.0,Liu_iphos,MDOA,,10A1-P5,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,20A2-P6,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+85.0,Liu_iphos,MDOA,,20A2-P11,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,9A1-P13,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,24A2-P13,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+50.98039216,Lin_peptide,DSPC,,a10-4,Lin_peptide,mRNA,MDA_MB,1.0,Lin_peptide,2
+97.51666666666668,Lxue,DOPE,Tox,10-a3-8b,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,17A1-P6,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,26A4-P16,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+85.0,Liu_iphos,MDOA,,4A1-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,20A2-P13,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+92.24376731,xyu,DOPE,,GT-EP14,Yu_Aminoglycoside,mRNA,IGROV1,1.0,Yu_Aminoglycoside,0
+89.21568627,Lin_peptide,DSPC,,a16-5,Lin_peptide,mRNA,MDA_MB,1.0,Lin_peptide,0
+94.06130268,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2736",2A9-SC8/2,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+98.68333333333332,Lxue,DOPE,Tox,5-a3-7b2,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+121.3114754,zhang,DSPC,,HG-C16,Zhang_Aminoglycoside,siRNA,HeLa,1.0,Zhang_Aminoglycoside,0
+45.09803922,Lin_peptide,DSPC,,a12-4,Lin_peptide,mRNA,MDA_MB,1.0,Lin_peptide,2
+99.5,Han_amidine,DOPE,Computed with aid lipid molwt as 865,9T-O12,Han_amidine,mRNA,HepG2,1.0,Han_amidine,0
+95.0,Liu_iphos,MDOA,,27A4-P12,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,25A2-P14,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,6A1-P12,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+104.80333333333331,Lxue,DOPE,Tox,10-a2-9,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+109.0027701,xyu,DOPE,,HG-Ac8-1,Yu_Aminoglycoside,mRNA,IGROV1,1.0,Yu_Aminoglycoside,0
+95.0,Liu_iphos,MDOA,,20A3-P12,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,28A4-P16,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,24A3-P5,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+93.09494451,ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA3-Ep8,Miller_Zwitter,siRNA,HeLa,1.0,Miller_Zwitter,0
+95.0,Liu_iphos,MDOA,,26A4-P8,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+103.5,Han_amidine,DOPE,Computed with aid lipid molwt as 865,6T-O12,Han_amidine,mRNA,HepG2,1.0,Han_amidine,0
+104.45,Lxue,DOPE,Tox,6-a3-6b,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,16A1-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,22A3-P13,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,5A1-P11,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+100.7662835,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2707",2A2-SC8,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+95.35,Han_a3,DOPE,,C19-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+115.3739612,xyu,DOPE,,HG-EP10,Yu_Aminoglycoside,mRNA,IGROV1,1.0,Yu_Aminoglycoside,0
+95.0,Liu_iphos,MDOA,,20A3-P6,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,20A2-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+91.78666666666668,Lxue,DOPE,Tox,12-a3-8b,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+91.3,Han_a3,DOPE,,A21-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+98.1,Han_a3,DOPE,,A27-4,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+97.0,Han_amidine,DOPE,Computed with aid lipid molwt as 865,18T-O9,Han_amidine,mRNA,HepG2,1.0,Han_amidine,0
+95.0,Liu_iphos,MDOA,,20A3-P5,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,13A1-P8,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+103.85666666666668,Lxue,DOPE,Tox,1-a2-8,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.10666666666668,Lxue,DOPE,Tox,11-a2-7,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+97.12643678,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2764",2A9-2C,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+98.30333333333331,Lxue,DOPE,Tox,10-a3-9b2,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+87.0,Han_amidine,DOPE,Computed with aid lipid molwt as 865,9T-O16,Han_amidine,mRNA,HepG2,1.0,Han_amidine,0
+95.0,Liu_iphos,MDOA,,25A4-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+99.01960784,Lin_peptide,DSPC,,a14-1,Lin_peptide,mRNA,MDA_MB,1.0,Lin_peptide,0
+111.9113573,xyu,DOPE,,AM-EP10,Yu_Aminoglycoside,mRNA,IGROV1,1.0,Yu_Aminoglycoside,0
+94.44444444,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2775",4A3-5,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+100.86333333333332,Lxue,DOPE,Tox,2-a2-7b2,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,26A3-P6,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,18A1-P4,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+83.60655738,zhang,DSPC,,AP-C14,Zhang_Aminoglycoside,siRNA,HeLa,1.0,Zhang_Aminoglycoside,0
+91.1,Han_a3,DOPE,,A26-4,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+95.0,Liu_iphos,MDOA,,17A1-P16,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,20A2-P5,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+96.20826696,ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA2-Ep16,Miller_Zwitter,siRNA,HeLa,1.0,Miller_Zwitter,0
+95.0,Liu_iphos,MDOA,,4A1-P8,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+99.05,Han_a3,DOPE,,A22-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+95.0,Liu_iphos,MDOA,,21A2-P8,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,25A2-P4,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,7A1-P4,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,22A2-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,13A1-P6,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,18A1-P7,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+92.5,Han_amidine,DOPE,Computed with aid lipid molwt as 865,8T-O12,Han_amidine,mRNA,HepG2,1.0,Han_amidine,0
+94.44333333333334,Lxue,DOPE,Tox,3-a2-9,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,25A3-P5,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+96.1,Han_a3,DOPE,,B3-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+95.0,Liu_iphos,MDOA,,21A2-P9,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+94.9,Han_a3,DOPE,,C16-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+104.55666666666666,Lxue,DOPE,Tox,4-a2-7b,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,15A1-P15,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+100.58,Lxue,DOPE,Tox,6-a3-7b,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,10A1-P14,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+108.7257618,xyu,DOPE,,GN-Ac10,Yu_Aminoglycoside,mRNA,IGROV1,1.0,Yu_Aminoglycoside,0
+95.63711911,xyu,DOPE,,AM-Ac6,Yu_Aminoglycoside,mRNA,IGROV1,1.0,Yu_Aminoglycoside,0
+39.21568627,Lin_peptide,DSPC,,a8-2,Lin_peptide,mRNA,MDA_MB,1.0,Lin_peptide,2
+85.0,Liu_iphos,MDOA,,19A2-P11,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+94.44444444,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2715",2A9-Ne,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+95.0,Liu_iphos,MDOA,,22A3-P15,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+106.52,Lxue,DOPE,Tox,5-a2-6,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+115.3256705,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2698",4A3-3T,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+95.0,Liu_iphos,MDOA,,24A3-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+105.4644809,zhang,DSPC,,RB-C10,Zhang_Aminoglycoside,siRNA,HeLa,1.0,Zhang_Aminoglycoside,0
+87.25490196,Lin_peptide,DSPC,,a12orn-1,Lin_peptide,mRNA,MDA_MB,1.0,Lin_peptide,0
+93.12,Lxue,DOPE,Tox,5-a2-9b,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+98.13,Lxue,DOPE,Tox,2-a3-9b2,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,5A1-P16,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+99.41,Lxue,DOPE,Tox,9-a3-7b,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+29.41176471,Lin_peptide,DSPC,,a10-2,Lin_peptide,mRNA,MDA_MB,1.0,Lin_peptide,2
+96.5,Han_amidine,DOPE,Computed with aid lipid molwt as 865,18T-O14,Han_amidine,mRNA,HepG2,1.0,Han_amidine,0
+95.0,Liu_iphos,MDOA,,27A2-P8,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+98.0,Han_amidine,DOPE,Computed with aid lipid molwt as 865,13T-O16,Han_amidine,mRNA,HepG2,1.0,Han_amidine,0
+54.09836066,zhang,DSPC,,GT-C13,Zhang_Aminoglycoside,siRNA,HeLa,1.0,Zhang_Aminoglycoside,2
+95.0,Liu_iphos,MDOA,,19A2-P4,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,23A4-P6,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+91.95402299,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2717",3A4-Ne,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+95.0,Liu_iphos,MDOA,,21A3-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+104.5,Han_amidine,DOPE,Computed with aid lipid molwt as 865,3T-O16,Han_amidine,mRNA,HepG2,1.0,Han_amidine,0
+99.8,Han_a3,DOPE,,B6-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+53.92156863,Lin_peptide,DSPC,,e12-5,Lin_peptide,mRNA,MDA_MB,1.0,Lin_peptide,2
+114.265928,xyu,DOPE,,HG-Ac8,Yu_Aminoglycoside,mRNA,IGROV1,1.0,Yu_Aminoglycoside,0
+105.4644809,zhang,DSPC,,HG-C14,Zhang_Aminoglycoside,siRNA,HeLa,1.0,Zhang_Aminoglycoside,0
+101.77,Lxue,DOPE,Tox,10-a2-7,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,16A1-P14,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+92.45,Han_a3,DOPE,,B7-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+90.7,Han_a3,DOPE,,C1-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+75.49019608,Lin_peptide,DSPC,,aat12-4,Lin_peptide,mRNA,MDA_MB,1.0,Lin_peptide,1
+95.59386973,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2699",6A3-3T,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+95.0,Liu_iphos,MDOA,,6A1-P16,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,13A1-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,28A2-P9,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+99.49333333333334,Lxue,DOPE,Tox,2-a2-9b2,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+110.9195402,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2745",3A4-Far,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+95.0,Liu_iphos,MDOA,,2A1-P15,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,27A2-P4,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+113.7119114,xyu,DOPE,,AM-EP8,Yu_Aminoglycoside,mRNA,IGROV1,1.0,Yu_Aminoglycoside,0
+95.0,Liu_iphos,MDOA,,11A1-P13,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+93.7,Han_a3,DOPE,,B21-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+98.40333333333336,Lxue,DOPE,Tox,11-a3-8b,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+98.27666666666666,Lxue,DOPE,Tox,7-a3-9b2,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+92.91187739,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2738",3A4-SC8/2,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+96.85,Han_a3,DOPE,,C6-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+99.42666666666668,Lxue,DOPE,Tox,2-a2-7,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,16A1-P5,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+100.75333333333332,Lxue,DOPE,Tox,12-a2-6,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,25A2-P12,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+98.46666666666664,Lxue,DOPE,Tox,7-a3-7b,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+98.58666666666666,Lxue,DOPE,Tox,5-a3-9b2,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.47333333333334,Lxue,DOPE,Tox,2-a3-7b2,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+93.1372549,Lin_peptide,DSPC,,a12orn-2,Lin_peptide,mRNA,MDA_MB,1.0,Lin_peptide,0
+99.67333333333332,Lxue,DOPE,Tox,10-a2-7b,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,28A3-P5,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,26A4-P9,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+93.39333333333332,Lxue,DOPE,Tox,12-a2-7,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+99.71333333333332,Lxue,DOPE,Tox,3-a2-7,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+91.59635606,ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA4-Ac18,Miller_Zwitter,siRNA,HeLa,1.0,Miller_Zwitter,0
+95.0,Liu_iphos,MDOA,,27A3-P6,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+108.4291188,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2708",2A9-SC8,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+100.5464481,zhang,DSPC,,HG-C12,Zhang_Aminoglycoside,siRNA,HeLa,1.0,Zhang_Aminoglycoside,0
+99.23371648,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2739",4A1-SC8/2,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+95.65,Han_a3,DOPE,,C27-4,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+95.0,Liu_iphos,MDOA,,25A3-P14,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,15A1-P5,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,19A2-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+70.76502732,zhang,DSPC,,GT-C11,Zhang_Aminoglycoside,siRNA,HeLa,1.0,Zhang_Aminoglycoside,1
+95.0,Liu_iphos,MDOA,,23A4-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,22A2-P12,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+107.1516646,ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA6-Ep10,Miller_Zwitter,siRNA,HeLa,1.0,Miller_Zwitter,0
+95.0,Liu_iphos,MDOA,,18A1-P14,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,15A1-P14,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,12A1-P5,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,21A3-P5,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+85.0,Liu_iphos,MDOA,,1A1-P11,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+101.05,Lxue,DOPE,Tox,9-a2-7b2,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,21A3-P9,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+86.97318008,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2727",6A3-4T,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+95.0,Liu_iphos,MDOA,,24A4-P15,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+96.95,Han_a3,DOPE,,B9-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+95.0,Liu_iphos,MDOA,,25A3-P12,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+101.62,Lxue,DOPE,Tox,3-a2-8,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,23A3-P9,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+99.42528736,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2714",2A2-Ne,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+100.23666666666666,Lxue,DOPE,Tox,9-a2-9b,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+102.5,Han_amidine,DOPE,Computed with aid lipid molwt as 865,3T-O14,Han_amidine,mRNA,HepG2,1.0,Han_amidine,0
+91.1,Han_a3,DOPE,,C24-4,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+94.85,Han_a3,DOPE,,A8-2,Han_a3,mRNA,HepG2,1.0,Han_a3,0
+90.48333333333336,Lxue,DOPE,Tox,12-a3-9b2,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,10A1-P13,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+107.0881226,Unsat_dendrimer,DOPE,"Total lipids/RNA 40:1; DOPE MW = 744, Chol = 387, C14-P2K = 2709",2A9V-SC8,Lee_unsat,mRNA,IGROV1,1.0,Lee_unsat,0
+93.88,Lxue,DOPE,Tox,3-a3-7b2,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,26A4-P4,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+100.73,Lxue,DOPE,Tox,1-a2-9,Xue_CAD_LNP,mRNA,HeLa,1.0,Xue_CAD_LNP,0
+95.0,Liu_iphos,MDOA,,14A1-P10,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+95.0,Liu_iphos,MDOA,,27A2-P6,Liu_iphos,mRNA,IGROV1,1.0,Liu_iphos,0
+99.87669544,ZAL_form,,"""ZAL:siRNA ratio such that the number of hydrophobic tails in the ZAL times the ZAL:siRNA mole ratio in the formulation was ~1000"", plus assumed siRNA MW = 13300Da",ZA1-Ac10,Miller_Zwitter,siRNA,HeLa,1.0,Miller_Zwitter,0
+106.7073171,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC6,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,0
+102.7272727,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC8,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,0
+72.83950617,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC14,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,1
+96.95121951,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC6,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,0
+91.81818182,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC8,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,0
+71.91358025,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC14,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,1
+83.84146341,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC6,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,0
+77.87878788,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC8,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,1
+64.81481481,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC14,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,2
+70.73170732,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC6,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,1
+61.51515152,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC8,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,2
+58.95061728,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC14,Farbiak_Dendrimer_HeLa,mRNA,HeLa,0.25,Farbiak_Dendrimer_HeLa,2
+103.6585366,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC6,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,0
+100.9090909,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC8,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,0
+91.97530864,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC14,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,0
+102.1341463,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC6,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,0
+98.78787879,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC8,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,0
+77.77777778,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC14,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,1
+100.0,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC6,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,0
+92.72727273,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC8,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,0
+56.79012346,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC14,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,2
+84.75609756,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC6,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,0
+64.54545455,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC8,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,2
+26.85185185,Farbiak_dendrimer,DOPE,calculated based off 10000:1 mol ratio,4A3-SC14,Farbiak_Dendrimer_igrov1,mRNA,IGROV1,0.25,Farbiak_Dendrimer_igrov1,2
+90.43333333333334,Han_branched,DOPE,,14,Han_branched,mRNA,HepG2,0.33,Han_branched,0
+92.83333333333331,Han_branched,DOPE,,12-8,Han_branched,mRNA,HepG2,0.33,Han_branched,0
+92.36666666666667,Han_branched,DOPE,,14-14,Han_branched,mRNA,HepG2,0.33,Han_branched,0
+97.63333333333333,Han_branched,DSPC,,MC3,Han_branched,mRNA,HepG2,0.33,Han_branched,0
+86.13333333333333,Han_branched,DOPE,,14,Han_branched,mRNA,HepG2,0.33,Han_branched,0
+89.76666666666667,Han_branched,DOPE,,12-8,Han_branched,mRNA,HepG2,0.33,Han_branched,0
+71.36666666666667,Han_branched,DOPE,,14-14,Han_branched,mRNA,HepG2,0.33,Han_branched,1
+91.03333333333336,Han_branched,DSPC,,MC3,Han_branched,mRNA,HepG2,0.33,Han_branched,0
+68.03333333,Han_branched,DOPE,,14,Han_branched,mRNA,HepG2,0.33,Han_branched,2
+81.56666667,Han_branched,DOPE,,12-8,Han_branched,mRNA,HepG2,0.33,Han_branched,0
+47.13333333,Han_branched,DOPE,,14-14,Han_branched,mRNA,HepG2,0.33,Han_branched,2
+79.73333333,Han_branched,DSPC,,MC3,Han_branched,mRNA,HepG2,0.33,Han_branched,1

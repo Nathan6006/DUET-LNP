@@ -21,6 +21,7 @@ Experiment_weight,Metadata
 Sample_weight,Sample_weight
 Helper_lipid_ID_DOPE,X_val
 Helper_lipid_ID_DSPC,X_val
+Helper_lipid_ID_MDOA,X_val
 Cargo_type_mRNA,X_val
 Cargo_type_siRNA,X_val
 Model_type_HeLa,X_val

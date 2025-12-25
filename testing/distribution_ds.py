@@ -23,7 +23,7 @@ def save_dist_to_csv(
         return
 
     # Ensure numeric
-    df["exact_toxicity"] = pd.to_numeric(df["exact_toxicity"], errors="coerce")
+    df["quantified_toxicity"] = pd.to_numeric(df["quantified_toxicity"], errors="coerce")
 
     # Get unique experiments
     experiments = df["Experiment_ID"].unique()
@@ -33,7 +33,7 @@ def save_dist_to_csv(
 
     for exp_id in experiments:
         dataset = df[df["Experiment_ID"] == exp_id]
-        tox = dataset["exact_toxicity"].dropna()
+        tox = dataset["quantified_toxicity"].dropna()
         total_count = len(tox)
 
         if total_count == 0:
