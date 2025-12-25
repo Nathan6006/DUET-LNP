@@ -341,13 +341,13 @@ def analyze_predictions_cv_tvt(
 
         rows.append({
             'fold': i,
-            'pearson': pearson_r,
-            'r2': r2,
-            'pearson_p_val': pearson_p,
-            'spearman': spearman_r,
-            'kendall': kendall_r,
-            'mse': mse, # Changed from rmse
-            'mae': mae, # Added
+            'pearson': round(pearson_r, 6),
+            'r2': round(r2, 6),
+            'pearson_p_val': round(pearson_p, 6),
+            'spearman': round(spearman_r, 6),
+            'kendall': round(kendall_r, 6),
+            'mse': round(mse, 6),  
+            'mae': round(mae,6), # Added
             'n_vals': len(actual)
         })
 
