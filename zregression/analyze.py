@@ -241,8 +241,8 @@ def analyze_predictions_cv_tvt(
                 except:
                     pass
 
-                min_val = min(pred.min(), actual.min()) - 0.1
-                max_val = max(pred.max(), actual.max()) + 0.1
+                min_val = 0.2# min(pred.min(), actual.min()) - 0.1
+                max_val = 1.05 # max(pred.max(), actual.max()) + 0.1
                 plt.plot([min_val, max_val], [min_val, max_val], 'r--', label='Ideal')
                 
                 plt.xlim(min_val, max_val)
@@ -328,8 +328,8 @@ def analyze_predictions_cv_tvt(
             plt.ylabel('Quantified')
             plt.title(f'Fold {i} Pooled (All Datasets)')
             
-            min_pooled = min(pred.min(), actual.min()) - 0.1
-            max_pooled = max(pred.max(), actual.max()) + 0.1
+            min_pooled = 0.2 # min(pred.min(), actual.min()) - 0.1
+            max_pooled = 1.05 # max(pred.max(), actual.max()) + 0.1
             plt.xlim(min_pooled, max_pooled)
             plt.ylim(min_pooled, max_pooled)
             plt.plot([min_pooled, max_pooled], [min_pooled, max_pooled], 'r--')
