@@ -420,18 +420,18 @@ def analyze_predictions_cv_tvt(
                         'predicted': pred
                     }).to_csv(f"{analyzed_path}/pred_vs_actual_data.csv", index=False)
 
-                metrics_rows.append({
-                    'dataset_ID': pred_split_name,
-                    'n': len(actual),
-                    'pearson': pearson_r,
-                    'r2': r2,
-                    'pearson_p_val': pearson_p,
-                    'kendall': kendall_r,
-                    'spearman': spearman_r,
-                    'mse': mse,  # Ensure MSE is here
-                    'mae': mae,  # Added
-                    'note': "insufficient_data" if len(actual) < min_values_for_analysis else ""
-                })
+            metrics_rows.append({
+                'dataset_ID': pred_split_name,
+                'n': len(actual),
+                'pearson': round(pearson_r, 6),
+                'r2': round(r2, 6),
+                'pearson_p_val': round(pearson_p, 6),
+                'kendall': round(kendall_r, 6),
+                'spearman': round(spearman_r, 6),
+                'mse': round(mse, 6),  
+                'mae': round(mae, 6),  
+                'note': "insufficient_data" if len(actual) < min_values_for_analysis else ""
+            })
 
             uho_metrics_df = pd.DataFrame(metrics_rows)
             uho_metrics_df.to_csv(f"{uho_path}/ultra_held_out_metrics.csv", index=False)
