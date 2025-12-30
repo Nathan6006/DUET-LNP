@@ -1,397 +1,319 @@
+import numpy as np
 import os
 import pandas as pd
-import sys
-import numpy as np
 import random
-from sklearn.model_selection import train_test_split, StratifiedKFold
-from rdkit import Chem
-from rdkit import DataStructs
-from rdkit.Chem import rdFingerprintGenerator
-from rdkit.ML.Cluster import Butina
+import sys
 from helpers import path_if_none
-from sklearn.cluster import AgglomerativeClustering
+from sklearn.model_selection import StratifiedKFold, train_test_split, StratifiedGroupKFold
+from sklearn.utils.class_weight import compute_class_weight
+from scipy.stats import gaussian_kde
 
-class LogicalUnit:
-    def __init__(self, smiles, indices, labels):
-        self.smiles = smiles
-        self.indices = indices  # List of original DF indices
-        self.size = len(indices)
-        # Rule: The group is treated as the class of the LOWEST value in the group
-        self.effective_class = min(labels) 
-        self.original_labels = labels
+# --- New Imports for Butina Clustering ---
+from rdkit import Chem
+from rdkit.Chem import AllChem, DataStructs
+from rdkit.ML.Cluster import Butina
 
-    def __repr__(self):
-        return f"Unit(Cls={self.effective_class}, Sz={self.size})"
-
-def group_into_logical_units(df, smiles_col, y_col):
+def assign_butina_clusters(df, smiles_col='smiles', cutoff=0.2, fp_radius=2, fp_bits=1024):
     """
-    Groups dataframe rows by SMILES. 
-    Returns a list of LogicalUnit objects.
+    Generates Butina clusters for unique SMILES in the dataframe and 
+    assigns a 'cluster_id' column to the dataframe.
     """
-    units = []
-    # Group by SMILES to find identicals
-    grouped = df.groupby(smiles_col)
+    print("Generating fingerprints and computing Butina clusters...")
     
-    for s, group in grouped:
-        indices = group.index.tolist()
-        labels = group[y_col].tolist()
-        units.append(LogicalUnit(s, indices, labels))
-        
-    return units
-
-# ==========================================
-# 3. CORE STRATIFICATION LOGIC
-# ==========================================
-
-def get_fingerprints_and_matrix(units):
-    """
-    Computes distance matrix for Logical Units based on their SMILES.
-    """
-    mols = [Chem.MolFromSmiles(u.smiles) for u in units]
-    # Filter out invalid mols (though should be rare if data is clean)
-    valid_data = [(i, m) for i, m in enumerate(mols) if m is not None]
+    # 1. Get unique SMILES to avoid redundant computation
+    unique_smiles = df[smiles_col].dropna().unique()
+    mols = [Chem.MolFromSmiles(s) for s in unique_smiles]
     
-    # Map back which unit corresponds to which valid mol
-    valid_indices = [x[0] for x in valid_data]
-    valid_mols = [x[1] for x in valid_data]
+    # Filter out invalid SMILES
+    valid_indices = [i for i, m in enumerate(mols) if m is not None]
+    valid_smiles = [unique_smiles[i] for i in valid_indices]
+    fps = [AllChem.GetMorganFingerprintAsBitVect(mols[i], fp_radius, nBits=fp_bits) for i in valid_indices]
     
-    fpgen = rdFingerprintGenerator.GetAtomPairGenerator(fpSize=2048)
-    fps = [fpgen.GetFingerprint(m) for m in valid_mols]
-    
+    # 2. Compute Distance Matrix (1 - Tanimoto Similarity)
+    dists = []
     n_fps = len(fps)
-    dist_matrix = np.zeros((n_fps, n_fps))
-    
-    # Calculate Distances
     for i in range(1, n_fps):
         sims = DataStructs.BulkTanimotoSimilarity(fps[i], fps[:i])
-        for j, sim in enumerate(sims):
-            dist = 1.0 - sim
-            dist_matrix[i, j] = dist
-            dist_matrix[j, i] = dist 
-            
-    return valid_indices, dist_matrix
-
-def shatter_cluster_into_units(cluster_obj, units_map):
-    """
-    Breaks a Cluster (group of similar Units) back down into individual Logical Units.
-    We CANNOT split a Logical Unit, so this is the finest granularity we have.
-    """
-    unit_indices = cluster_obj['unit_indices']
-    broken_pieces = []
+        dists.extend([1 - x for x in sims])
     
-    for u_idx in unit_indices:
-        unit = units_map[u_idx]
-        broken_pieces.append({
-            'type': 'unit', # Mark as a single indivisible unit
-            'unit_indices': [u_idx],
-            'counts': {unit.effective_class: unit.size},
-            'total': unit.size
-        })
-    return broken_pieces
-
-def perform_grouped_stratification(df, smiles_col, y_col, 
-                                   cv_folds=5, test_frac=0.175, uho_frac=0.0):
+    # 3. Run Butina Clustering
+    clusters = Butina.ClusterData(dists, n_fps, cutoff, isDistData=True)
     
-    if df.empty: return df
-    print(f"-> Grouping Identical Contexts...")
+    # 4. Map back to SMILES
+    smiles_to_cluster = {}
+    for cluster_id, idx_tuple in enumerate(clusters):
+        for idx in idx_tuple:
+            smiles_to_cluster[valid_smiles[idx]] = cluster_id
+            
+    # 5. Apply to DataFrame
+    df['cluster_id'] = df[smiles_col].map(smiles_to_cluster)
     
-    # 1. Create Indivisible Units
-    all_units = group_into_logical_units(df, smiles_col, y_col)
-    print(f"   Reduced {len(df)} rows to {len(all_units)} unique structural units.")
-
-    # 2. Compute Clustering on Units
-    valid_ptr, dist_matrix = get_fingerprints_and_matrix(all_units)
+    # Fill NA with unique negative IDs
+    na_mask = df['cluster_id'].isna()
+    df.loc[na_mask, 'cluster_id'] = range(-1, -1 - sum(na_mask), -1)
     
-    # Map matrix indices back to all_units list indices
-    # valid_ptr[matrix_index] = all_units_index
-    
-    print("   Clustering Units...")
-    lt_dists = []
-    n_fps = len(valid_ptr)
-    for i in range(1, n_fps):
-        lt_dists.extend(dist_matrix[i, :i].tolist())
-    
-    raw_clusters = Butina.ClusterData(lt_dists, n_fps, 0.4, isDistData=True)
-    
-    # 3. Build Pool of Clusters
-    pool = []
-    for c_idx, member_matrix_indices in enumerate(raw_clusters):
-        # Convert matrix indices -> unit list indices
-        unit_indices = [valid_ptr[mi] for mi in member_matrix_indices]
-        
-        c_counts = {}
-        total_size = 0
-        
-        for u_idx in unit_indices:
-            u = all_units[u_idx]
-            c_counts[u.effective_class] = c_counts.get(u.effective_class, 0) + u.size
-            total_size += u.size
-            
-        pool.append({
-            'type': 'cluster',
-            'id': f"c_{c_idx}",
-            'unit_indices': unit_indices,
-            'counts': c_counts,
-            'total': total_size
-        })
-
-    # 4. Define Requirements
-    # Note: We are now counting "effective class" sizes
-    test_min = {0: 100, 1: 10, 2: 10}
-    cv_min   = {0: 100, 1: 7, 2: 10}
-    classes = sorted(list(set(df[y_col])))
-
-    bins = []
-    # Test Bin
-    bins.append({
-        'name': 'test',
-        'min': test_min,
-        'current': {k: 0 for k in classes},
-        'items': [] # Stores unit indices
-    })
-    
-    # CV Bins
-    cv_bins = []
-    for i in range(cv_folds):
-        cv_bins.append({
-            'name': f'cv_{i}',
-            'min': cv_min,
-            'current': {k: 0 for k in classes},
-            'items': []
-        })
-    bins.extend(cv_bins)
-
-    final_assignments = {} # smiles -> bin_name
-
-    # ==========================================
-    # PHASE 1: TEST SET (Strict Requirement)
-    # ==========================================
-    print("   Phase 1: Filling Test Set...")
-    test_bin = bins[0]
-    
-    for p_class in [1, 2, 0]: # Rare first
-        while test_bin['current'].get(p_class, 0) < test_bin['min'].get(p_class, 0):
-            needed = test_bin['min'][p_class] - test_bin['current'][p_class]
-            
-            # Find best cluster/unit
-            best_idx = -1
-            best_score = -1
-            
-            for i, item in enumerate(pool):
-                cnt = item['counts'].get(p_class, 0)
-                if cnt > 0:
-                    # Density heuristic
-                    score = cnt / item['total']
-                    if score > best_score:
-                        best_score = score
-                        best_idx = i
-            
-            if best_idx == -1:
-                print(f"      WARNING: Ran out of Class {p_class} for Test Set!")
-                break
-            
-            cand = pool.pop(best_idx)
-            
-            # Check for massive overflow/waste
-            # If cand is a single Unit, we MUST take it or leave it (indivisible)
-            wasteful = cand['counts'][p_class] > (needed + 5)
-            too_heavy = cand['total'] > (needed + 10)
-            
-            if (wasteful or too_heavy) and cand['type'] == 'cluster':
-                # Shatter Cluster -> Logical Units
-                frags = shatter_cluster_into_units(cand, all_units)
-                pool.extend(frags)
-                # Restart search with smaller pieces
-            else:
-                # Assign
-                test_bin['items'].extend(cand['unit_indices'])
-                for k, v in cand['counts'].items(): test_bin['current'][k] += v
-
-    # ==========================================
-    # PHASE 2: CV MINIMUMS
-    # ==========================================
-    print("   Phase 2: Filling CV Minimums...")
-    
-    for p_class in [1, 2, 0]:
-        while True:
-            # Who needs it?
-            neediest_bin = None
-            max_deficit = 0
-            for b in cv_bins:
-                defic = b['min'].get(p_class, 0) - b['current'].get(p_class, 0)
-                if defic > max_deficit:
-                    max_deficit = defic
-                    neediest_bin = b
-            
-            if neediest_bin is None: break 
-            
-            # Find candidate
-            best_idx = -1
-            best_score = -1
-            for i, item in enumerate(pool):
-                cnt = item['counts'].get(p_class, 0)
-                if cnt > 0:
-                    score = cnt / item['total']
-                    if score > best_score:
-                        best_score = score
-                        best_idx = i
-            
-            if best_idx == -1: break
-            
-            cand = pool.pop(best_idx)
-            needed = neediest_bin['min'][p_class] - neediest_bin['current'][p_class]
-            
-            # Fit Check
-            wasteful = cand['counts'][p_class] > (needed + 5)
-            too_heavy = cand['total'] > (needed + 20)
-            
-            if (wasteful or too_heavy) and cand['type'] == 'cluster':
-                frags = shatter_cluster_into_units(cand, all_units)
-                pool.extend(frags)
-            else:
-                neediest_bin['items'].extend(cand['unit_indices'])
-                for k, v in cand['counts'].items(): neediest_bin['current'][k] += v
-
-    # ==========================================
-    # PHASE 3: CLEANUP (Force Assign All Remaining)
-    # ==========================================
-    print("   Phase 3: Distributing Remaining Units...")
-    
-    # Sort remaining pool by size (descending) to place large rocks first
-    pool.sort(key=lambda x: x['total'], reverse=True)
-    
-    while pool:
-        cand = pool.pop(0)
-        
-        # Assign to the CV fold that is smallest (by total count)
-        # We exclude Test set from this phase to prevent over-stuffing it
-        target_bin = sorted(cv_bins, key=lambda b: sum(b['current'].values()))[0]
-        
-        target_bin['items'].extend(cand['unit_indices'])
-        for k, v in cand['counts'].items():
-            target_bin['current'][k] += v
-
-    # ==========================================
-    # MAPPING BACK TO DATAFRAME
-    # ==========================================
-    # Assign bin names to SMILES
-    smiles_to_bin = {}
-    for b in bins:
-        for u_idx in b['items']:
-            u = all_units[u_idx]
-            smiles_to_bin[u.smiles] = b['name']
-            
-    df['split_group'] = df[smiles_col].map(smiles_to_bin).fillna('skipped')
-    
-    print("\n  Final Stratified Report (Groups + Cleanup):")
-    print(f"    {'BIN':<10} | {'ACTUAL (Rows)':<30} | {'MIN REQUIRED':<25}")
-    print("-" * 75)
-    for b in bins:
-        print(f"    {b['name']:<10} | {b['current']} | {b['min']}")
-
+    print(f"Clustering complete. Found {len(clusters)} clusters for {len(valid_smiles)} unique SMILES.")
     return df
 
+def get_custom_class_label(val):
+    """
+    Maps toxicity value to 0, 1, or 2 based on:
+    0: < 0.7
+    1: 0.7 <= x < 0.8
+    2: >= 0.8
+    """
+    if pd.isna(val): return -1
+    if val < 0.7: return 0
+    if val < 0.8: return 1
+    return 2
+
+def stratified_group_split_custom(df, group_col, target_col, test_size, min_samples_per_class=10, random_state=42):
+    """
+    Custom splitter that:
+    1. Respects groups (clusters cannot be split).
+    2. Enforces at least `min_samples_per_class` for defined toxicity ranges in the Test set.
+    3. Target ranges: [<0.7, 0.7-0.8, >=0.8].
+    """
+    if test_size <= 0:
+        return df, pd.DataFrame()
+
+    df = df.copy()
+    # Assign custom class bin
+    df['custom_bin'] = df[target_col].apply(get_custom_class_label)
+    
+    # Summarize content of each cluster
+    # We need to know how many Low, Mid, and High samples are in each cluster
+    cluster_stats = df.groupby(group_col)['custom_bin'].value_counts().unstack(fill_value=0)
+    
+    # Ensure all columns 0, 1, 2 exist
+    for c in [0, 1, 2]:
+        if c not in cluster_stats.columns:
+            cluster_stats[c] = 0
+            
+    # Get total size per cluster
+    cluster_sizes = df.groupby(group_col).size()
+    
+    all_clusters = list(cluster_sizes.index)
+    total_samples = len(df)
+    target_test_samples = int(total_samples * test_size)
+    
+    # Initialize Test Sets
+    test_clusters = []
+    current_test_counts = {0: 0, 1: 0, 2: 0}
+    current_test_size = 0
+    
+    rng = np.random.RandomState(random_state)
+    rng.shuffle(all_clusters)
+    
+    remaining_clusters = set(all_clusters)
+    
+    # --- PHASE 1: Satisfy Minimum Class Counts ---
+    # We iterate through required classes (0, 1, 2). If a class count < 10,
+    # we hunt for a cluster that contains that class and move it to Test.
+    
+    for target_class in [0, 1, 2]:
+        while current_test_counts[target_class] < min_samples_per_class:
+            
+            # Find candidate clusters that have at least 1 sample of this target_class
+            # and are not yet in test_clusters
+            candidates = [c for c in remaining_clusters if cluster_stats.loc[c, target_class] > 0]
+            
+            if not candidates:
+                print(f"Warning: Not enough clusters containing class {target_class} to satisfy minimum requirement of {min_samples_per_class}.")
+                break
+                
+            # Pick a random candidate
+            chosen = rng.choice(candidates)
+            
+            # Move to Test
+            test_clusters.append(chosen)
+            remaining_clusters.remove(chosen)
+            
+            # Update counts
+            counts_in_cluster = cluster_stats.loc[chosen]
+            for c in [0, 1, 2]:
+                current_test_counts[c] += counts_in_cluster[c]
+            current_test_size += cluster_sizes[chosen]
+
+    # --- PHASE 2: Fill to Target Test Size ---
+    # Now we just fill up the rest of the bucket to reach test_frac
+    # Convert set back to list for consistent iteration/shuffling
+    remaining_clusters_list = list(remaining_clusters)
+    rng.shuffle(remaining_clusters_list)
+    
+    for cluster in remaining_clusters_list:
+        if current_test_size >= target_test_samples:
+            break
+            
+        test_clusters.append(cluster)
+        current_test_size += cluster_sizes[cluster]
+        
+        # Update class counts (just for tracking)
+        counts_in_cluster = cluster_stats.loc[cluster]
+        for c in [0, 1, 2]:
+            current_test_counts[c] += counts_in_cluster[c]
+
+    # --- Final Split ---
+    test_df = df[df[group_col].isin(test_clusters)].copy()
+    train_df = df[~df[group_col].isin(test_clusters)].copy()
+    
+    # Cleanup temp column
+    test_df.drop(columns=['custom_bin'], inplace=True, errors='ignore')
+    train_df.drop(columns=['custom_bin'], inplace=True, errors='ignore')
+    
+    print("--- Custom Split Statistics ---")
+    print(f"Test Set Total: {len(test_df)} samples")
+    print(f"Class < 0.7:   {current_test_counts[0]} (Req: {min_samples_per_class})")
+    print(f"Class 0.7-0.8: {current_test_counts[1]} (Req: {min_samples_per_class})")
+    print(f"Class >= 0.8:  {current_test_counts[2]} (Req: {min_samples_per_class})")
+    
+    return train_df, test_df
+
+
 # ==========================================
-# 4. MAIN WRAPPER
+#      MAIN SPLIT FUNCTION (BUTINA)
 # ==========================================
 
 def cv_split_butina(split_spec_fname, path_to_folders='../data',
                     cv_fold=5, ultra_held_out_fraction=-1.0,
-                    test_frac=0.175, random_state=42, 
-                    y_stratify_col='toxicity_class'):
+                    test_frac=0.2, random_state=42, 
+                    y_target_col='quantified_toxicity',
+                    smiles_col='smiles',
+                    butina_cutoff=0.2): 
     
-    print(f"Starting Process: {split_spec_fname}")
-
-    # 1. Load Data
-    all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data.csv'))
+    # --- 1. Load Data ---
+    all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data_regression.csv'))
     split_df = pd.read_csv(os.path.join(path_to_folders, 'crossval_split_specs', split_spec_fname))
-    col_types = pd.read_csv(os.path.join(path_to_folders, 'col_type.csv'))
+    col_types = pd.read_csv(os.path.join(path_to_folders, 'col_types_regression.csv'))
 
-    split_name = split_spec_fname.replace('.csv', '')
+    # --- 2. Setup Directories ---
+    split_name = split_spec_fname.replace('.csv', '') + '_butina'
     split_path = os.path.join(path_to_folders, 'crossval_splits', split_name)
-    if ultra_held_out_fraction > 0: split_path += '_with_uho'
+    if ultra_held_out_fraction > 0:
+        split_path += '_with_uho'
     
-    os.makedirs(os.path.join(split_path, 'test'), exist_ok=True)
-    if ultra_held_out_fraction > 0: 
-        os.makedirs(os.path.join(split_path, 'ultra_held_out'), exist_ok=True)
+    path_if_none(split_path)
+    path_if_none(os.path.join(split_path, 'test'))
+    if ultra_held_out_fraction > 0:
+        path_if_none(os.path.join(split_path, 'ultra_held_out'))
 
-    # 2. Filter & Merge
+    # --- 3. Partition Data into Pools ---
     perma_train = pd.DataFrame()
-    split_pool = pd.DataFrame() 
+    splittable_pool = pd.DataFrame() 
 
     for _, row in split_df.iterrows():
         dtypes = [d.strip() for d in row['Data_types_for_component'].split(',')]
         vals = [v.strip() for v in row['Values'].split(',')]
-        subset = all_df.copy()
         
+        subset = all_df.copy()
         for dtype, val in zip(dtypes, vals):
             subset = subset[subset[dtype].astype(str) == str(val)]
+        
         if subset.empty: continue
 
-        # Handle 'split_context' explicitly as the pool for grouping
-        role = row['Train_or_split'].lower()
-        if role == 'train':
+        mode = row['Train_or_split'].lower()
+        if mode == 'train':
             perma_train = pd.concat([perma_train, subset])
-        elif role == 'split_context' or role == 'split':
-            split_pool = pd.concat([split_pool, subset])
+        elif mode in ['split', 'split_context']:
+            splittable_pool = pd.concat([splittable_pool, subset])
 
-    # 3. RUN STRATIFICATION
-    if not split_pool.empty:
-        split_pool = perform_grouped_stratification(
-            split_pool, 
-            smiles_col='smiles', 
-            y_col=y_stratify_col,
-            cv_folds=cv_fold, 
-            test_frac=test_frac, 
-            uho_frac=ultra_held_out_fraction
-        )
+    if splittable_pool.empty:
+        print("No data available for splitting.")
+        return
 
-    # 4. Save Logic
-    def save_group(df_subset, save_path, set_name):
-        if df_subset.empty: return
-        y, x, w, m = split_df_by_col_type(df_subset, col_types)
-        yxwm_to_csvs(y, x, w, m, save_path, set_name)
+    # --- 4. Assign Clusters ---
+    splittable_pool = assign_butina_clusters(splittable_pool, smiles_col=smiles_col, cutoff=butina_cutoff)
 
-    # A. UHO
-    if 'split_group' in split_pool.columns:
-        uho = split_pool[split_pool['split_group'] == 'ultra_held_out']
-        save_group(uho, os.path.join(split_path, 'ultra_held_out'), 'test')
+    # --- 5. Perform Hierarchical Splitting ---
+    
+    # A) Ultra Held Out (Cluster-based)
+    # Note: UHO uses standard stratified group split, or you can switch to custom if UHO also needs min counts
+    uho_df = pd.DataFrame()
+    if ultra_held_out_fraction > 0:
+        # We use a simplified binning for UHO unless specifically requested otherwise
+        # Just ensuring groups stay together
+        splittable_pool['strat_bin_uho'] = pd.cut(splittable_pool[y_target_col], bins=5, labels=False)
+        try:
+            train_grps, uho_grps = train_test_split(
+                splittable_pool['cluster_id'].unique(),
+                test_size=ultra_held_out_fraction,
+                random_state=random_state
+            )
+            # Simple group split fallback for UHO to preserve pool for the strict Test split
+            uho_df = splittable_pool[splittable_pool['cluster_id'].isin(uho_grps)].copy()
+            splittable_pool = splittable_pool[splittable_pool['cluster_id'].isin(train_grps)].copy()
+        except:
+             print("UHO Split Warning: Falling back to random row split due to group constraints")
 
-        # B. Test
-        test = split_pool[split_pool['split_group'] == 'test']
-        save_group(test, os.path.join(split_path, 'test'), 'test')
+    # B) Test Set (Cluster-based + Strict Class Counts)
+    # Adjust test size because pool is smaller after UHO removal
+    adj_test_frac = test_frac / (1 - (ultra_held_out_fraction if ultra_held_out_fraction > 0 else 0))
+    
+    print("\nGenerating Test Set with strict class requirements...")
+    cv_pool, test_df = stratified_group_split_custom(
+        splittable_pool, 
+        group_col='cluster_id', 
+        target_col=y_target_col, 
+        test_size=adj_test_frac, 
+        min_samples_per_class=10, # <--- ENFORCED REQUIREMENT
+        random_state=random_state
+    )
 
-        # C. CV Folds
-        for i in range(cv_fold):
-            fold_dir = os.path.join(split_path, f'cv_{i}')
-            os.makedirs(fold_dir, exist_ok=True)
+    # --- 6. Save Fixed Sets ---
+    if not uho_df.empty:
+        y, x, w, m = split_df_by_col_type(uho_df, col_types)
+        yxwm_to_csvs(y, x, w, m, os.path.join(split_path, 'ultra_held_out'), 'test')
+
+    if not test_df.empty:
+        y, x, w, m = split_df_by_col_type(test_df, col_types)
+        yxwm_to_csvs(y, x, w, m, os.path.join(split_path, 'test'), 'test')
+
+    # --- 7. Generate CV Folds (Cluster-based) ---
+    # Create bin for CV stratification
+    cv_pool = cv_pool.copy()
+    try:
+        cv_pool['strat_bin'] = pd.qcut(cv_pool[y_target_col], q=5, labels=False, duplicates='drop')
+    except:
+        cv_pool['strat_bin'] = pd.cut(cv_pool[y_target_col], bins=5, labels=False)
+
+    sgkf = StratifiedGroupKFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
+    
+    fold_idx = 0
+    # Split provides indices. Arguments: X, y (for stratification), groups (to keep together)
+    for train_idxs, val_idxs in sgkf.split(cv_pool, cv_pool['strat_bin'], cv_pool['cluster_id']):
+        path_if_none(os.path.join(split_path, f'cv_{fold_idx}'))
+        
+        # Extract Fold Data
+        fold_train = cv_pool.iloc[train_idxs]
+        fold_val = cv_pool.iloc[val_idxs]
+        
+        # Add Perma Train to every training fold
+        final_train = pd.concat([perma_train, fold_train], ignore_index=True)
+        final_val = fold_val.copy()
+        
+        # Recalculate Weights using the existing method
+        final_train = generate_weights_gkde(final_train)
+        
+        # Save
+        for df, name in [(final_train, 'train'), (final_val, 'valid')]:
+            y_f, x_f, w_f, m_f = split_df_by_col_type(df, col_types)
+            yxwm_to_csvs(y_f, x_f, w_f, m_f, os.path.join(split_path, f'cv_{fold_idx}'), name)
             
-            # Validation
-            val_df = split_pool[split_pool['split_group'] == f'cv_{i}']
-            
-            # Train
-            train_groups = [f'cv_{j}' for j in range(cv_fold) if j != i]
-            pool_train = split_pool[split_pool['split_group'].isin(train_groups)]
-            
-            full_train = pd.concat([perma_train, pool_train], ignore_index=True)
-            
-            save_group(full_train, fold_dir, 'train')
-            save_group(val_df, fold_dir, 'valid')
+        print(f"Saved Fold {fold_idx}: Train {len(final_train)}, Val {len(final_val)}")
+        fold_idx += 1
 
-    print(f"Done. Saved to {split_path}")
+    print(f"Full Butina stratified split finished at {split_path}")
 
-
-
-
+    
 def cv_split_stratified(split_spec_fname, path_to_folders='../data',
                        cv_fold=5, ultra_held_out_fraction=-1.0,
                        test_frac=0.2, random_state=42, 
-                       y_stratify_col='toxicity_class'):
+                       y_target_col='quantified_toxicity'): 
     
     # --- 1. Load Data ---
-    all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data.csv'))
+    all_df = pd.read_csv(os.path.join(path_to_folders, 'all_data_regression.csv'))
     split_df = pd.read_csv(os.path.join(path_to_folders, 'crossval_split_specs', split_spec_fname))
-    col_types = pd.read_csv(os.path.join(path_to_folders, 'col_type.csv'))
+    col_types = pd.read_csv(os.path.join(path_to_folders, 'col_types_regression.csv'))
 
     # --- 2. Setup Directories ---
     split_name = split_spec_fname.replace('.csv', '')
@@ -425,20 +347,40 @@ def cv_split_stratified(split_spec_fname, path_to_folders='../data',
         elif mode == 'split_context':
             context_pool = pd.concat([context_pool, subset])
 
+    # --- Helper: Create Bins for Continuous Stratification ---
+    # We create a temporary column 'strat_bin' to allow StratifiedKFold to work on regression data
+    def add_strat_bins(df, target_col, n_bins=5):
+        if df.empty: return df
+        # drop na targets
+        df = df.dropna(subset=[target_col]).copy()
+        try:
+            # Try qcut first for equal-sized bins
+            df['strat_bin'] = pd.qcut(df[target_col], q=n_bins, labels=False, duplicates='drop')
+        except:
+            # Fallback to cut if qcut fails (e.g., too many identical values)
+            df['strat_bin'] = pd.cut(df[target_col], bins=n_bins, labels=False)
+        return df
+
     # --- 4. Perform Splitting ---
+    
     # A) Process Context Data (Grouped by Lipid, with UHO)
+    # Note: get_context_splits handles its own binning internally
     ctx_uho, ctx_test, ctx_cv_pool, ctx_folds = get_context_splits(
-        context_pool, cv_fold, test_frac, ultra_held_out_fraction, y_stratify_col
+        context_pool, cv_fold, test_frac, ultra_held_out_fraction, y_target_col
     )
     
     # B) Process Standard Data (Row-level, with UHO)
     std_uho, std_test, std_train_val = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+    
     if not standard_pool.empty:
+        # Add bins for stratification
+        standard_pool = add_strat_bins(standard_pool, y_target_col)
+        
         # Standard UHO split
         if ultra_held_out_fraction > 0:
             std_cv_test, std_uho = train_test_split(
                 standard_pool, test_size=ultra_held_out_fraction, 
-                random_state=random_state, stratify=standard_pool[y_stratify_col]
+                random_state=random_state, stratify=standard_pool['strat_bin']
             )
         else:
             std_cv_test = standard_pool
@@ -447,8 +389,13 @@ def cv_split_stratified(split_spec_fname, path_to_folders='../data',
         adj_test_size = test_frac / (1 - ultra_held_out_fraction) if ultra_held_out_fraction > 0 else test_frac
         std_train_val, std_test = train_test_split(
             std_cv_test, test_size=adj_test_size, 
-            random_state=random_state, stratify=std_cv_test[y_stratify_col]
+            random_state=random_state, stratify=std_cv_test['strat_bin']
         )
+        
+        # Clean up temporary bin column
+        for df in [std_uho, std_test, std_train_val]:
+            if 'strat_bin' in df.columns:
+                df.drop(columns=['strat_bin'], inplace=True)
 
     # --- 5. Save Results ---
     # 5a. Save Ultra Held Out
@@ -463,8 +410,15 @@ def cv_split_stratified(split_spec_fname, path_to_folders='../data',
     yxwm_to_csvs(y, x, w, m, os.path.join(split_path, 'test'), 'test')
 
     # 5c. Save CV Folds
-    skf = StratifiedKFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
-    std_fold_gen = list(skf.split(std_train_val, std_train_val[y_stratify_col])) if not std_train_val.empty else []
+    # Re-calculate bins for the training/val pool specifically for CV
+    if not std_train_val.empty:
+        std_train_val = add_strat_bins(std_train_val, y_target_col)
+        skf = StratifiedKFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
+        # Stratify using the bin
+        std_fold_gen = list(skf.split(std_train_val, std_train_val['strat_bin']))
+        std_train_val.drop(columns=['strat_bin'], inplace=True) # clean up
+    else:
+        std_fold_gen = []
 
     for i in range(cv_fold):
         path_if_none(os.path.join(split_path, f'cv_{i}'))
@@ -481,7 +435,8 @@ def cv_split_stratified(split_spec_fname, path_to_folders='../data',
             std_train_val.iloc[std_fold_gen[i][1]] if std_fold_gen else pd.DataFrame(),
             ctx_cv_pool.loc[ctx_folds[i][1]] if ctx_folds else pd.DataFrame()
         ], ignore_index=True)
-
+        
+        f_train = generate_weights_gkde(f_train)
         # Save Fold
         for df, name in [(f_train, 'train'), (f_val, 'valid')]:
             y_f, x_f, w_f, m_f = split_df_by_col_type(df, col_types)
@@ -491,20 +446,24 @@ def cv_split_stratified(split_spec_fname, path_to_folders='../data',
 
 
 # Helper functions for cv split
-def get_context_splits(df, cv_fold, test_frac, uho_frac, y_col, group_col='Lipid_name', random_state=42):
+def get_context_splits(df, cv_fold, test_frac, uho_frac, y_col, group_col='smiles', random_state=42):
     """
-    Groups lipids and performs standard fold splitting (1/K validation).
-    Uses the MINIMUM class value (most potent) for stratification.
+    Groups lipids and performs stratified splitting based on MEAN toxicity per lipid.
     """
     if df.empty:
         return pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), []
 
-    # 1. Identify "worst-case" class per lipid across all conditions/datasets
-    group_repr = df.groupby(group_col)[y_col].min().reset_index()
-    group_repr.rename(columns={y_col: 'strat_label'}, inplace=True)
+    # 1. Identify representative value (mean toxicity) per lipid
+    group_repr = df.groupby(group_col)[y_col].mean().reset_index()
+    
+    # 2. Bin the continuous values for stratification
+    # We use qcut to create 5 bins (quintiles) of toxicity
+    try:
+        group_repr['strat_label'] = pd.qcut(group_repr[y_col], q=5, labels=False, duplicates='drop')
+    except:
+        group_repr['strat_label'] = pd.cut(group_repr[y_col], bins=5, labels=False)
 
-    # 2. Safety: Identify classes with fewer members than cv_fold
-    # These are the cause of the UserWarning. We move them to a forced training pool.
+    # 3. Safety: Identify bins with fewer members than cv_fold
     counts = group_repr['strat_label'].value_counts()
     small_classes = counts[counts < cv_fold].index.tolist()
     
@@ -512,7 +471,7 @@ def get_context_splits(df, cv_fold, test_frac, uho_frac, y_col, group_col='Lipid
     # The pool we can safely stratify
     strat_pool = group_repr[~group_repr['strat_label'].isin(small_classes)].copy()
 
-    # 3. Stage 1: Separate Ultra-Held-Out (UHO)
+    # 4. Stage 1: Separate Ultra-Held-Out (UHO)
     uho_df = pd.DataFrame()
     if uho_frac > 0:
         cv_test_ids, uho_ids = train_test_split(
@@ -522,8 +481,7 @@ def get_context_splits(df, cv_fold, test_frac, uho_frac, y_col, group_col='Lipid
         uho_df = df[df[group_col].isin(uho_ids)].copy()
         strat_pool = strat_pool[strat_pool[group_col].isin(cv_test_ids)]
 
-    # 4. Stage 2: Separate Test Set
-    # Scale test_frac to the remainder
+    # 5. Stage 2: Separate Test Set
     adj_test_size = test_frac / (1 - (uho_frac if uho_frac > 0 else 0))
     cv_ids, test_ids = train_test_split(
         strat_pool[group_col], test_size=adj_test_size, 
@@ -535,7 +493,7 @@ def get_context_splits(df, cv_fold, test_frac, uho_frac, y_col, group_col='Lipid
     cv_pool_df = df[df[group_col].isin(cv_ids) | df[group_col].isin(forced_train_lipids)].copy()
     cv_pool_repr = strat_pool[strat_pool[group_col].isin(cv_ids)]
 
-    # 5. Stage 3: Generate CV Folds (Standard 1/K Split)
+    # 6. Stage 3: Generate CV Folds (Standard 1/K Split)
     skf = StratifiedKFold(n_splits=cv_fold, shuffle=True, random_state=random_state)
     
     fold_map = {}
@@ -572,25 +530,148 @@ def yxwm_to_csvs(y, x, w, m, path, settype):
     w.to_csv(os.path.join(path, settype + '_weights.csv'), index=False)
     m.to_csv(os.path.join(path, settype + '_metadata.csv'), index=False)
 
-def split_for_cv(vals, cv_fold, held_out_fraction):
-    random.seed(42)
-    random.shuffle(vals)
-    held_out_len = int(held_out_fraction * len(vals)) if held_out_fraction > 0 else 0
-    held_out_vals = vals[:held_out_len]
-    cv_vals = vals[held_out_len:]
-    return [cv_vals[i::cv_fold] for i in range(cv_fold)], held_out_vals
 
+# weighting functions 
+def generate_weights_bin(all_df):
+    """
+    Adjusts the 'Sample_weight' column based on class balance
+    of 'toxicity_class' (0, 1, 2).
+
+    New_Weight = Old_Weight * Class_Balancing_Multiplier
+    Also reports Effective Sample Size (ESS).
+    """
+    # Ensure weight column exists
+    if 'Sample_weight' not in all_df.columns:
+        all_df['Sample_weight'] = 1.0
+
+    # Only use rows with labels to compute class weights
+    mask = ~all_df['toxicity_class'].isna()
+    y = all_df.loc[mask, 'toxicity_class'].values
+    unique_classes = np.unique(y)
+
+    class_weights = compute_class_weight(
+        class_weight='balanced',
+        classes=unique_classes,
+        y=y
+    )
+    weight_dict = dict(zip(unique_classes, class_weights))
+
+    # Apply class multipliers
+    class_multipliers = all_df['toxicity_class'].map(weight_dict)
+    all_df['Sample_weight'] *= class_multipliers.fillna(1.0)
+
+    # ---- ESS computation (only labeled rows) ----
+    w = all_df.loc[mask, 'Sample_weight'].values
+    ess = (w.sum() ** 2) / np.sum(w ** 2)
+
+    print(
+        f"Binned weighting complete | "
+        f"ESS = {ess:.1f} / {mask.sum()} "
+        f"({ess / mask.sum():.2%} effective)"
+    )
+
+    return all_df
+
+
+def generate_weights_gkde(
+    all_df,
+    target_col='unnormalized_toxicity',
+    power=0.85,
+    bandwidth='silverman',      
+    bandwidth_adjust=0.5,       # NEW: Multiplier to tighten the KDE (prevent smoothing out rare items)
+    clip_quantile=0.995,         # NEW: Dynamic clipping (e.g., 0.98) instead of hard max
+    clip_max=50.0,              
+    lower_bound=0.0,            
+    upper_bound=1.0,
+    reflect_frac=2.0,           
+    verbose=True
+):
+    mask = ~all_df[target_col].isna() & ~np.isinf(all_df[target_col])
+    y = all_df.loc[mask, target_col].to_numpy(dtype=float)
+
+    if len(y) < 2:
+        return all_df
+
+    # -----------------------------
+
+
+    y_std = np.std(y)
+    
+    # Upper Reflection
+    upper_mask = (upper_bound - y) < (reflect_frac * y_std)
+    y_upper = 2 * upper_bound - y[upper_mask]
+    
+    # Lower Reflection (NEW)
+    lower_mask = (y - lower_bound) < (reflect_frac * y_std)
+    y_lower = 2 * lower_bound - y[lower_mask]
+
+    y_combined = np.concatenate([y, y_upper, y_lower])
+
+    kde = gaussian_kde(y_combined, bw_method=bandwidth)
+    
+    # Manually tighten the bandwidth
+    # This reduces "leakage" from the majority class into the minority class
+    kde.set_bandwidth(kde.factor * bandwidth_adjust)
+
+    densities = kde(y)
+    
+    # Prevent divide by zero / extreme explosions
+    densities = np.maximum(densities, 1e-8)
+
+    weights = 1.0 / (densities ** power)
+
+    # Normalize to mean=1 first so 'clip_max' makes relative sense
+    weights /= weights.mean()
+
+    # Dynamic Clipping (Quantile)
+    if clip_quantile is not None:
+        limit = np.quantile(weights, clip_quantile)
+        if verbose: print(f"Clipping weights at {clip_quantile} quantile: {limit:.2f}")
+        weights = np.clip(weights, a_min=None, a_max=limit)
+    else:
+        # Hard Cap
+        weights = np.clip(weights, a_min=None, a_max=clip_max)
+
+    weights /= weights.mean()
+
+    ess = (weights.sum() ** 2) / np.sum(weights ** 2)
+    
+    if verbose:
+        print(f"--- KDE Weighting Diagnostics ---")
+        print(f"BW Factor used: {kde.factor:.4f}")
+        print(f"Weights: Min={weights.min():.2f}, Max={weights.max():.2f}, Mean={weights.mean():.2f}")
+        print(f"ESS: {ess:.1f} / {len(y)} ({(ess/len(y))*100:.1f}%)")
+        
+        # Check if minority is actually getting boosted
+        # Assuming y < 0.7 is minority
+        minority_mask = y < 0.7
+        if minority_mask.sum() > 0:
+            avg_min_wt = weights[minority_mask].mean()
+            avg_maj_wt = weights[~minority_mask].mean()
+            print(f"Avg Weight (y < 0.7): {avg_min_wt:.2f}")
+            print(f"Avg Weight (y >= 0.7): {avg_maj_wt:.2f}")
+            print(f"Boost Factor: {avg_min_wt / avg_maj_wt:.1f}x")
+
+    # Map back to DataFrame
+    kde_series = pd.Series(weights, index=all_df.loc[mask].index)
+    kde_multipliers = all_df.index.map(kde_series).fillna(1.0)
+
+    if 'Sample_weight' not in all_df.columns:
+        all_df['Sample_weight'] = 1.0
+
+    all_df['Sample_weight'] *= kde_multipliers
+
+    return all_df
 
 def main(argv):
     split = argv[1]
-    ultra_held_out = float(argv[2])
     cv_num = 5
     if len(argv)>3:
         for i, arg in enumerate(argv):
             if arg.replace('–', '-') == '--cv':
                 cv_num = int(argv[i+1])
                 print('this many folds: ',str(cv_num))
-    cv_split_stratified(split, cv_fold=cv_num, ultra_held_out_fraction = ultra_held_out)
+    cv_split_butina(split, cv_fold=cv_num)
 
     
 if __name__ == '__main__':

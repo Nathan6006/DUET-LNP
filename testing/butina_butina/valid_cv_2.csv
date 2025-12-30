@@ -1,0 +1,8 @@
+Dataset,Total,Class_0,Class_1,Class_2
+Han_a3,8,8,0,0
+Lee_unsat,11,11,0,0
+Lin_peptide,67,34,4,29
+Liu_iphos,2,2,0,0
+Xue_CAD_LNP,13,13,0,0
+Zhang_Aminoglycoside,12,10,0,2
+Total,113,78,4,31
