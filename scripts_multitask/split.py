@@ -469,7 +469,7 @@ def cv_split_stratified(split_spec_fname, mode_flag, path_to_folders='../data',
             ctx_cv_pool.loc[ctx_folds[i][1]] if ctx_folds else pd.DataFrame()
         ], ignore_index=True)
         
-        f_train = generate_weights_gkde(f_train, target_col=y_target_col)
+        #f_train = generate_weights_gkde(f_train, target_col=y_target_col)
         
         for df, name in [(f_train, 'train'), (f_val, 'valid')]:
             y_f, x_f, w_f, m_f = split_df_by_col_type(df, col_types)
@@ -641,7 +641,7 @@ def main(argv):
                 cv_num = int(argv[i+1])
                 print('this many folds: ', str(cv_num))
     
-    cv_split_butina(split, mode_flag=mode_flag, cv_fold=cv_num, y_target_col=target_col)
+    cv_split_stratified(split, mode_flag=mode_flag, cv_fold=cv_num, y_target_col=target_col)
 
     
 if __name__ == '__main__':
