@@ -1,0 +1,132 @@
+Lipid_name,Delivery_target,Comment,Amine,Tail,Model_type,Route_of_administration,Experiment_weight,Value_name,molecular_weight
+2A1-SCC-4,igrov1,Ranked 1-4 by heatmap color,2A1,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,820.298693
+2A1-SCC-8,igrov1,Ranked 1-4 by heatmap color,2A1,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,932.4238935
+2A1-SCC-10,igrov1,Ranked 1-4 by heatmap color,2A1,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,988.4864938
+2A1-SCC-12,igrov1,Ranked 1-4 by heatmap color,2A1,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,1044.549094
+2A1-SCC-14,igrov1,Ranked 1-4 by heatmap color,2A1,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,1100.611694
+2A1-SCC-EH,igrov1,Ranked 1-4 by heatmap color,2A1,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,932.4238935
+2A1-SCC-PH,igrov1,Ranked 1-4 by heatmap color,2A1,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,988.4864938
+2A1-SCC-BO,igrov1,Ranked 1-4 by heatmap color,2A1,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,1044.549094
+2A2-SCC-4,igrov1,Ranked 1-4 by heatmap color,2A2,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,860.3299931
+2A2-SCC-8,igrov1,Ranked 1-4 by heatmap color,2A2,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,972.4551936
+2A2-SCC-10,igrov1,Ranked 1-4 by heatmap color,2A2,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,1028.517794
+2A2-SCC-12,igrov1,Ranked 1-4 by heatmap color,2A2,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,1084.580394
+2A2-SCC-14,igrov1,Ranked 1-4 by heatmap color,2A2,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,1140.642994
+2A2-SCC-EH,igrov1,Ranked 1-4 by heatmap color,2A2,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,972.4551936
+2A2-SCC-PH,igrov1,Ranked 1-4 by heatmap color,2A2,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,1028.517794
+2A2-SCC-BO,igrov1,Ranked 1-4 by heatmap color,2A2,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,1084.580394
+2A3-SCC-4,igrov1,Ranked 1-4 by heatmap color,2A3,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,889.3565422
+2A3-SCC-8,igrov1,Ranked 1-4 by heatmap color,2A3,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,1001.481743
+2A3-SCC-10,igrov1,Ranked 1-4 by heatmap color,2A3,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,1057.544343
+2A3-SCC-12,igrov1,Ranked 1-4 by heatmap color,2A3,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,1113.606943
+2A3-SCC-14,igrov1,Ranked 1-4 by heatmap color,2A3,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,1169.669544
+2A3-SCC-EH,igrov1,Ranked 1-4 by heatmap color,2A3,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,1001.481743
+2A3-SCC-PH,igrov1,Ranked 1-4 by heatmap color,2A3,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,1057.544343
+2A3-SCC-BO,igrov1,Ranked 1-4 by heatmap color,2A3,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,1113.606943
+2A4-SCC-4,igrov1,Ranked 1-4 by heatmap color,2A4,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,857.293942
+2A4-SCC-8,igrov1,Ranked 1-4 by heatmap color,2A4,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,969.4191425
+2A4-SCC-10,igrov1,Ranked 1-4 by heatmap color,2A4,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,1025.481743
+2A4-SCC-12,igrov1,Ranked 1-4 by heatmap color,2A4,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,1081.544343
+2A4-SCC-14,igrov1,Ranked 1-4 by heatmap color,2A4,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,1137.606943
+2A4-SCC-EH,igrov1,Ranked 1-4 by heatmap color,2A4,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,969.4191425
+2A4-SCC-PH,igrov1,Ranked 1-4 by heatmap color,2A4,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,1025.481743
+2A4-SCC-BO,igrov1,Ranked 1-4 by heatmap color,2A4,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,1081.544343
+2A5-SCC-4,igrov1,Ranked 1-4 by heatmap color,2A5,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,892.298693
+2A5-SCC-8,igrov1,Ranked 1-4 by heatmap color,2A5,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,1004.423894
+2A5-SCC-10,igrov1,Ranked 1-4 by heatmap color,2A5,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,1060.486494
+2A5-SCC-12,igrov1,Ranked 1-4 by heatmap color,2A5,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,1116.549094
+2A5-SCC-14,igrov1,Ranked 1-4 by heatmap color,2A5,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,1172.611694
+2A5-SCC-EH,igrov1,Ranked 1-4 by heatmap color,2A5,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,1004.423894
+2A5-SCC-PH,igrov1,Ranked 1-4 by heatmap color,2A5,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,1060.486494
+2A5-SCC-BO,igrov1,Ranked 1-4 by heatmap color,2A5,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,1116.549094
+3A1-SCC-4,igrov1,Ranked 1-4 by heatmap color,3A1,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,1257.471515
+3A1-SCC-8,igrov1,Ranked 1-4 by heatmap color,3A1,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,1425.659315
+3A1-SCC-10,igrov1,Ranked 1-4 by heatmap color,3A1,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,1509.753216
+3A1-SCC-12,igrov1,Ranked 1-4 by heatmap color,3A1,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,1593.847116
+3A1-SCC-14,igrov1,Ranked 1-4 by heatmap color,3A1,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,1677.941017
+3A1-SCC-EH,igrov1,Ranked 1-4 by heatmap color,3A1,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,1425.659315
+3A1-SCC-PH,igrov1,Ranked 1-4 by heatmap color,3A1,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,1509.753216
+3A1-SCC-BO,igrov1,Ranked 1-4 by heatmap color,3A1,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,1593.847116
+3A2-SCC-4,igrov1,Ranked 1-4 by heatmap color,3A2,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,1241.440214
+3A2-SCC-8,igrov1,Ranked 1-4 by heatmap color,3A2,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,1409.628015
+3A2-SCC-10,igrov1,Ranked 1-4 by heatmap color,3A2,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,1493.721916
+3A2-SCC-12,igrov1,Ranked 1-4 by heatmap color,3A2,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,1577.815816
+3A2-SCC-14,igrov1,Ranked 1-4 by heatmap color,3A2,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,1661.909716
+3A2-SCC-EH,igrov1,Ranked 1-4 by heatmap color,3A2,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,1409.628015
+3A2-SCC-PH,igrov1,Ranked 1-4 by heatmap color,3A2,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,1493.721916
+3A2-SCC-BO,igrov1,Ranked 1-4 by heatmap color,3A2,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,1577.815816
+4A1-SCC-4,igrov1,Ranked 1-4 by heatmap color,4A1,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,1664.597386
+4A1-SCC-8,igrov1,Ranked 1-4 by heatmap color,4A1,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,1888.847787
+4A1-SCC-10,igrov1,Ranked 1-4 by heatmap color,4A1,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,2000.972988
+4A1-SCC-12,igrov1,Ranked 1-4 by heatmap color,4A1,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,2113.098188
+4A1-SCC-14,igrov1,Ranked 1-4 by heatmap color,4A1,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,2225.223389
+4A1-SCC-EH,igrov1,Ranked 1-4 by heatmap color,4A1,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,1888.847787
+4A1-SCC-PH,igrov1,Ranked 1-4 by heatmap color,4A1,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,2000.972988
+4A1-SCC-BO,igrov1,Ranked 1-4 by heatmap color,4A1,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,2113.098188
+4A3-SCC-4,igrov1,Ranked 1-4 by heatmap color,4A3,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,1609.555187
+4A3-SCC-8,igrov1,Ranked 1-4 by heatmap color,4A3,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,1833.805588
+4A3-SCC-10,igrov1,Ranked 1-4 by heatmap color,4A3,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,1945.930788
+4A3-SCC-12,igrov1,Ranked 1-4 by heatmap color,4A3,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,2058.055989
+4A3-SCC-14,igrov1,Ranked 1-4 by heatmap color,4A3,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,2170.181189
+4A3-SCC-EH,igrov1,Ranked 1-4 by heatmap color,4A3,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,1833.805588
+4A3-SCC-PH,igrov1,Ranked 1-4 by heatmap color,4A3,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,1945.930788
+4A3-SCC-BO,igrov1,Ranked 1-4 by heatmap color,4A3,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,2058.055989
+5A1-SCC-4,igrov1,Ranked 1-4 by heatmap color,5A1,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,1961.638859
+5A1-SCC-8,igrov1,Ranked 1-4 by heatmap color,5A1,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,2241.95186
+5A1-SCC-10,igrov1,Ranked 1-4 by heatmap color,5A1,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,2382.108361
+5A1-SCC-12,igrov1,Ranked 1-4 by heatmap color,5A1,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,2522.264862
+5A1-SCC-14,igrov1,Ranked 1-4 by heatmap color,5A1,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,2662.421362
+5A1-SCC-EH,igrov1,Ranked 1-4 by heatmap color,5A1,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,2241.95186
+5A1-SCC-PH,igrov1,Ranked 1-4 by heatmap color,5A1,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,2382.108361
+5A1-SCC-BO,igrov1,Ranked 1-4 by heatmap color,5A1,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,2522.264862
+5A2-SCC-4,igrov1,Ranked 1-4 by heatmap color,5A2,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,1976.649758
+5A2-SCC-8,igrov1,Ranked 1-4 by heatmap color,5A2,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,2256.962759
+5A2-SCC-10,igrov1,Ranked 1-4 by heatmap color,5A2,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,2397.11926
+5A2-SCC-12,igrov1,Ranked 1-4 by heatmap color,5A2,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,2537.275761
+5A2-SCC-14,igrov1,Ranked 1-4 by heatmap color,5A2,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,2677.432261
+5A2-SCC-EH,igrov1,Ranked 1-4 by heatmap color,5A2,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,2256.962759
+5A2-SCC-PH,igrov1,Ranked 1-4 by heatmap color,5A2,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,2397.11926
+5A2-SCC-BO,igrov1,Ranked 1-4 by heatmap color,5A2,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,2537.275761
+6A1-SCC-4,igrov1,Ranked 1-4 by heatmap color,6A1,SCC-4,IGROV1,in_vitro,1,Discretized_luminescence,2342.74908
+6A1-SCC-8,igrov1,Ranked 1-4 by heatmap color,6A1,SCC-8,IGROV1,in_vitro,1,Discretized_luminescence,2679.124682
+6A1-SCC-10,igrov1,Ranked 1-4 by heatmap color,6A1,SCC-10,IGROV1,in_vitro,1,Discretized_luminescence,2847.312483
+6A1-SCC-12,igrov1,Ranked 1-4 by heatmap color,6A1,SCC-12,IGROV1,in_vitro,1,Discretized_luminescence,3015.500284
+6A1-SCC-14,igrov1,Ranked 1-4 by heatmap color,6A1,SCC-14,IGROV1,in_vitro,1,Discretized_luminescence,3183.688084
+6A1-SCC-EH,igrov1,Ranked 1-4 by heatmap color,6A1,SCC-EH,IGROV1,in_vitro,1,Discretized_luminescence,2679.124682
+6A1-SCC-PH,igrov1,Ranked 1-4 by heatmap color,6A1,SCC-PH,IGROV1,in_vitro,1,Discretized_luminescence,2847.312483
+6A1-SCC-BO,igrov1,Ranked 1-4 by heatmap color,6A1,SCC-BO,IGROV1,in_vitro,1,Discretized_luminescence,3015.500284
+4A3-SC-10,igrov1,Ranked 1-4 by heatmap color,4A3,SC-10,IGROV1,in_vitro,1,Discretized_luminescence,1578.02902
+4A3-SSC-10,igrov1,Ranked 1-4 by heatmap color,4A3,SSC-10,IGROV1,in_vitro,1,Discretized_luminescence,1361.770186
+4A3-SC-PH,igrov1,Ranked 1-4 by heatmap color,4A3,SC-PH,IGROV1,in_vitro,1,Discretized_luminescence,1578.02902
+4A3-SSC-PH,igrov1,Ranked 1-4 by heatmap color,4A3,SSC-PH,IGROV1,in_vitro,1,Discretized_luminescence,1361.770186
+2A1-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC3",2A1,SCC-10,Mouse,iv,3,log_luminescence,988.4864938
+2A2-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC4",2A2,SCC-10,Mouse,iv,3,log_luminescence,1028.517794
+2A3-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC5",2A3,SCC-10,Mouse,iv,3,log_luminescence,1057.544343
+2A4-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC6",2A4,SCC-10,Mouse,iv,3,log_luminescence,1025.481743
+2A5-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC7",2A5,SCC-10,Mouse,iv,3,log_luminescence,1060.486494
+3A1-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC8",3A1,SCC-10,Mouse,iv,3,log_luminescence,1509.753216
+3A2-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC9",3A2,SCC-10,Mouse,iv,3,log_luminescence,1493.721916
+4A1-SCC-4,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC10",4A1,SCC-4,Mouse,iv,3,log_luminescence,1664.597386
+4A1-SCC-8,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC11",4A1,SCC-8,Mouse,iv,3,log_luminescence,1888.847787
+4A1-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC12",4A1,SCC-10,Mouse,iv,3,log_luminescence,2000.972988
+4A1-SCC-12,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC13",4A1,SCC-12,Mouse,iv,3,log_luminescence,2113.098188
+4A1-SCC-14,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC14",4A1,SCC-14,Mouse,iv,3,log_luminescence,2225.223389
+4A1-SCC-EH,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC15",4A1,SCC-EH,Mouse,iv,3,log_luminescence,1888.847787
+4A1-SCC-PH,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC16",4A1,SCC-PH,Mouse,iv,3,log_luminescence,2000.972988
+4A1-SCC-BO,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC17",4A1,SCC-BO,Mouse,iv,3,log_luminescence,2113.098188
+4A3-SCC-4,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC18",4A3,SCC-4,Mouse,iv,3,log_luminescence,1609.555187
+4A3-SCC-8,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC19",4A3,SCC-8,Mouse,iv,3,log_luminescence,1833.805588
+4A3-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC20",4A3,SCC-10,Mouse,iv,3,log_luminescence,1945.930788
+4A3-SCC-12,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC21",4A3,SCC-12,Mouse,iv,3,log_luminescence,2058.055989
+4A3-SCC-14,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC22",4A3,SCC-14,Mouse,iv,3,log_luminescence,2170.181189
+4A3-SCC-EH,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC23",4A3,SCC-EH,Mouse,iv,3,log_luminescence,1833.805588
+4A3-SCC-PH,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC24",4A3,SCC-PH,Mouse,iv,3,log_luminescence,1945.930788
+4A3-SCC-BO,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC25",4A3,SCC-BO,Mouse,iv,3,log_luminescence,2058.055989
+5A1-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC26",5A1,SCC-10,Mouse,iv,3,log_luminescence,2382.108361
+5A2-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC27",5A2,SCC-10,Mouse,iv,3,log_luminescence,2397.11926
+6A1-SCC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC28",6A1,SCC-10,Mouse,iv,3,log_luminescence,2847.312483
+4A3-SC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC29",4A3,SC-10,Mouse,iv,3,log_luminescence,1578.02902
+4A3-SSC-10,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC30",4A3,SSC-10,Mouse,iv,3,log_luminescence,1361.770186
+4A3-SC-PH,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC31",4A3,SC-PH,Mouse,iv,3,log_luminescence,1578.02902
+4A3-SSC-PH,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC32",4A3,SSC-PH,Mouse,iv,3,log_luminescence,1361.770186
+MC3,liver,"log luminescence, estimated visually from plots, confirmed via ""-fold improvement"" for the SC, SSC's, and MC33",na,na,Mouse,iv,3,log_luminescence,641.6110808

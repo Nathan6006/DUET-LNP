@@ -3,20 +3,7 @@ import pandas as pd
 
 # List of folders to process (FIXED commas)
 folders = [
-    "../data/data_files_to_merge/Liu_iphos"
-    # "../data/data_files_to_merge/Lin_peptide",
-    # "../data/data_files_to_merge/Han_a3",
-    # "../data/data_files_to_merge/Han_branched",
-    # "../data/data_files_to_merge/Han_amidine",
-    # "../data/data_files_to_merge/Miller_Zwitter",
-    # # "../data/data_files_to_merge/3_tails",
-    # "../data/data_files_to_merge/Lee_unsat",
-    # "../data/data_files_to_merge/Farbiak_dendrimer_Hek",
-    # "../data/data_files_to_merge/Farbiak_dendrimer_HeLa",
-    # "../data/data_files_to_merge/Farbiak_dendrimer_igrov1"
-    # "../data/data_files_to_merge/Xue_CAD_LNP",
-    # "../data/data_files_to_merge/Yu_Aminoglycoside",
-    # "../data/data_files_to_merge/Zhang_Aminoglycoside"
+    "../data_files/AGILE"
 ]
 
 # Cell densities aligned by folder index
@@ -52,7 +39,7 @@ for i, folder in enumerate(folders):
     df["Dose/Cells"] = df["Dosage"] / curr_cell_den
     df.drop(columns=["Dosage"], inplace=True)
 
-    df["Dose/Cells"] = df["Dose/Cells"] * df["Ionizable_Lipid_to_mRNA_weight_ratio"]
+    df["Lipid/Cells"] = df["Lipid/Cells"] * df["Ionizable_Lipid_to_mRNA_weight_ratio"]
 
     
     df.to_csv(output_path, index=False)

@@ -5,8 +5,7 @@ import sys
 def save_dist_to_csv(
     output_filename="dataset_data_dist.csv",
     folder='../data/all_data.csv',
-    bins=None
-):
+    bins=None):
     """
     bins: list of bin edges (must be increasing), e.g. [0, 75, 90, 100]
           Highest-value bin will be labeled Class 0
