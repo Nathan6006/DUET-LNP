@@ -1,0 +1,2 @@
+removed duplicate smiles
+(for each unique pair, removed all but the first time it happened)

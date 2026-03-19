@@ -1,0 +1,4 @@
+removed 84 duplicate smiles: 
+all smiles containing Iso52DC18, Iso62DC18, Iso92DC18
+
+for dosage, aritcle only mentioned 100 ng (0.1 ug) mRNA so i assumed 10k cells.

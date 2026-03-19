@@ -1,0 +1,58 @@
+{
+  "best_global_step": 162,
+  "best_metric": 0.09506864845752716,
+  "best_model_checkpoint": "../data/crossval_splits/cb_tox_S/cv_2/model_2/chemberta_checkpoints/checkpoint-162",
+  "epoch": 3.0,
+  "eval_steps": 500,
+  "global_step": 162,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_loss": 0.1449609398841858,
+      "eval_runtime": 0.2396,
+      "eval_samples_per_second": 926.474,
+      "eval_steps_per_second": 58.426,
+      "step": 54
+    },
+    {
+      "epoch": 2.0,
+      "eval_loss": 0.10651522874832153,
+      "eval_runtime": 0.1795,
+      "eval_samples_per_second": 1237.018,
+      "eval_steps_per_second": 78.01,
+      "step": 108
+    },
+    {
+      "epoch": 3.0,
+      "eval_loss": 0.09506864845752716,
+      "eval_runtime": 0.2048,
+      "eval_samples_per_second": 1083.778,
+      "eval_steps_per_second": 68.346,
+      "step": 162
+    }
+  ],
+  "logging_steps": 500,
+  "max_steps": 162,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 3,
+  "save_steps": 500,
+  "stateful_callbacks": {
+    "TrainerControl": {
+      "args": {
+        "should_epoch_stop": false,
+        "should_evaluate": false,
+        "should_log": false,
+        "should_save": true,
+        "should_training_stop": true
+      },
+      "attributes": {}
+    }
+  },
+  "total_flos": 5887612597248.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}

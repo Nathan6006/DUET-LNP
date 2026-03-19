@@ -1,0 +1,27 @@
+Amine,Tail,Lipid_name,Num_tails,MolWt,Value_name,Model_type,Target_or_delivered_gene,Delivery_target,Route_of_administration,Experiment_weight
+Zhou_dendrimer_2A2,Zhou_dendrimer_SC14,Zhou_dendrimer_2A2-SC14,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_2A6,Zhou_dendrimer_SC14,Zhou_dendrimer_2A6-SC14,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_2A9,Zhou_dendrimer_SC14,Zhou_dendrimer_2A9-SC14,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_3A3,Zhou_dendrimer_SC10,Zhou_dendrimer_3A3-SC10,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_3A3,Zhou_dendrimer_SC14,Zhou_dendrimer_3A3-SC14,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_3A5,Zhou_dendrimer_SC10,Zhou_dendrimer_3A5-SC10,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_3A5,Zhou_dendrimer_SC14,Zhou_dendrimer_3A5-SC14,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_4A1,Zhou_dendrimer_SC12,Zhou_dendrimer_4A1-SC12,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_4A1,Zhou_dendrimer_SC8,Zhou_dendrimer_4A1-SC8,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_4A3,Zhou_dendrimer_SC12,Zhou_dendrimer_4A3-SC12,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_4A3,Zhou_dendrimer_SC8,Zhou_dendrimer_4A3-SC8,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_5A1,Zhou_dendrimer_SC12,Zhou_dendrimer_5A1-SC12,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_5A1,Zhou_dendrimer_SC8,Zhou_dendrimer_5A1-SC8,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_5A2,Zhou_dendrimer_SC12,Zhou_dendrimer_5A2-SC12,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_5A2,Zhou_dendrimer_SC8,Zhou_dendrimer_5A2-SC8,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_5A3,Zhou_dendrimer_SC12,Zhou_dendrimer_5A3-SC12,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_5A3,Zhou_dendrimer_SC8,Zhou_dendrimer_5A3-SC8,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_5A4,Zhou_dendrimer_SC12,Zhou_dendrimer_5A4-SC12,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_5A3,Zhou_dendrimer_SC8,Zhou_dendrimer_5A3-SC8,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_6A1,Zhou_dendrimer_SC12,Zhou_dendrimer_6A1-SC12,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_6A1,Zhou_dendrimer_SC8,Zhou_dendrimer_6A1-SC8,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_6A1,Zhou_dendrimer_SC10,Zhou_dendrimer_6A1-SC10,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_6A1,Zhou_dendrimer_SC12,Zhou_dendrimer_6A1-SC12,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_6A2,Zhou_dendrimer_SC8,Zhou_dendrimer_6A2-SC8,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_6A3,Zhou_dendrimer_SC12,Zhou_dendrimer_6A3-SC12,,,FVII silencing,Mouse,FVII,liver,iv,3
+Zhou_dendrimer_3A3,Zhou_dendrimer_SC8,Zhou_dendrimer_3A3-SC8,,,FVII silencing,Mouse,FVII,liver,iv,3

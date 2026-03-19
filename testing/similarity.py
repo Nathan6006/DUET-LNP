@@ -79,7 +79,7 @@ def find_duplicates(test_smiles, train_smiles):
 def main(argv):
     # --- 1. SETUP ---
     # Update paths to match your actual files
-    df_train = pd.read_csv(f'../data/crossval_splits/{argv[1]}/cv_2/train.csv')
+    df_train = pd.read_csv(f'../data/crossval_splits/{argv[1]}/cv_4/train.csv')
     df_test = pd.read_csv(f'../data/crossval_splits/{argv[1]}/test/test.csv')
     print(f"Loaded {len(df_train)} training and {len(df_test)} test molecules.")
 
@@ -89,6 +89,9 @@ def main(argv):
     
     if dups:
         print(f"WARNING: Found {len(dups)} strict duplicates (Identical strings).")
+        pd.DataFrame({"duplicate_smiles": list(dups)}).to_csv(
+            "duplicates.csv", index=False
+        )
     else:
         print("SUCCESS: No strict duplicates found.")
 

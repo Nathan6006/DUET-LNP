@@ -22,6 +22,7 @@ def dataset_to_numpy(datapoints, smiles_column="smiles", method="morgan"):
             rdkit = np.nan_to_num(rdkit, nan=0.0, posinf=0.0, neginf=0.0)
             rdkit = np.clip(rdkit, -1e6, 1e6)
             embed = np.concatenate([morgan, rdkit])
+        
         # Ensure dimensionality matches
         feats = np.concatenate([embed, np.array(extra_features)])
         X.append(feats)
@@ -59,6 +60,8 @@ def morgan_fingerprint(smiles, radius=2, n_bits=2048, use_counts=True):
     arr = np.zeros((n_bits,), dtype=int)
     DataStructs.ConvertToNumpyArray(fp, arr)
     return arr
+
+
 
 def rdkit_descriptors(smiles):
     """

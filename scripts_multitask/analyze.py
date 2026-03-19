@@ -9,7 +9,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from helpers import path_if_none, change_column_order, load_datapoints_rf, load_datapoints_tox_only
 from embeddings import morgan_fingerprint
 from embeddings import dataset_to_numpy
-from train import PossMSEObjective
+#from train_ import LogCoshObjective, PossMSEObjective
 
 # ------------------------------------------------------------------------------
 # 1. MAKE PREDICTIONS (Continuous Regression Values)

@@ -1,0 +1,9 @@
+target,class,count
+toxicity,0.0,1238
+toxicity,1.0,45
+toxicity,2.0,61
+toxicity,,5966
+delivery,0.0,873
+delivery,1.0,4863
+delivery,2.0,891
+delivery,,683

@@ -1,33 +1,47 @@
-import sys
-import os
-from distribution_ds import save_dist_to_csv
+import argparse
+from pathlib import Path
+import pandas as pd
 
-def path_if_none(newpath):
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
 
-def main(argv):
-    split_folder = argv[1]
-    path_if_none(split_folder)
+def collect_split_distributions(split_folder, out_csv="split_distributions.csv"):
+    base_dir = Path("../data/crossval_splits") / split_folder
+    rows = []
 
     for i in range(5):
-        save_dist_to_csv(
-            output_filename=f'{split_folder}/train_cv_{i}.csv',
-            folder= f'../data/crossval_splits/{split_folder}/cv_{i}/train_metadata.csv',
-            bins=[0,.70,.80,2.00]
-        )
+        split_dir = base_dir / f"cv_{i}"
+        test_path = base_dir / "test" / "test.csv"
 
-        save_dist_to_csv(
-            output_filename=f'{split_folder}/valid_cv_{i}.csv',
-            folder= f'../data/crossval_splits/{split_folder}/cv_{i}/valid_metadata.csv',
-            bins=[0,.70,.80,2.00]
-        )
+        train_path = split_dir / "train.csv"
+        valid_path = split_dir / "valid.csv"
 
-    save_dist_to_csv(
-        output_filename=f'{split_folder}/test.csv',
-        folder= f'../data/crossval_splits/{split_folder}/test/test_metadata.csv',
-        bins=[0,.70,.80,2.00]
-    )
+        if not train_path.exists() or not valid_path.exists() or not test_path.exists():
+            raise FileNotFoundError(f"Missing files in {split_dir} or test folder")
+
+        train_df = pd.read_csv(train_path)
+        valid_df = pd.read_csv(valid_path)
+        test_df = pd.read_csv(test_path)
+
+        rows.append({
+            "split": f"cv_{i}",
+            "train_size": len(train_df),
+            "valid_size": len(valid_df),
+            "test_size": len(test_df)
+        })
+
+    out_df = pd.DataFrame(rows)
+    out_df.to_csv(out_csv, index=False)
+    print(f"Saved distributions to {out_csv}")
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--split_folder", required=True, help="Name of crossval split folder")
+    parser.add_argument("--out_csv", default="split_distributions.csv", help="Output CSV path")
+
+    args = parser.parse_args()
+
+    collect_split_distributions(args.split_folder, args.out_csv)
+
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()

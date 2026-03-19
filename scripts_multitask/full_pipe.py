@@ -1,5 +1,5 @@
 import sys
-from train import train_basic, train_cm, PossMSEObjective
+from train_ import train_basic, train_cm, PossMSEObjective
 from analyze import make_pred_vs_actual_tvt, analyze_predictions_cv_tvt
 
 def main(argv):

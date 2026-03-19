@@ -1,0 +1,7 @@
+fold,note,pearson,r2,pearson_p_val,spearman,kendall,mse,mae,n_vals
+0,insufficient_data,,-33.278237,,,,0.18025,0.418319,2.0
+1,insufficient_data,,-0.166991,,,,0.006137,0.072515,2.0
+2,insufficient_data,,-42.945497,,,,0.231084,0.475211,2.0
+3,insufficient_data,,-32.554014,,,,0.176441,0.413742,2.0
+4,insufficient_data,,-19.167426,,,,0.106049,0.317475,2.0
+Mean,,,-25.622433,,,,0.1399922,0.3394524,2.0

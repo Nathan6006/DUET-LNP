@@ -1,0 +1,2 @@
+put num carbon in tail as 0 for non carbon ending tails
+fixed 42 smiles (SC3 tails were being represented as SC2)

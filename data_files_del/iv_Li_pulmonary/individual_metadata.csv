@@ -1,0 +1,54 @@
+Lipid_name,Amine,Tail,Delivery_target,Route_of_administration,Purity,Batch_or_individual,Experiment_weight,Mix_type
+MD-1,RM_carbonate_na,RM_carbonate_na,muscle,intramuscular,Pure,Individual,3,Hand
+MC3,RM_carbonate_na,RM_carbonate_na,muscle,intramuscular,Pure,Individual,3,Hand
+A1-T2 ,RM_carbonate_A1,RM_carbonate_T2 ,muscle,intramuscular,Pure,Individual,3,Hand
+A14-T7 ,RM_carbonate_A14,RM_carbonate_T7 ,muscle,intramuscular,Pure,Individual,3,Hand
+MD-1,RM_carbonate_MD,RM_carbonate_1,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A1-T2 ,RM_carbonate_A1,RM_carbonate_T2 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A14-T7 ,RM_carbonate_A14,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A4-T7 ,RM_carbonate_A4,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+MC3,RM_carbonate_na,RM_carbonate_na,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A47-T7 ,RM_carbonate_A47,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A4-T7 ,RM_carbonate_A4,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+MD-1,RM_carbonate_na,RM_carbonate_na,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+MD-1,RM_carbonate_na,RM_carbonate_na,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A4-T7 ,RM_carbonate_A4,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A1-T3 ,RM_carbonate_A1,RM_carbonate_T3 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A1-T2 ,RM_carbonate_A1,RM_carbonate_T2 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A28-T7 ,RM_carbonate_A28,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A2-T2 ,RM_carbonate_A2,RM_carbonate_T2 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A47-T7 ,RM_carbonate_A47,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A3-T3 ,RM_carbonate_A3,RM_carbonate_T3 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A47-T7 ,RM_carbonate_A47,RM_carbonate_T7 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A14-T4 ,RM_carbonate_A14,RM_carbonate_T4 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A14-T8 ,RM_carbonate_A14,RM_carbonate_T8 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+MD-1,RM_carbonate_na,RM_carbonate_na,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A14-T5 ,RM_carbonate_A14,RM_carbonate_T5 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A4-T8 ,RM_carbonate_A4,RM_carbonate_T8 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A4-T6 ,RM_carbonate_A4,RM_carbonate_T6 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A14-T10 ,RM_carbonate_A14,RM_carbonate_T10 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A14-T6 ,RM_carbonate_A14,RM_carbonate_T6 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A14-T9 ,RM_carbonate_A14,RM_carbonate_T9 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A4-T9 ,RM_carbonate_A4,RM_carbonate_T9 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A4-T4 ,RM_carbonate_A4,RM_carbonate_T4 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A4-T7 ,RM_carbonate_A4,RM_carbonate_T7 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A4-T5 ,RM_carbonate_A4,RM_carbonate_T5 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A1-T5 ,RM_carbonate_A1,RM_carbonate_T5 ,lung_epithelium,intratracheal,Crude,Individual,3,Microfluidic
+A1-T1 ,RM_carbonate_A1,RM_carbonate_T1 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A14-T4 ,RM_carbonate_A14,RM_carbonate_T4 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A14-T8 ,RM_carbonate_A14,RM_carbonate_T8 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A19-T7 ,RM_carbonate_A19,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A19-T8 ,RM_carbonate_A19,RM_carbonate_T8 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A2-T7 ,RM_carbonate_A2,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A4-T7 ,RM_carbonate_A4,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A4-T8 ,RM_carbonate_A4,RM_carbonate_T8 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A4-T9 ,RM_carbonate_A4,RM_carbonate_T9 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A47-T7 ,RM_carbonate_A47,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+MD-1,RM_carbonate_na,RM_carbonate_na,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A4-T8 ,RM_carbonate_A4,RM_carbonate_T8 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A14-T10 ,RM_carbonate_A14,RM_carbonate_T10 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A14-T9 ,RM_carbonate_A14,RM_carbonate_T9 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A14-T8 ,RM_carbonate_A14,RM_carbonate_T8 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A19-T8 ,RM_carbonate_A19,RM_carbonate_T8 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A4-T7 ,RM_carbonate_A4,RM_carbonate_T7 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic
+A14-T4 ,RM_carbonate_A14,RM_carbonate_T4 ,lung_epithelium,intratracheal,Pure,Individual,3,Microfluidic

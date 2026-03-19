@@ -1,0 +1,7 @@
+Data_types_for_component,Values,Data_type_for_split,Train_or_split
+Experiment_ID,Lee_unsat,smiles,split
+Experiment_ID,Liu_iphos,smiles,split
+Experiment_ID,AGILE,smiles,split
+Experiment_ID,Li_pulmonary,smiles,split
+Experiment_ID,Whitehead_siRNA,smiles,split
+Experiment_ID,Zhou_dendrimer,smiles,split

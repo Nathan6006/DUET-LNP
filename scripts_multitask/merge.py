@@ -13,7 +13,7 @@ def z_score_normalize(df, col_name):
         if pd.isna(std) or std == 0:
             df[col_name] = 0.0
         else:
-            df[col_name] = (series - mean) / std
+            df[col_name] = round(((series - mean) / std), 5)
     return df
 
 def merge_datasets(experiment_list, path_to_folders='../data_files', write_path='../data'): 
@@ -83,7 +83,8 @@ def merge_datasets(experiment_list, path_to_folders='../data_files', write_path=
     # OHE and Column setup
     extra_x_variables = ['Ionizable_Lipid_Mol_Ratio','Phospholipid_Mol_Ratio','Cholesterol_Mol_Ratio',
                          'PEG_Lipid_Mol_Ratio','Ionizable_Lipid_to_mRNA_weight_ratio', 'Num_tails', 
-                         'Num_carbon_in_tail', 'Lipid/Cells', 'mRNA/Cells' 'MolWt'] 
+                         'Num_carbon_in_tail', 'MolWt',  'num_unsaturated_cc_bonds', 'num_protonatable_nitrogens'] #'Lipid/Cells', 'mRNA/Cells']
+    
     extra_x_categorical = ['Helper_lipid_ID','Cargo_type','Model_type']
 
     for x_cat in extra_x_categorical:
@@ -98,8 +99,18 @@ def merge_datasets(experiment_list, path_to_folders='../data_files', write_path=
 
     # Finalize Targets
     if 'quantified_toxicity' in all_df.columns:
-        all_df["unnormalized_toxicity"] = (all_df['quantified_toxicity']/100).clip(upper=1.0)
-        all_df['quantified_toxicity'] = (all_df['quantified_toxicity'] / 100.0).clip(upper=1.0, lower=0.3)
+        all_df["unnormalized_toxicity"] = (all_df['quantified_toxicity']/100).clip(upper=1.0).round(5)
+        all_df['quantified_toxicity'] = (all_df['quantified_toxicity'] / 100.0).clip(upper=1.0, lower=0.3).round(5)
+    
+    # def hinged_power(y, t=0.7, p=0.3):
+    #     y = np.asarray(y)
+    #     out = y.copy()
+    #     mask = y < t
+    #     out[mask] = t * (y[mask] / t) ** p
+    #     return out
+
+    # all_df["quantified_toxicity_hinged"] = hinged_power(
+    #     all_df["quantified_toxicity"].values, t=0.7, p=0.5)
 
     y_val_cols = ["quantified_toxicity", "quantified_delivery", "smiles"]
 
@@ -119,6 +130,7 @@ def merge_datasets(experiment_list, path_to_folders='../data_files', write_path=
     all_df = all_df.where(all_df != True, 1.0).where(all_df != False, 0.0)
     all_df["MolWt"] = np.log1p(all_df["MolWt"])
     all_df["Lipid/Cells"] = np.log1p(all_df["Lipid/Cells"])
+    all_df["mRNA/Cells"] = np.log1p(all_df["mRNA/Cells"])
 
     print("Creating all_data.csv")
     change_column_order(os.path.join(write_path, 'all_data.csv'), all_df, first_cols=['quantified_toxicity', 'quantified_delivery','smiles'])

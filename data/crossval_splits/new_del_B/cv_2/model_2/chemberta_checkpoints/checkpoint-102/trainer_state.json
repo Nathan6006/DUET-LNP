@@ -1,0 +1,42 @@
+{
+  "best_global_step": 102,
+  "best_metric": 1.0831419229507446,
+  "best_model_checkpoint": "../data/crossval_splits/new_del_B/cv_2/model_2/chemberta_checkpoints/checkpoint-102",
+  "epoch": 1.0,
+  "eval_steps": 500,
+  "global_step": 102,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_loss": 1.0831419229507446,
+      "eval_runtime": 2.4726,
+      "eval_samples_per_second": 389.472,
+      "eval_steps_per_second": 24.671,
+      "step": 102
+    }
+  ],
+  "logging_steps": 500,
+  "max_steps": 306,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 3,
+  "save_steps": 500,
+  "stateful_callbacks": {
+    "TrainerControl": {
+      "args": {
+        "should_epoch_stop": false,
+        "should_evaluate": false,
+        "should_log": false,
+        "should_save": true,
+        "should_training_stop": false
+      },
+      "attributes": {}
+    }
+  },
+  "total_flos": 7456260554496.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}

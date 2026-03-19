@@ -1,0 +1,459 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Hybrid Model Analysis: cb_tox_B</title>
+        <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 40px; background-color: #f4f4f9; color: #333; }
+            h1 { text-align: center; color: #2c3e50; }
+            .fold-section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 40px; }
+            .bits-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 10px; }
+            .bit-card { border: 1px solid #eee; padding: 10px; background: #fff; text-align: center; border-radius: 8px; }
+            .bit-card img { max-width: 100%; height: auto; }
+            .bit-caption { margin-top: 10px; font-weight: 600; color: #555; font-size: 0.95em; }
+            details { margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
+            summary { background-color: #f1f2f6; padding: 15px; cursor: pointer; font-weight: bold; color: #34495e; outline: none; }
+            summary:hover { background-color: #e2e6ea; }
+            details[open] summary { border-bottom: 1px solid #ddd; }
+            .details-content { padding: 20px; background: #fff; }
+            .note { font-size: 0.9em; color: #666; font-style: italic; margin-bottom: 15px; }
+        </style>
+    </head>
+    <body>
+        <h1>Hybrid Model Analysis (ChemBERTa + XGB): cb_tox_B</h1>
+        <p style="text-align:center">
+            <b>Visualization Method:</b> RDKit Similarity Maps (Occlusion Sensitivity). <br>
+            <span style="color:green">Green/Red</span> areas contribute positively to the target. 
+            <span style="color:blue">Blue</span> areas contribute negatively (or lower the prediction).
+        </p>
+    <div class="fold-section"><h2>Cross Validation Fold 0</h2>
+            <details><summary>Global Feature Importance (SHAP)</summary>
+            <div class="details-content" style='text-align:center;'>
+                <img src="cv_0/shap_summary_plot.png" style='max-width:80%; border:1px solid #eee;'>
+                <p>Shows impact of Embeddings vs. Extra Features.</p>
+            </div></details>
+            <details open><summary>Top Predicted Structures & Influential Regions</summary><div class="details-content"><div class="note">These molecules had the highest predicted values. Colors indicate atomic contribution to the Hybrid Model's score.</div><div class='bits-grid'>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_1_idx_8.png" loading="lazy">
+                    <div class="bit-caption">Rank #1 (Sample 8)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_2_idx_2.png" loading="lazy">
+                    <div class="bit-caption">Rank #2 (Sample 2)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_3_idx_49.png" loading="lazy">
+                    <div class="bit-caption">Rank #3 (Sample 49)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_4_idx_11.png" loading="lazy">
+                    <div class="bit-caption">Rank #4 (Sample 11)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_5_idx_14.png" loading="lazy">
+                    <div class="bit-caption">Rank #5 (Sample 14)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_6_idx_12.png" loading="lazy">
+                    <div class="bit-caption">Rank #6 (Sample 12)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_7_idx_7.png" loading="lazy">
+                    <div class="bit-caption">Rank #7 (Sample 7)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_8_idx_13.png" loading="lazy">
+                    <div class="bit-caption">Rank #8 (Sample 13)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_9_idx_6.png" loading="lazy">
+                    <div class="bit-caption">Rank #9 (Sample 6)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_10_idx_25.png" loading="lazy">
+                    <div class="bit-caption">Rank #10 (Sample 25)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_11_idx_1.png" loading="lazy">
+                    <div class="bit-caption">Rank #11 (Sample 1)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_12_idx_10.png" loading="lazy">
+                    <div class="bit-caption">Rank #12 (Sample 10)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_13_idx_26.png" loading="lazy">
+                    <div class="bit-caption">Rank #13 (Sample 26)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_14_idx_20.png" loading="lazy">
+                    <div class="bit-caption">Rank #14 (Sample 20)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_15_idx_28.png" loading="lazy">
+                    <div class="bit-caption">Rank #15 (Sample 28)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_16_idx_16.png" loading="lazy">
+                    <div class="bit-caption">Rank #16 (Sample 16)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_17_idx_3.png" loading="lazy">
+                    <div class="bit-caption">Rank #17 (Sample 3)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_18_idx_44.png" loading="lazy">
+                    <div class="bit-caption">Rank #18 (Sample 44)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_19_idx_0.png" loading="lazy">
+                    <div class="bit-caption">Rank #19 (Sample 0)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_0/top_structures/rank_20_idx_39.png" loading="lazy">
+                    <div class="bit-caption">Rank #20 (Sample 39)</div>
+                </div></div></div></details></div><div class="fold-section"><h2>Cross Validation Fold 1</h2>
+            <details><summary>Global Feature Importance (SHAP)</summary>
+            <div class="details-content" style='text-align:center;'>
+                <img src="cv_1/shap_summary_plot.png" style='max-width:80%; border:1px solid #eee;'>
+                <p>Shows impact of Embeddings vs. Extra Features.</p>
+            </div></details>
+            <details open><summary>Top Predicted Structures & Influential Regions</summary><div class="details-content"><div class="note">These molecules had the highest predicted values. Colors indicate atomic contribution to the Hybrid Model's score.</div><div class='bits-grid'>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_1_idx_11.png" loading="lazy">
+                    <div class="bit-caption">Rank #1 (Sample 11)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_2_idx_14.png" loading="lazy">
+                    <div class="bit-caption">Rank #2 (Sample 14)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_3_idx_12.png" loading="lazy">
+                    <div class="bit-caption">Rank #3 (Sample 12)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_4_idx_2.png" loading="lazy">
+                    <div class="bit-caption">Rank #4 (Sample 2)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_5_idx_20.png" loading="lazy">
+                    <div class="bit-caption">Rank #5 (Sample 20)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_6_idx_13.png" loading="lazy">
+                    <div class="bit-caption">Rank #6 (Sample 13)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_7_idx_1.png" loading="lazy">
+                    <div class="bit-caption">Rank #7 (Sample 1)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_8_idx_3.png" loading="lazy">
+                    <div class="bit-caption">Rank #8 (Sample 3)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_9_idx_25.png" loading="lazy">
+                    <div class="bit-caption">Rank #9 (Sample 25)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_10_idx_10.png" loading="lazy">
+                    <div class="bit-caption">Rank #10 (Sample 10)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_11_idx_28.png" loading="lazy">
+                    <div class="bit-caption">Rank #11 (Sample 28)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_12_idx_39.png" loading="lazy">
+                    <div class="bit-caption">Rank #12 (Sample 39)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_13_idx_26.png" loading="lazy">
+                    <div class="bit-caption">Rank #13 (Sample 26)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_14_idx_44.png" loading="lazy">
+                    <div class="bit-caption">Rank #14 (Sample 44)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_15_idx_177.png" loading="lazy">
+                    <div class="bit-caption">Rank #15 (Sample 177)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_16_idx_27.png" loading="lazy">
+                    <div class="bit-caption">Rank #16 (Sample 27)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_17_idx_167.png" loading="lazy">
+                    <div class="bit-caption">Rank #17 (Sample 167)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_18_idx_0.png" loading="lazy">
+                    <div class="bit-caption">Rank #18 (Sample 0)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_19_idx_41.png" loading="lazy">
+                    <div class="bit-caption">Rank #19 (Sample 41)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_1/top_structures/rank_20_idx_30.png" loading="lazy">
+                    <div class="bit-caption">Rank #20 (Sample 30)</div>
+                </div></div></div></details></div><div class="fold-section"><h2>Cross Validation Fold 2</h2>
+            <details><summary>Global Feature Importance (SHAP)</summary>
+            <div class="details-content" style='text-align:center;'>
+                <img src="cv_2/shap_summary_plot.png" style='max-width:80%; border:1px solid #eee;'>
+                <p>Shows impact of Embeddings vs. Extra Features.</p>
+            </div></details>
+            <details open><summary>Top Predicted Structures & Influential Regions</summary><div class="details-content"><div class="note">These molecules had the highest predicted values. Colors indicate atomic contribution to the Hybrid Model's score.</div><div class='bits-grid'>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_1_idx_14.png" loading="lazy">
+                    <div class="bit-caption">Rank #1 (Sample 14)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_2_idx_15.png" loading="lazy">
+                    <div class="bit-caption">Rank #2 (Sample 15)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_3_idx_3.png" loading="lazy">
+                    <div class="bit-caption">Rank #3 (Sample 3)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_4_idx_11.png" loading="lazy">
+                    <div class="bit-caption">Rank #4 (Sample 11)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_5_idx_13.png" loading="lazy">
+                    <div class="bit-caption">Rank #5 (Sample 13)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_6_idx_12.png" loading="lazy">
+                    <div class="bit-caption">Rank #6 (Sample 12)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_7_idx_2.png" loading="lazy">
+                    <div class="bit-caption">Rank #7 (Sample 2)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_8_idx_40.png" loading="lazy">
+                    <div class="bit-caption">Rank #8 (Sample 40)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_9_idx_16.png" loading="lazy">
+                    <div class="bit-caption">Rank #9 (Sample 16)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_10_idx_45.png" loading="lazy">
+                    <div class="bit-caption">Rank #10 (Sample 45)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_11_idx_4.png" loading="lazy">
+                    <div class="bit-caption">Rank #11 (Sample 4)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_12_idx_49.png" loading="lazy">
+                    <div class="bit-caption">Rank #12 (Sample 49)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_13_idx_44.png" loading="lazy">
+                    <div class="bit-caption">Rank #13 (Sample 44)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_14_idx_39.png" loading="lazy">
+                    <div class="bit-caption">Rank #14 (Sample 39)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_15_idx_10.png" loading="lazy">
+                    <div class="bit-caption">Rank #15 (Sample 10)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_16_idx_17.png" loading="lazy">
+                    <div class="bit-caption">Rank #16 (Sample 17)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_17_idx_20.png" loading="lazy">
+                    <div class="bit-caption">Rank #17 (Sample 20)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_18_idx_36.png" loading="lazy">
+                    <div class="bit-caption">Rank #18 (Sample 36)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_19_idx_5.png" loading="lazy">
+                    <div class="bit-caption">Rank #19 (Sample 5)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_2/top_structures/rank_20_idx_51.png" loading="lazy">
+                    <div class="bit-caption">Rank #20 (Sample 51)</div>
+                </div></div></div></details></div><div class="fold-section"><h2>Cross Validation Fold 3</h2>
+            <details><summary>Global Feature Importance (SHAP)</summary>
+            <div class="details-content" style='text-align:center;'>
+                <img src="cv_3/shap_summary_plot.png" style='max-width:80%; border:1px solid #eee;'>
+                <p>Shows impact of Embeddings vs. Extra Features.</p>
+            </div></details>
+            <details open><summary>Top Predicted Structures & Influential Regions</summary><div class="details-content"><div class="note">These molecules had the highest predicted values. Colors indicate atomic contribution to the Hybrid Model's score.</div><div class='bits-grid'>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_1_idx_11.png" loading="lazy">
+                    <div class="bit-caption">Rank #1 (Sample 11)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_2_idx_14.png" loading="lazy">
+                    <div class="bit-caption">Rank #2 (Sample 14)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_3_idx_26.png" loading="lazy">
+                    <div class="bit-caption">Rank #3 (Sample 26)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_4_idx_12.png" loading="lazy">
+                    <div class="bit-caption">Rank #4 (Sample 12)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_5_idx_13.png" loading="lazy">
+                    <div class="bit-caption">Rank #5 (Sample 13)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_6_idx_164.png" loading="lazy">
+                    <div class="bit-caption">Rank #6 (Sample 164)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_7_idx_28.png" loading="lazy">
+                    <div class="bit-caption">Rank #7 (Sample 28)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_8_idx_3.png" loading="lazy">
+                    <div class="bit-caption">Rank #8 (Sample 3)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_9_idx_30.png" loading="lazy">
+                    <div class="bit-caption">Rank #9 (Sample 30)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_10_idx_1.png" loading="lazy">
+                    <div class="bit-caption">Rank #10 (Sample 1)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_11_idx_49.png" loading="lazy">
+                    <div class="bit-caption">Rank #11 (Sample 49)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_12_idx_0.png" loading="lazy">
+                    <div class="bit-caption">Rank #12 (Sample 0)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_13_idx_177.png" loading="lazy">
+                    <div class="bit-caption">Rank #13 (Sample 177)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_14_idx_2.png" loading="lazy">
+                    <div class="bit-caption">Rank #14 (Sample 2)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_15_idx_165.png" loading="lazy">
+                    <div class="bit-caption">Rank #15 (Sample 165)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_16_idx_166.png" loading="lazy">
+                    <div class="bit-caption">Rank #16 (Sample 166)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_17_idx_180.png" loading="lazy">
+                    <div class="bit-caption">Rank #17 (Sample 180)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_18_idx_7.png" loading="lazy">
+                    <div class="bit-caption">Rank #18 (Sample 7)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_19_idx_167.png" loading="lazy">
+                    <div class="bit-caption">Rank #19 (Sample 167)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_3/top_structures/rank_20_idx_34.png" loading="lazy">
+                    <div class="bit-caption">Rank #20 (Sample 34)</div>
+                </div></div></div></details></div><div class="fold-section"><h2>Cross Validation Fold 4</h2>
+            <details><summary>Global Feature Importance (SHAP)</summary>
+            <div class="details-content" style='text-align:center;'>
+                <img src="cv_4/shap_summary_plot.png" style='max-width:80%; border:1px solid #eee;'>
+                <p>Shows impact of Embeddings vs. Extra Features.</p>
+            </div></details>
+            <details open><summary>Top Predicted Structures & Influential Regions</summary><div class="details-content"><div class="note">These molecules had the highest predicted values. Colors indicate atomic contribution to the Hybrid Model's score.</div><div class='bits-grid'>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_1_idx_13.png" loading="lazy">
+                    <div class="bit-caption">Rank #1 (Sample 13)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_2_idx_11.png" loading="lazy">
+                    <div class="bit-caption">Rank #2 (Sample 11)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_3_idx_12.png" loading="lazy">
+                    <div class="bit-caption">Rank #3 (Sample 12)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_4_idx_14.png" loading="lazy">
+                    <div class="bit-caption">Rank #4 (Sample 14)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_5_idx_51.png" loading="lazy">
+                    <div class="bit-caption">Rank #5 (Sample 51)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_6_idx_34.png" loading="lazy">
+                    <div class="bit-caption">Rank #6 (Sample 34)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_7_idx_32.png" loading="lazy">
+                    <div class="bit-caption">Rank #7 (Sample 32)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_8_idx_3.png" loading="lazy">
+                    <div class="bit-caption">Rank #8 (Sample 3)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_9_idx_2.png" loading="lazy">
+                    <div class="bit-caption">Rank #9 (Sample 2)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_10_idx_39.png" loading="lazy">
+                    <div class="bit-caption">Rank #10 (Sample 39)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_11_idx_30.png" loading="lazy">
+                    <div class="bit-caption">Rank #11 (Sample 30)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_12_idx_0.png" loading="lazy">
+                    <div class="bit-caption">Rank #12 (Sample 0)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_13_idx_15.png" loading="lazy">
+                    <div class="bit-caption">Rank #13 (Sample 15)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_14_idx_116.png" loading="lazy">
+                    <div class="bit-caption">Rank #14 (Sample 116)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_15_idx_10.png" loading="lazy">
+                    <div class="bit-caption">Rank #15 (Sample 10)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_16_idx_25.png" loading="lazy">
+                    <div class="bit-caption">Rank #16 (Sample 25)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_17_idx_36.png" loading="lazy">
+                    <div class="bit-caption">Rank #17 (Sample 36)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_18_idx_26.png" loading="lazy">
+                    <div class="bit-caption">Rank #18 (Sample 26)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_19_idx_6.png" loading="lazy">
+                    <div class="bit-caption">Rank #19 (Sample 6)</div>
+                </div>
+                <div class="bit-card">
+                    <img src="cv_4/top_structures/rank_20_idx_49.png" loading="lazy">
+                    <div class="bit-caption">Rank #20 (Sample 49)</div>
+                </div></div></div></details></div></body></html>

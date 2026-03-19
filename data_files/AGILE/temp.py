@@ -1,11 +1,12 @@
 import pandas as pd
-import re
+import numpy as np
 
-# Read the CSV
-df = pd.read_csv("individual_metadata.csv")
+# Load the data
+df = pd.read_csv("main_data.csv")
 
-# Extract the number after 'B' at the end of Lipid_name
-df.drop(columns=["Lipid/Cells"], inplace=True)
+# Convert log2(raw) → log10(raw)
+# log10(raw) = x * log10(2)
+df["quantified_delivery"] = df["quantified_delivery"] * np.log10(2)
 
-# Optional: save back to CSV
-df.to_csv("individual_metadata.csv", index=False)
+# Save back to CSV
+df.to_csv("main_data.csv", index=False)

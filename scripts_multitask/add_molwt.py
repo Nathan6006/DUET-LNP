@@ -27,7 +27,7 @@ to the correct molar ratios.
 # ]
 
 folders = [
-"../data_files/AGILE"
+"../data_files/Whitehead_siRNA"
 ]
 
 def calculate_molwt(smiles):

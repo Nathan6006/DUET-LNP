@@ -1,28 +1,28 @@
-import os
-import pandas as pd
+from transformers import AutoModel, AutoConfig, AutoTokenizer
 
-base_dir = "../data_files"
-folders = [
-    "Farbiak_Dendrimer_HeLa",
-    "Farbiak_Dendrimer_igrov1",
-    "Han_branched",
-]
+BASE_MODEL = "DeepChem/ChemBERTa-77M-MTR"
 
-for folder in folders:
-    csv_path = os.path.join(base_dir, folder, "formulations.csv")
+def main():
+    # Load config (fastest way to inspect architecture)
+    config = AutoConfig.from_pretrained(BASE_MODEL)
 
-    if not os.path.exists(csv_path):
-        print(f"Missing: {csv_path}")
-        continue
+    print("Model type:", config.model_type)
 
-    df = pd.read_csv(csv_path)
+    # Most BERT-like models store layer count here
+    if hasattr(config, "num_hidden_layers"):
+        print("Number of hidden layers:", config.num_hidden_layers)
+    else:
+        print("num_hidden_layers not found in config")
 
-    # Create new column
-    df["mRNA/Cells"] = (
-        df["Lipid/Cells"] / df["Ionizable_Lipid_to_mRNA_weight_ratio"]
-    )
+    # Load full model to inspect detailed architecture
+    model = AutoModel.from_pretrained(BASE_MODEL)
 
-    # Save back to the same file
-    df.to_csv(csv_path, index=False)
+    print("\nFull model architecture:\n")
+    print(model)
 
-    print(f"Updated: {csv_path}")
+    # If it's a BERT-style model, this usually works:
+    if hasattr(model, "encoder") and hasattr(model.encoder, "layer"):
+        print("\nDetected encoder layers:", len(model.encoder.layer))
+
+if __name__ == "__main__":
+    main()
