@@ -1,8 +1,9 @@
-# Artificial intelligence-guided design of lipid nanoparticles for pulmonary gene therapy
+# DUET-LNP: Accelerating Lipid Nanoparticle Optimization by Predicting Cytotoxicity and Transfection Efficacy Using Interpretable Machine Learning
+
 
 ## Description
 
-This repository contains the data processing code and analysis discussed in the paper "Artificial intelligence-guided design of lipid nanoparticles for pulmonary gene therapy".
+This repository contains the data processing code and analysis discussed in the DUET-LNP: "Accelerating Lipid Nanoparticle Optimization by Predicting Cytotoxicity and Transfection Efficacy Using Interpretable Machine Learning".
 
 _____
 
